@@ -1,0 +1,22 @@
+		(1)
+VARIABLES	LABELS	Log. Hourly Brutto Wages in 2015 Prices
+		
+lnwage	Log. Hourly Brutto Wages in 2015 Prices	.
+		(.)
+pgbilzeit	Dauer der Ausbildung, in Jahren	1.089***
+		(0.003)
+erf	erf	1.039***
+		(0.002)
+c.erf#c.erf		0.999***
+		(0.000)
+frau	RECODE of sex (Geschlecht)	0.864***
+		(0.012)
+ost	RECODE of sampreg (Aktuelle Stichprobenregion (Berlin West-Ost))	0.768***
+		(0.014)
+Constant	Constant	3.563***
+		(0.153)
+		
+Observations		14,150
+R-squared		0.297
+Robust seeform in parentheses		
+*** p<0.001, ** p<0.01, * p<0.05		

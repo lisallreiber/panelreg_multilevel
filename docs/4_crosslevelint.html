@@ -1,0 +1,530 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title></title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 64px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+
+.section h2 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h3 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h4 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h5 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h6 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Panelregression and Multilevel Models</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Models
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Random Intercept</li>
+    <li>
+      <a href="1_rimodel.html">1. without independent variable</a>
+    </li>
+    <li>
+      <a href="2_rimodel.html">2. with independent variable</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="3_rcmodel.html">3. Random Coefficient</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="4_crosslevelint.html">4. Cross-Level Interaction</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="5_crossclass.html">5. Cross-Classified</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="6_3level.html">6. Three Level</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="7_lrtest.html">7. Likelihood Ratio test</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="0_create.html">Data Preparation</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/TripLLL">
+    <span class="fa fa-github"></span>
+     
+    
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+
+</div>
+
+
+<div id="cross-level-interaction-model" class="section level1 tabset">
+<h1>4.1 Cross-Level Interaction Model</h1>
+<div id="model-data" class="section level2 tabset">
+<h2>Model Data</h2>
+<div id="model" class="section level3">
+<h3>Model</h3>
+<div id="stata" class="section level4">
+<h4>Stata</h4>
+<pre class="stata"><code>use &quot;../data/ess50prep.dta&quot;, clear
+
+xtmixed stfdem polintr nwsptot gndr##newest gndr##new || cntry: gndr, cov(unstructured)
+estat icc</code></pre>
+<pre><code>
+. use &quot;../data/ess50prep.dta&quot;, clear
+
+. 
+. xtmixed stfdem polintr nwsptot gndr##newest gndr##new || cntry: gndr, cov(uns
+&gt; tructured)
+
+Performing EM optimization: 
+
+Performing gradient-based optimization: 
+
+Iteration 0:   log likelihood = -24309.031  
+Iteration 1:   log likelihood = -24309.028  
+Iteration 2:   log likelihood = -24309.028  
+
+Computing standard errors:
+
+Mixed-effects ML regression                     Number of obs     =     10,963
+Group variable: cntry                           Number of groups  =         22
+
+                                                Obs per group:
+                                                              min =         46
+                                                              avg =      498.3
+                                                              max =      1,544
+
+                                                Wald chi2(7)      =     114.61
+Log likelihood = -24309.028                     Prob &gt; chi2       =     0.0000
+
+------------------------------------------------------------------------------
+      stfdem |      Coef.   Std. Err.      z    P&gt;|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+     polintr |  -.2399529    .025955    -9.24   0.000    -.2908237   -.1890821
+     nwsptot |   .0058149   .0177282     0.33   0.743    -.0289317    .0405615
+             |
+        gndr |
+     female  |  -.1657879   .0645948    -2.57   0.010    -.2923914   -.0391843
+    1.newest |  -1.140559    .368079    -3.10   0.002    -1.861981   -.4191378
+             |
+ gndr#newest |
+   female#1  |   .1723873   .1302671     1.32   0.186    -.0829316    .4277062
+             |
+       1.new |  -.2253065   .4165704    -0.54   0.589    -1.041769    .5911564
+             |
+    gndr#new |
+   female#1  |   .0888319   .1532403     0.58   0.562    -.2115135    .3891773
+             |
+       _cons |   6.366919   .1856832    34.29   0.000     6.002986    6.730851
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+cntry: Unstructured          |
+                    sd(gndr) |   .1258337    .073777      .0398779    .3970644
+                   sd(_cons) |   .6765851   .1251705      .4708117     .972294
+            corr(gndr,_cons) |  -.3937098   .3608483     -.8491707    .3976095
+-----------------------------+------------------------------------------------
+                sd(Residual) |   2.213484   .0149805      2.184316    2.243041
+------------------------------------------------------------------------------
+LR test vs. linear model: chi2(3) = 690.66                Prob &gt; chi2 = 0.0000
+
+Note: LR test is conservative and provided only for reference.
+
+. estat icc
+
+Conditional intraclass correlation
+
+------------------------------------------------------------------------------
+                       Level |        ICC   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+                       cntry |   .0854478   .0289368      .0432608    .1618164
+------------------------------------------------------------------------------
+Note: ICC is conditional on zero values of random-effects covariates.</code></pre>
+</div>
+<div id="r" class="section level4">
+<h4>R</h4>
+<pre class="r"><code>multi4 &lt;- lmer(stfdem ~ polintr + nwsptot + (gndr * new) + (gndr * newest) + (1  + gndr |cntry), data = ess, REML = FALSE)</code></pre>
+<pre class="r"><code>tidy(multi4)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["group"],"name":[5],"type":["chr"],"align":["left"]}],"data":[{"1":"(Intercept)","2":"6.532704660","3":"0.20883613","4":"31.2814863","5":"fixed"},{"1":"polintr","2":"-0.239952995","3":"0.02595498","4":"-9.2449701","5":"fixed"},{"1":"nwsptot","2":"0.005814923","3":"0.01772819","4":"0.3280042","5":"fixed"},{"1":"gndr","2":"-0.165786712","3":"0.06459633","4":"-2.5665035","5":"fixed"},{"1":"new","2":"-0.314131729","3":"0.47970348","4":"-0.6548456","5":"fixed"},{"1":"newest","2":"-1.312947522","3":"0.41932802","4":"-3.1310751","5":"fixed"},{"1":"gndr:new","2":"0.088828073","3":"0.15324379","4":"0.5796520","5":"fixed"},{"1":"gndr:newest","2":"0.172388037","3":"0.13027028","4":"1.3233105","5":"fixed"},{"1":"sd_(Intercept).cntry","2":"0.676578076","3":"NA","4":"NA","5":"cntry"},{"1":"sd_gndr.cntry","2":"0.125843159","3":"NA","4":"NA","5":"cntry"},{"1":"cor_(Intercept).gndr.cntry","2":"-0.393714779","3":"NA","4":"NA","5":"cntry"},{"1":"sd_Observation.Residual","2":"2.213483717","3":"NA","4":"NA","5":"Residual"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>glance(multi4)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["sigma"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["logLik"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["AIC"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["deviance"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df.residual"],"name":[6],"type":["int"],"align":["right"]}],"data":[{"1":"2.213484","2":"-24309.03","3":"48642.06","4":"48729.68","5":"48618.06","6":"10951"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>icc(multi4)</code></pre>
+<pre><code>## 
+## Linear mixed model
+##  Family: gaussian (identity)
+## Formula: stfdem ~ polintr + nwsptot + (gndr * new) + (gndr * newest) + (1 + gndr | cntry)
+## 
+##   ICC (cntry): 0.085446</code></pre>
+</div>
+</div>
+</div>
+<div id="fixed-effects-plots" class="section level2">
+<h2>4.2 Fixed Effects Plots</h2>
+<div id="fixed-effects" class="section level4">
+<h4>Fixed effects</h4>
+<p>p-values approximated by Wald-Statistics with <code>p.kr = FALSE</code> -&gt; reduces computing time signficantly</p>
+<pre class="r"><code>sjp.lmer(multi4, type = &quot;fe&quot;, p.kr = FALSE)</code></pre>
+<pre><code>## Computing p-values via Wald-statistics approximation (treating t as Wald z).</code></pre>
+<p><img src="4_crosslevelint_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+</div>
+<div id="standardized-fixed-effects" class="section level4">
+<h4>Standardized Fixed effects</h4>
+<pre class="r"><code>sjp.lmer(multi4, type = &quot;fe.std&quot;, p.kr = FALSE)</code></pre>
+<pre><code>## Computing p-values via Wald-statistics approximation (treating t as Wald z).</code></pre>
+<p><img src="4_crosslevelint_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+</div>
+<div id="slopes-of-fixed-effects" class="section level4">
+<h4>Slopes of fixed effects</h4>
+<pre class="r"><code>sjp.lmer(multi4, type = &quot;fe.slope&quot;, vars = c(&quot;newest&quot;, &quot;polintr&quot;))</code></pre>
+<pre><code>## `sjp.lmer()` will become deprecated in the future. Please use `plot_model()` instead.</code></pre>
+<p><img src="4_crosslevelint_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<pre><code>## Don&#39;t know how to automatically pick scale for object of type labelled. Defaulting to continuous.</code></pre>
+<p><img src="4_crosslevelint_files/figure-html/unnamed-chunk-6-2.png" width="672" /></p>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

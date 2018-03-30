@@ -1,0 +1,170 @@
+---
+author: Lisa Reiber
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output: 
+  html_notebook: 
+    code_folding: show
+    toc: yes
+    toc_float: true
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = T)
+```
+
+# Load Packages and Data
+```{r}
+#options(scipen = 100)
+options(digits = 2)
+
+#### install missing packages and load needed packages ####
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(foreign, readstata13, haven, ggplot2, lubridate, broom, effects, 
+               pastecs, interplot, ggeffects, rstudioapi, tidyr, dplyr)      
+ # "plm",  # panel regression analysis
+              # "memisc",
+              # "stargazer",  # output of regression results in Latex tables
+              # "tidyverse" # incl. the packages imp. for every day data analyses
+
+
+#### load dataset ####
+load(file = "../../data/ex2.RData")
+```
+
+```{r}
+## drop unplausible cases, generate sample for analyses
+asample <- ex2 %>% 
+        filter(pgtatzeit > 5,
+               alter %>% dplyr::between(18, 64),
+               pgemplst %in% c(1,2,4)
+               ) %>% 
+      # Unplausible Einzelfälle
+      mutate(na = case_when(
+              pid %in% c(1380202, 1380202, 607602, 2555301) ~ 1,
+              pid == 8267202 & syear == 2007 ~ 1,
+              pid == 2633801 & syear == 2006 ~ 1,
+              pid == 2582901 & syear > 2006 ~ 1 )
+             ) %>% 
+        filter(is.na(na))
+
+## Sample For Analysis for 2015
+asample15 <- asample %>% filter(syear == 2015)
+
+# prep: Ohne Anstaltsbevölkerung, Arbeitslose, Azubis, Rentner
+# prep: ohne NA's in verwendeten Variablen
+ex4 <- asample %>% 
+      filter(pop < 3, 
+             pgstib !=10, pgstib!=11, pgstib!=12, hwageb>0,
+             phrf >0,
+             syear %>% between(1991, 2015)
+             ) %>% 
+      dplyr::select(hwageb, pgbilzeit, pgisco88, pgnace, pgexpue,
+             sex, ost, erf, pgallbet, phrf, syear, pid) %>%
+      mutate(lnwage = log(hwageb),
+             frau = sex-1) %>% 
+      drop_na() 
+
+#### save mydf from ex2 ####
+saveRDS(ex4, file = "../../data/ex4.rds" )
+```
+
+# Exercise 4
+
+## 4.1 Mincer Equation
+Estimate the Mincer equation of last weeks exercise seperately for East and West Germany for all years since 1992 using loops (see foreach).
+
+### Trend by Year
+```{r trend}
+# Fit Hourly Wage Brutto Model by year
+      fit4 <- ex4 %>% 
+            group_by(syear) %>% 
+            do(model = lm(lnwage ~ 0+ pgbilzeit + 
+                     erf + I(erf^2) + pgexpue +
+                     ost + frau + factor(pgallbet) + factor(pgnace) +
+                           factor(pgisco88), 
+               data=., weights=phrf))
+
+      # grab relevant info
+      td_fit <- fit4 %>% tidy(model, conf.int = TRUE)
+      td_plot <- td_fit %>% filter(term == "frau") 
+      
+      # Plot Over Years
+      td_plot %>% 
+            ggplot(aes(x = syear, y = estimate)) +
+            geom_point() +
+            geom_errorbar(aes(ymin = conf.low, ymax = conf.high),
+                          alpha=0.3, color = "black") +
+            geom_line() +
+            ylab("Gender Revenue") +
+            xlab("Survey Year") +
+            ggtitle("Gender Pay Gap From 1992 to 2015") +
+            scale_x_continuous(breaks = seq(1992, 2015, by= 5))+
+            scale_y_reverse(labels = scales::percent)+
+            theme_bw()
+```
+
+### Trend by Region
+```{r Trend by Region}
+#### Trend by Region ####
+      fit4_region <- ex4 %>% 
+            group_by(ost, syear) %>% 
+            do(model = lm(lnwage ~ 0+ pgbilzeit + 
+                     erf + I(erf^2) + pgexpue +
+                     ost + frau + factor(pgallbet) + factor(pgnace) +
+                           factor(pgisco88), 
+               data=., weights=phrf))
+
+      # look at model
+            # (fit4_region$model) # only use if not too many models
+            #fit4_region %>% tidy(model)
+            #fit4_region %>% glance(model)
+            #fit4_region %>% augment(model)
+            
+      # make tidy dataframe 
+      (td_fit <- fit4_region %>% tidy(model, conf.int = TRUE))
+      # select relevant info (coefficient for gender)
+      td_plot <- td_fit %>% filter(term == "frau")
+      
+      # plot Trend by Region (grouped)
+      td_plot %>% 
+      ggplot(aes(x = syear, y = estimate, color = as.factor(ost))) +
+            geom_point() +
+            geom_errorbar(aes(ymin = conf.low, ymax = conf.high),
+                          alpha=0.3, color = "black") +
+            geom_line() +
+            ylab("Gender Revenue") +
+            xlab("Survey Year") +
+            ggtitle("Gender Pay Gap by Region") +
+            scale_x_continuous(breaks = seq(1991, 2015, by= 5))+
+            scale_y_reverse(labels = scales::percent)
+     
+      # plot Trend by Region (facet)
+      td_plot %>% 
+      ggplot(aes(x = syear, y = estimate)) +
+            geom_point() +
+            geom_errorbar(aes(ymin = conf.low, ymax = conf.high),
+                          alpha=0.3, color = "black") +
+            geom_line() +
+            facet_wrap(~ost)+
+            ylab("Gender Revenue") +
+            xlab("Survey Year") +
+            ggtitle("Gender Pay Gap by Region") +
+            scale_x_continuous(breaks = seq(1991, 2015, by= 5))
+      
+```
+
+## 4.2 
+Present the effects of years of education and of sex (the gender pay gap) graphically showing the trend since 1992 (see collapse) Tip: Use the Stata commands foreach, collapse and graph combine. 
+
+```{r}
+
+```
+
+same but you use coefficient of frau rather than pgbilzeit
+
+## 4.3 Tell Stata your data is panel data using xtset. Describe the variables of your Mincer equation and differentiate within and between variation (xtsum).
+
+```{r}
+
+```
+

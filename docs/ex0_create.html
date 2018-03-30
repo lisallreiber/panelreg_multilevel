@@ -1,0 +1,1174 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title></title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 64px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+
+.section h2 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h3 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h4 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h5 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h6 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Panelregression and Multilevel Models</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Models
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Random Intercept</li>
+    <li>
+      <a href="1_rimodel.html">1. without independent variable</a>
+    </li>
+    <li>
+      <a href="2_rimodel.html">2. with independent variable</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="3_rcmodel.html">3. Random Coefficient</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="4_crosslevelint.html">4. Cross-Level Interaction</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="5_crossclass.html">5. Cross-Classified</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="6_3level.html">6. Three Level</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="7_lrtest.html">7. Likelihood Ratio test</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Exercises
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="ex1_soep.html">Ex1</a>
+    </li>
+    <li>
+      <a href="ex2_soep.html">Ex2</a>
+    </li>
+    <li>
+      <a href="ex3_soep.html">Ex3</a>
+    </li>
+    <li>
+      <a href="ex4_soep.html">Ex4</a>
+    </li>
+    <li>
+      <a href="ex5_soep.html">Ex5</a>
+    </li>
+    <li>
+      <a href="ex6_soep.html">Ex6</a>
+    </li>
+    <li>
+      <a href="ex7_soep.html">Ex7</a>
+    </li>
+    <li>
+      <a href="ex8_soep.html">Ex8</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data Preparation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="ex0_create.html">Exercises</a>
+    </li>
+    <li>
+      <a href="0_create.html">Models</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/TripLLL">
+    <span class="fa fa-github"></span>
+     
+    
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+
+</div>
+
+
+<div id="prepare-data-for-exercises" class="section level1 tabset">
+<h1>Prepare Data for Exercises</h1>
+<div id="stata" class="section level2">
+<h2>Stata</h2>
+<pre class="stata"><code>set more off
+capt clear
+version 14
+
+
+* 1. Load datasets and merge (also exercise 1.1)
+********************************************************************************
+use &quot;_data/pgen.dta&quot;, clear
+
+merge 1:1 pid syear using &quot;_data/ppfadl.dta&quot; , ///
+      keepusing(sampreg psample pop sex gebjahr phrf phrf0 phrf1) keep(match) nogen
+
+* 2. Data clening
+********************************************************************************
+* 2.1 define missing values
+    mvdecode *, mv(-8/-1)
+    
+* 2.2 generierate variables (also exercise 1.2)
+*************************************
+** demographics
+    cap drop ost
+    recode sampreg 1 = 0 2 = 1, gen(ost)
+    lab def ost 0 &quot;West&quot; 1 &quot;Ost&quot; , replace
+    lab val ost ost
+    tab1 ost sampreg
+
+    cap drop frau
+    recode sex 1 = 0 2 = 1, gen(frau)
+    lab def frau 0 &quot;männlich&quot; 1 &quot;weiblich&quot; , replace
+    lab val frau frau
+    tab1 frau sex
+    
+    cap drop alter
+    gen alter = syear - gebjahr
+
+** Job Status
+    cap drop erwstatus
+    recode pgemplst 1 = 1  2 4 = 2 * = ., gen(erwstatus)
+    lab def erwstatus 1 &quot;Vollzeit&quot; 2 &quot;Teilzeit&quot;, replace
+    lab val erwstatus erwstatus
+
+*** Consumer Price Index Jahr 2010 (also Exercise 1.2)
+    cap drop cpi
+    gen cpi=.
+    label var cpi Preisindex
+    replace cpi=(106.9) if syear==2015  // laut destatis
+    replace cpi=(106.6) if syear==2014  // laut destatis
+    replace cpi=(105.7) if syear==2013  
+    replace cpi=(104.1) if syear==2012
+    replace cpi=(102.1) if syear==2011
+    replace cpi=(100)  if syear==2010   // base year 2010
+    replace cpi=(98.9) if syear==2009
+    replace cpi=(98.6) if syear==2008
+    replace cpi=(96.1) if syear==2007
+    replace cpi=(93.9) if syear==2006
+    replace cpi=(92.5) if syear==2005   
+    replace cpi=(91)   if syear==2004
+    replace cpi=(89.6) if syear==2003
+    replace cpi=(88.6) if syear==2002
+    replace cpi=(87.4) if syear==2001
+    replace cpi=(85.7) if syear==2000
+    replace cpi=(84.4) if syear==1999 &amp; ost==0
+    replace cpi=(85.1) if syear==1999 &amp; ost==1
+    replace cpi=(83.8) if syear==1998 &amp; ost==0
+    replace cpi=(84.8) if syear==1998 &amp; ost==1
+    replace cpi=(83.1) if syear==1997 &amp; ost==0
+    replace cpi=(83.9) if syear==1997 &amp; ost==1
+    replace cpi=(81.5) if syear==1996 &amp; ost==0
+    replace cpi=(82.0) if syear==1996 &amp; ost==1
+    replace cpi=(80.5) if syear==1995 &amp; ost==0
+    replace cpi=(80.5) if syear==1995 &amp; ost==1
+    replace cpi=(79.2) if syear==1994 &amp; ost==0
+    replace cpi=(79.0) if syear==1994 &amp; ost==1
+    replace cpi=(77.1) if syear==1993 &amp; ost==0
+    replace cpi=(76.2) if syear==1993 &amp; ost==1
+    replace cpi=(74.5) if syear==1992 &amp; ost==0
+    replace cpi=(68.9) if syear==1992 &amp; ost==1
+    replace cpi=(71.6) if syear==1991 &amp; ost==0
+    replace cpi=(60.8) if syear==1991 &amp; ost==1
+    replace cpi=(69.1) if syear==1990 &amp; ost == 0
+    replace cpi=(67.3) if syear==1989 &amp; ost == 0
+    replace cpi=(65.4) if syear==1988 &amp; ost == 0
+    replace cpi=(64.6) if syear==1987 &amp; ost == 0
+    replace cpi=(64.5) if syear==1986 &amp; ost == 0
+    replace cpi=(64.6) if syear==1985 &amp; ost == 0
+    replace cpi=(63.3) if syear==1984 &amp; ost == 0
+    
+
+*** Brutto Income in prices from 2010
+    cap drop breink10
+    gen breink10= pglabgro/cpi*100
+    lab var breink10 &quot;Monthly Brutto Income in 2010 Prices&quot;
+
+*** Brutto Income in Prices from 2015
+    cap drop breink15
+    gen breink15= pglabgro/cpi*106.9
+    lab var breink15 &quot;Monthly Brutto Income in 2015 Prices&quot;
+
+*** Hourly Wages in Prices from 2015
+    cap drop hwageb
+    gen hwageb = breink15/(pgtatzeit*(52/12))
+    lab var hwageb &quot;Hourly Brutto Income in 2015 Prices&quot;
+
+*** Work Experience
+    cap drop erf
+    gen erf= pgexpft + .4*pgexppt
+    gen erfq= erf^2
+
+*** Labor Market Segments
+    cap drop qualstand
+    gen qualstand= pgausb
+    recode qualstand 1/4=0 5/9=1
+
+    cap drop intern
+    gen intern = pgallbet
+    recode intern 1/2=0 3/5=1 
+    tab intern qualstand
+    
+*** Centralize years of schooling and work experience
+    gen cpgbilzeit = pgbilzeit - r(mean)
+    gen cerf = erf -r(mean)
+    
+*** Log of Wage
+    gen lnwage= ln(hwageb)
+    lab var lnwage &quot;Log. Hourly Brutto Wages in 2015 Prices&quot;
+
+
+* 4. Define Sample for Analysis
+********************************************************************************
+      cap drop asample
+      gen asample=1 if  pgtatzeit &gt;= 6 &amp; !missing(pgtatzeit) &amp; ///
+                        alter &lt;= 65 &amp; alter &gt;= 18 &amp; !missing(alter) &amp;   ///
+                        (pgemplst==1 | pgemplst==2 | pgemplst==4) &amp;  ///
+                        pop&lt;3
+                     
+* unplausible cases:
+    replace asample=. if    pid==1380202 | ///
+                          (pid== 8267202 &amp; syear==2007) | ///
+                          (pid==2633801 &amp; syear==2006) | ///
+                          (pid==2582901 &amp; syear &gt; 2006) | ///
+                          pid==1380202 | ///
+                          pid == 607602  | ///
+                          pid==2555301
+      
+*** Save Analysis Sample Data
+      save &quot;_data/ex_mydf.dta&quot;, replace</code></pre>
+<pre><code>
+. set more off
+
+. capt clear
+
+. version 14
+
+. 
+. 
+. * 1. Load datasets and merge (also exercise 1.1)
+. *****************************************************************************
+&gt; ***
+. use &quot;_data/pgen.dta&quot;, clear
+(PGEN: Feb 12, 2017 13:00:53-1 DBV32L)
+
+. 
+. merge 1:1 pid syear using &quot;_data/ppfadl.dta&quot; , ///
+&gt;       keepusing(sampreg psample pop sex gebjahr phrf phrf0 phrf1) keep(match)
+&gt;  nogen
+
+    Result                           # of obs.
+    -----------------------------------------
+    not matched                             0
+    matched                           594,828  
+    -----------------------------------------
+
+. 
+. * 2. Data clening
+. *****************************************************************************
+&gt; ***
+. * 2.1 define missing values
+.         mvdecode *, mv(-8/-1)
+    pgerljob: 255844 missing values generated
+      pgbetr: 260221 missing values generated
+     pgoeffd: 261535 missing values generated
+      pgausb: 265058 missing values generated
+     pgpartz: 487 missing values generated
+    pgpartnr: 181355 missing values generated
+    pgnation: 91 missing values generated
+     pgpsbil: 13990 missing values generated
+   pgpbbil01: 231533 missing values generated
+   pgpbbil02: 493054 missing values generated
+   pgpbbil03: 425223 missing values generated
+    pgpsbila: 530357 missing values generated
+    pgpbbila: 561965 missing values generated
+    pgpsbilo: 482647 missing values generated
+    pgpbbilo: 514647 missing values generated
+    pgfamstd: 7236 missing values generated
+   pgbilzeit: 27340 missing values generated
+   pgerwzeit: 248371 missing values generated
+   pgtatzeit: 260674 missing values generated
+   pgvebzeit: 308715 missing values generated
+    pguebstd: 289557 missing values generated
+       pglfs: 6 missing values generated
+    pgisco88: 261674 missing values generated
+    pgisei88: 160505 missing values generated
+     pgmps92: 160698 missing values generated
+      pgnace: 270930 missing values generated
+   pgsiops88: 160505 missing values generated
+     pgegp88: 160505 missing values generated
+    pgkldb92: 260031 missing values generated
+    pgautono: 248630 missing values generated
+   pgisced97: 10137 missing values generated
+    pgcasmin: 13108 missing values generated
+      pgstib: 8372 missing values generated
+     pgmonth: 49 missing values generated
+      pgmode: 523 missing values generated
+    pglabgro: 245465 missing values generated
+    pgimpgro: 245465 missing values generated
+    pglabnet: 245466 missing values generated
+    pgimpnet: 245466 missing values generated
+    pgallbet: 260221 missing values generated
+    pgemplst: 24 missing values generated
+     pgexpft: 13804 missing values generated
+     pgexppt: 13804 missing values generated
+     pgexpue: 13804 missing values generated
+     pgjobch: 25 missing values generated
+     pgfield: 547715 missing values generated
+    pgdegree: 555441 missing values generated
+    pgtraina: 472005 missing values generated
+    pgtrainb: 571016 missing values generated
+    pgtrainc: 579023 missing values generated
+    pgtraind: 588756 missing values generated
+     pgfdt_f: 391212 missing values generated
+   pgbilztch: 111168 missing values generated
+   pgbilztev: 31076 missing values generated
+    pgsndjob: 565504 missing values generated
+    pgimpsnd: 565504 missing values generated
+    pgjobend: 547189 missing values generated
+    pgkldb10: 545448 missing values generated
+    pgisco08: 545413 missing values generated
+   pgisced11: 426010 missing values generated
+     gebjahr: 2 missing values generated
+
+.         
+. * 2.2 generierate variables (also exercise 1.2)
+. *************************************
+. ** demographics
+.         cap drop ost
+
+.         recode sampreg 1 = 0 2 = 1, gen(ost)
+(594828 differences between sampreg and ost)
+
+.         lab def ost 0 &quot;West&quot; 1 &quot;Ost&quot; , replace
+
+.         lab val ost ost
+
+.         tab1 ost sampreg
+
+-&gt; tabulation of ost  
+
+  RECODE of |
+    sampreg |
+  (Aktuelle |
+Stichproben |
+     region |
+    (Berlin |
+ West-Ost)) |      Freq.     Percent        Cum.
+------------+-----------------------------------
+       West |    466,335       78.40       78.40
+        Ost |    128,493       21.60      100.00
+------------+-----------------------------------
+      Total |    594,828      100.00
+
+-&gt; tabulation of sampreg  
+
+     Aktuelle Stichprobenregion (Berlin |
+                              West-Ost) |      Freq.     Percent        Cum.
+----------------------------------------+-----------------------------------
+[1] Westdeutschland, alte Bundeslaender |    466,335       78.40       78.40
+[2] Ostdeutschland, neue Bundeslaender  |    128,493       21.60      100.00
+----------------------------------------+-----------------------------------
+                                  Total |    594,828      100.00
+
+. 
+.         cap drop frau
+
+.         recode sex 1 = 0 2 = 1, gen(frau)
+(594828 differences between sex and frau)
+
+.         lab def frau 0 &quot;männlich&quot; 1 &quot;weiblich&quot; , replace
+
+.         lab val frau frau
+
+.         tab1 frau sex
+
+-&gt; tabulation of frau  
+
+  RECODE of |
+        sex |
+(Geschlecht |
+          ) |      Freq.     Percent        Cum.
+------------+-----------------------------------
+   männlich |    282,865       47.55       47.55
+   weiblich |    311,963       52.45      100.00
+------------+-----------------------------------
+      Total |    594,828      100.00
+
+-&gt; tabulation of sex  
+
+                             Geschlecht |      Freq.     Percent        Cum.
+----------------------------------------+-----------------------------------
+                          [1] maennlich |    282,865       47.55       47.55
+                           [2] weiblich |    311,963       52.45      100.00
+----------------------------------------+-----------------------------------
+                                  Total |    594,828      100.00
+
+.         
+.         cap drop alter
+
+.         gen alter = syear - gebjahr
+(2 missing values generated)
+
+. 
+. ** Job Status
+.         cap drop erwstatus
+
+.         recode pgemplst 1 = 1  2 4 = 2 * = ., gen(erwstatus)
+(288308 differences between pgemplst and erwstatus)
+
+.         lab def erwstatus 1 &quot;Vollzeit&quot; 2 &quot;Teilzeit&quot;, replace
+
+.         lab val erwstatus erwstatus
+
+. 
+. *** Consumer Price Index Jahr 2010 (also Exercise 1.2)
+.         cap drop cpi
+
+.         gen cpi=.
+(594,828 missing values generated)
+
+.         label var cpi Preisindex
+
+.         replace cpi=(106.9) if syear==2015  // laut destatis
+(27,743 real changes made)
+
+.         replace cpi=(106.6) if syear==2014  // laut destatis
+(28,042 real changes made)
+
+.         replace cpi=(105.7) if syear==2013  
+(31,523 real changes made)
+
+.         replace cpi=(104.1) if syear==2012
+(28,520 real changes made)
+
+.         replace cpi=(102.1) if syear==2011
+(29,264 real changes made)
+
+.         replace cpi=(100)  if syear==2010   // base year 2010
+(27,124 real changes made)
+
+.         replace cpi=(98.9) if syear==2009
+(21,035 real changes made)
+
+.         replace cpi=(98.6) if syear==2008
+(19,945 real changes made)
+
+.         replace cpi=(96.1) if syear==2007
+(21,232 real changes made)
+
+.         replace cpi=(93.9) if syear==2006
+(22,665 real changes made)
+
+.         replace cpi=(92.5) if syear==2005   
+(21,105 real changes made)
+
+.         replace cpi=(91)   if syear==2004
+(22,019 real changes made)
+
+.         replace cpi=(89.6) if syear==2003
+(22,611 real changes made)
+
+.         replace cpi=(88.6) if syear==2002
+(23,892 real changes made)
+
+.         replace cpi=(87.4) if syear==2001
+(22,351 real changes made)
+
+.         replace cpi=(85.7) if syear==2000
+(24,576 real changes made)
+
+.         replace cpi=(84.4) if syear==1999 &amp; ost==0
+(10,266 real changes made)
+
+.         replace cpi=(85.1) if syear==1999 &amp; ost==1
+(3,819 real changes made)
+
+.         replace cpi=(83.8) if syear==1998 &amp; ost==0
+(10,772 real changes made)
+
+.         replace cpi=(84.8) if syear==1998 &amp; ost==1
+(3,898 real changes made)
+
+.         replace cpi=(83.1) if syear==1997 &amp; ost==0
+(9,617 real changes made)
+
+.         replace cpi=(83.9) if syear==1997 &amp; ost==1
+(3,666 real changes made)
+
+.         replace cpi=(81.5) if syear==1996 &amp; ost==0
+(9,811 real changes made)
+
+.         replace cpi=(82.0) if syear==1996 &amp; ost==1
+(3,700 real changes made)
+
+.         replace cpi=(80.5) if syear==1995 &amp; ost==0
+(10,063 real changes made)
+
+.         replace cpi=(80.5) if syear==1995 &amp; ost==1
+(3,705 real changes made)
+
+.         replace cpi=(79.2) if syear==1994 &amp; ost==0
+(9,628 real changes made)
+
+.         replace cpi=(79.0) if syear==1994 &amp; ost==1
+(3,789 real changes made)
+
+.         replace cpi=(77.1) if syear==1993 &amp; ost==0
+(9,339 real changes made)
+
+.         replace cpi=(76.2) if syear==1993 &amp; ost==1
+(3,840 real changes made)
+
+.         replace cpi=(74.5) if syear==1992 &amp; ost==0
+(9,404 real changes made)
+
+.         replace cpi=(68.9) if syear==1992 &amp; ost==1
+(3,993 real changes made)
+
+.         replace cpi=(71.6) if syear==1991 &amp; ost==0
+(9,506 real changes made)
+
+.         replace cpi=(60.8) if syear==1991 &amp; ost==1
+(4,163 real changes made)
+
+.         replace cpi=(69.1) if syear==1990 &amp; ost == 0
+(9,519 real changes made)
+
+.         replace cpi=(67.3) if syear==1989 &amp; ost == 0
+(9,710 real changes made)
+
+.         replace cpi=(65.4) if syear==1988 &amp; ost == 0
+(10,023 real changes made)
+
+.         replace cpi=(64.6) if syear==1987 &amp; ost == 0
+(10,516 real changes made)
+
+.         replace cpi=(64.5) if syear==1986 &amp; ost == 0
+(10,646 real changes made)
+
+.         replace cpi=(64.6) if syear==1985 &amp; ost == 0
+(11,090 real changes made)
+
+.         replace cpi=(63.3) if syear==1984 &amp; ost == 0
+(12,245 real changes made)
+
+.         
+. 
+. *** Brutto Income in prices from 2010
+.         cap drop breink10
+
+.         gen breink10= pglabgro/cpi*100
+(248,902 missing values generated)
+
+.         lab var breink10 &quot;Monthly Brutto Income in 2010 Prices&quot;
+
+. 
+. *** Brutto Income in Prices from 2015
+.         cap drop breink15
+
+.         gen breink15= pglabgro/cpi*106.9
+(248,902 missing values generated)
+
+.         lab var breink15 &quot;Monthly Brutto Income in 2015 Prices&quot;
+
+. 
+. *** Hourly Wages in Prices from 2015
+.         cap drop hwageb
+
+.         gen hwageb = breink15/(pgtatzeit*(52/12))
+(263,911 missing values generated)
+
+.         lab var hwageb &quot;Hourly Brutto Income in 2015 Prices&quot;
+
+. 
+. *** Work Experience
+.         cap drop erf
+
+.         gen erf= pgexpft + .4*pgexppt
+(13,804 missing values generated)
+
+.         gen erfq= erf^2
+(13,804 missing values generated)
+
+. 
+. *** Labor Market Segments
+.         cap drop qualstand
+
+.         gen qualstand= pgausb
+(265,058 missing values generated)
+
+.         recode qualstand 1/4=0 5/9=1
+(qualstand: 329770 changes made)
+
+. 
+.         cap drop intern
+
+.         gen intern = pgallbet
+(260,221 missing values generated)
+
+.         recode intern 1/2=0 3/5=1 
+(intern: 334607 changes made)
+
+.         tab intern qualstand
+
+           |       qualstand
+    intern |         0          1 |     Total
+-----------+----------------------+----------
+         0 |    54,450    119,376 |   173,826 
+         1 |    42,824    108,103 |   150,927 
+-----------+----------------------+----------
+     Total |    97,274    227,479 |   324,7.         
+. *** Centralize years of schooling and work experience
+.         gen cpgbilzeit = pgbilzeit - r(mean)
+(594,828 missing values generated)
+
+.         gen cerf = erf -r(mean)
+(594,828 missing values generated)
+
+.         
+. *** Log of Wage
+.         gen lnwage= ln(hwageb)
+(265,217 missing values generated)
+
+.         lab var lnwage &quot;Log. Hourly Brutto Wages in 2015 Prices&quot;
+
+. 
+. 
+. * 4. Define Sample for Analysis
+. *****************************************************************************
+&gt; ***
+.       cap drop asample
+
+.       gen asample=1 if  pgtatzeit &gt;= 6 &amp; !missing(pgtatzeit) &amp; ///
+&gt;                                                 alter &lt;= 65 &amp; alter &gt;= 18 &amp; !
+&gt; missing(alter)     &amp;       ///
+&gt;                                                 (pgemplst==1 | pgemplst==2 | 
+&gt; pgemplst==4) &amp;  ///
+&gt;                                                 pop&lt;3
+(285,903 missing values generated)
+
+.                                          
+. * unplausible cases:
+.         replace asample=. if    pid==1380202 | ///
+&gt;                               (pid== 8267202 &amp; syear==2007) | ///
+&gt;                               (pid==2633801 &amp; syear==2006) | ///
+&gt;                               (pid==2582901 &amp; syear &gt; 2006) | ///
+&gt;                               pid==1380202 | ///
+&gt;                               pid == 607602  | ///
+&gt;                               pid==2555301
+(26 real changes made, 26 to missing)
+
+.       
+. *** Save Analysis Sample Data
+.       save &quot;_data/ex_mydf.dta&quot;, replace
+file _data/ex_mydf.dta saved</code></pre>
+</div>
+<div id="r" class="section level2 tabset">
+<h2>R</h2>
+<div id="read-soep-data-into-r" class="section level3">
+<h3>Read SOEP Data into R</h3>
+<p>Because SOEP Data are not available in R format we can read them into R wth readstata13 or haven and save them as rds for future use.</p>
+<pre class="r"><code>#### 1. generate  and merge dataset mydf_raw  
+# PGEN
+  if (file.exists(paste0(&quot;_data/pgen.rds&quot;))) {
+        pgen &lt;- readRDS(&quot;_data/pgen.rds&quot;)
+  } else{
+        cat(&quot;RDS Datei nicht vorhanden, wird aus Stata Dataset .dta erstellt&quot;)
+        pgen &lt;- read_dta(&quot;_data/pgen.dta&quot;)
+        saveRDS(pgen, file = &quot;_data/pgen.rds&quot;)
+  }
+
+# PPFADL
+  if (file.exists(paste0(&quot;_data/ppfadl.rds&quot;))) {
+        ppfadl &lt;- readRDS(&quot;_data/ppfadl.rds&quot;)
+  } else{
+        cat(&quot;RDS Datei nicht vorhanden, wird aus Stata Dataset .dta erstellt&quot;)
+        ppfadl &lt;- read_dta(&quot;_data/ppfadl.dta&quot;) %&gt;% 
+            tbl_df() %&gt;% 
+            select(sampreg,
+                   psample,
+                   pop,
+                   sex,
+                   gebjahr,
+                   phrf,
+                   phrf0,
+                   pid,
+                   syear,
+                   phrf1)
+        saveRDS(ppfadl, file = &quot;_data/ppfadl.rds&quot;)
+  }</code></pre>
+</div>
+<div id="get-additional-data" class="section level3">
+<h3>Get Additional Data</h3>
+<div id="cpi-base-2010" class="section level4">
+<h4>CPI (base 2010)</h4>
+<p>Note: <strong>Separate Calculation of CPI in SOEP from 1991 to 2000</strong> the SOEP provides separate cpi for former East and West- Germany from the Years 1991 to 2000. These are reflected in the cpi_s (_s for SOEP) variable. One thing to remark is that the SOEP does not provide CPI’s for East-Incomes in 1990. Those deflated incomes can therefore not be calculated.</p>
+<pre class="r"><code># CPI (base 2010)
+# download.file(&quot;http://research.stlouisfed.org/fred2/data/DEUCPIALLMINMEI.txt&quot;, &quot;~/Desktop&quot;) 
+
+# look for how many lines to skip
+cpi_url &lt;- &quot;https://research.stlouisfed.org/fred2/data/DEUCPIALLMINMEI.txt&quot;
+cpi_url2 &lt;- &quot;https://www.destatis.de/DE/Publikationen/Thematisch/Preise/Verbraucherpreise/VerbraucherpreisindexLangeReihenXLS_5611103.xlsx&quot;
+
+# cpi from the net
+cpi_raw &lt;-read.table(cpi_url, skip = 15, header = TRUE)
+cpi &lt;- cpi_raw %&gt;% 
+      mutate(cpi_year = year(.$DATE)) %&gt;% 
+      # convert from monthly to yearly cpi values:
+      group_by(cpi_year) %&gt;% 
+      dplyr::summarize(cpi = mean(VALUE)) %&gt;% 
+      # create adjustment factor relative 2010 year&#39;s prices:
+      mutate(adj_fac2010 = cpi/cpi[cpi_year == 2010],
+             adj_fac2015 = cpi/cpi[cpi_year == 2015])
+
+# cpi from SOEP
+cpi_raw_s &lt;- read.table(&quot;_data/cpi.csv&quot;, header = T, na.strings = &quot;-&quot;, dec = &quot;.&quot;,
+                        numerals = c(&quot;no.loss&quot;))
+cpi_s &lt;- cpi_raw_s %&gt;% 
+      select(year, cpi_west, cpi_ost) %&gt;%
+      # add missing values based on destatis data
+      add_row(year = 2014:2015, 
+              cpi_ost = c(106.6, 106.9),
+              cpi_west = c(106.6, 106.9)) %&gt;% 
+      mutate(syear = as.numeric(year)
+             ) %&gt;% 
+      select(-year)</code></pre>
+</div>
+</div>
+<div id="create-dataset" class="section level3 active">
+<h3>Create Dataset</h3>
+<div id="merge-data" class="section level4">
+<h4>1. Merge Data</h4>
+<pre class="r"><code>#  merge datasets
+mydf_raw &lt;- ppfadl %&gt;% 
+      inner_join(y = pgen, by= c(&quot;pid&quot;, &quot;syear&quot;)) %&gt;% 
+      left_join(y = cpi, by = c(&quot;syear&quot; = &quot;cpi_year&quot;)) %&gt;% 
+      left_join(cpi_s, by = c(&quot;syear&quot;)) %&gt;% 
+      mutate(cpi_s = case_when(
+            sampreg == 2 ~ cpi_ost, 
+            sampreg == 1 ~ cpi_west)) %&gt;% 
+      select(-cpi_west, -cpi_ost)</code></pre>
+</div>
+<div id="clean-data" class="section level4">
+<h4>2. Clean Data</h4>
+<div id="define-missing-codes" class="section level5">
+<h5>2.1 Define Missing Codes</h5>
+<pre class="r"><code>#### 2. cleaning data ####
+#  2.1 Define Missings
+      na_codes &lt;- c(-1: -8)
+      for (i in seq_along(mydf_raw)) {
+            mydf_raw[[i]][mydf_raw[[i]] %in% na_codes] &lt;- NA
+      }</code></pre>
+</div>
+<div id="generate-variables" class="section level5">
+<h5>2.2 Generate Variables</h5>
+<p>Notes:</p>
+<p><strong>Logarithm of wage differences in STATA and R</strong>.</p>
+<p>example: - R <code>mutate(data, lnwage = log(wage))</code> - STATA <code>gen lnwage = ln(wage)</code> - In R the function log() calculates the natural logarithm of wage as described <a href="https://stackoverflow.com/questions/24304936/r-using-equation-with-natural-logarithm-in-nls">here</a>, returns -Inf if wage = 0. - In STATA ln() returns missings for lnwage if wage is 0. - If you want the same results, you can code <code>mutate(data, lnwage = ifelse(wage &lt;0, log(wage), NA)</code>.</p>
+<pre class="r"><code># 2.2 Generate Variables
+# Employment Status
+mydf_raw$erwstatus &lt;- mydf_raw %&gt;% 
+      mutate(erwstatus = case_when(
+                              pgemplst == 1 ~ 1, 
+                              pgemplst %in% c(2, 4) ~ 2
+                              )
+            ) %&gt;%
+      select(erwstatus) %&gt;% unlist() %&gt;% 
+      labelled(c(&quot;Vollzeit&quot; = 1, &quot;Teilzeit&quot; = 2)) 
+
+ex_mydf &lt;- mydf_raw %&gt;% 
+      # Demographics
+      mutate(ost = sampreg - 1, # ost(1), west(0)
+             # age
+             alter = syear - gebjahr, 
+             # gender
+             frau = sex -1, # frau = 1 mann = 0
+      # Generate Brutto Income 2010 and 2015, Hourly Wage 2015
+             # Einkommen, Hourly Wage
+             breink10 = pglabgro / cpi_s * 100,
+             # deflate income for 2015
+             breink15 = pglabgro / cpi_s * 106.9,
+             # hourly wage in prices of 2015
+             hwageb = breink15/(pgtatzeit*(52/12)),
+             # Log of wage
+             lnwage = ifelse(hwageb &gt; 0, log(hwageb), NA),
+             # job experience
+             erf = pgexpft + 0.4*pgexppt,
+             # Arbeitsmarktsegmente I
+             qualstand = case_when(
+                   between(pgausb, 1,4) ~ 0,
+                   between(pgausb, 5,9) ~ 1),
+             # Arbeitsmarktsegments II
+             intern = case_when(
+                   between(pgallbet, 1,2) ~ 0,
+                   between(pgallbet, 3,5) ~ 1),
+            # create id var
+            pid_syear = (paste(pid, syear, sep = &quot;.&quot; ))
+                  ) %&gt;% 
+      group_by(syear) %&gt;% 
+      mutate( 
+            # centralized values for education by year
+            cpgbilzeit = pgbilzeit - mean(pgbilzeit, na.rm = T),
+            cerf = erf - mean(erf, na.rm = T)
+            ) %&gt;% 
+      ungroup()</code></pre>
+</div>
+<div id="save-dataset" class="section level5">
+<h5>2.3 save dataset</h5>
+<pre class="r"><code>saveRDS(ex_mydf, file = &quot;_data/ex_mydf.rds&quot;)</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

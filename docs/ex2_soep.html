@@ -1,0 +1,2060 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title></title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 64px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+
+.section h2 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h3 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h4 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h5 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h6 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Panelregression and Multilevel Models</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Models
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Random Intercept</li>
+    <li>
+      <a href="1_rimodel.html">1. without independent variable</a>
+    </li>
+    <li>
+      <a href="2_rimodel.html">2. with independent variable</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="3_rcmodel.html">3. Random Coefficient</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="4_crosslevelint.html">4. Cross-Level Interaction</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="5_crossclass.html">5. Cross-Classified</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="6_3level.html">6. Three Level</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="7_lrtest.html">7. Likelihood Ratio test</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Exercises
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="ex1_soep.html">Ex1</a>
+    </li>
+    <li>
+      <a href="ex2_soep.html">Ex2</a>
+    </li>
+    <li>
+      <a href="ex3_soep.html">Ex3</a>
+    </li>
+    <li>
+      <a href="ex4_soep.html">Ex4</a>
+    </li>
+    <li>
+      <a href="ex5_soep.html">Ex5</a>
+    </li>
+    <li>
+      <a href="ex6_soep.html">Ex6</a>
+    </li>
+    <li>
+      <a href="ex7_soep.html">Ex7</a>
+    </li>
+    <li>
+      <a href="ex8_soep.html">Ex8</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data Preparation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="ex0_create.html">Exercises</a>
+    </li>
+    <li>
+      <a href="0_create.html">Models</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/TripLLL">
+    <span class="fa fa-github"></span>
+     
+    
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+
+</div>
+
+
+<div id="exercise-2" class="section level1 tabset">
+<h1>Exercise 2</h1>
+<div id="questions" class="section level2">
+<h2>Questions</h2>
+<ul>
+<li><p>2.1 Estimate a Linear Regression with SOEP Data using hourly wage <code>hwageb</code> as dependent variable for the year 2015. Include years of schooling <code>pgbilzeit</code> and work experience <code>erf</code> as predictor variables and gender <code>frau</code> and region <code>ost</code> as additional controls.</p></li>
+<li><p>2.2 Interpret the coefficients and the value of R²</p></li>
+<li><p>2.3 Is the relationship between work experience and wage linear?</p></li>
+<li><p>2.4 Specifiy the same regression model but use the natural logarithm as dependent variable instead.</p></li>
+<li><p>2.5 How large is the gender pay gap?</p></li>
+</ul>
+</div>
+<div id="data-prep" class="section level2 tabset">
+<h2>Data Prep</h2>
+<div id="stata" class="section level3">
+<h3>Stata</h3>
+<pre class="stata"><code>use &quot;_data/ex_mydf.dta&quot;, replace
+
+* Unplausible Beobachtungen identifizieren
+********************************************************************************
+      twoway (scatter hwageb pgtatzeit, msymbol(point) jitter(2))
+
+* Visualize Income
+********************************************************************************
+      histogram hwageb if asample==1, bin(25)
+    sum hwageb if asample==1, d
+    twoway (scatter hwageb pgtatzeit, msymbol(point) jitter(2)) if asample==1
+      </code></pre>
+<pre><code>
+. use &quot;_data/ex_mydf.dta&quot;, replace
+(PGEN: Feb 12, 2017 13:00:53-1 DBV32L)
+
+. 
+. * Unplausible Beobachtungen identifizieren
+. *****************************************************************************
+&gt; ***
+.       twoway (scatter hwageb pgtatzeit, msymbol(point) jitter(2))
+
+. 
+. * Visualize Income
+. *****************************************************************************
+&gt; ***
+.       histogram hwageb if asample==1, bin(25)
+(bin=25, start=0, width=30.855825)
+
+.         sum hwageb if asample==1, d
+
+             Hourly Brutto Income in 2015 Prices
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%     2.169231              0
+ 5%     5.403614              0
+10%     7.005816              0       Obs             305,838
+25%     9.983869              0       Sum of Wgt.     305,838
+
+50%     14.00146                      Mean           16.06223
+                        Largest       Std. Dev.      11.46355
+75%     19.18718        525.431
+90%     26.40982       556.8619       Variance        131.413
+95%     32.53085       559.2414       Skewness       8.248211
+99%     54.21809       771.3956       Kurtosis       224.3553
+
+.         twoway (scatter hwageb pgtatzeit, msymbol(point) jitter(2)) if asampl
+&gt; e==1
+
+.       </code></pre>
+</div>
+<div id="r" class="section level3 tabset">
+<h3>R</h3>
+<div id="load-data" class="section level4">
+<h4>Load Data</h4>
+<pre class="r"><code>ex_mydf &lt;- readRDS(file = &quot;_data/ex_mydf.rds&quot;)
+
+asample &lt;- ex_mydf %&gt;% 
+        filter(pgtatzeit &gt; 5,
+               alter %&gt;% dplyr::between(18, 64),
+               pgemplst %in% c(1,2,4),
+               pop &lt; 3
+               )</code></pre>
+</div>
+<div id="descriptive-pre---analysis" class="section level4">
+<h4>Descriptive Pre - Analysis</h4>
+<div id="unplausible-cases" class="section level5">
+<h5>unplausible Cases</h5>
+<pre class="r"><code># to do: show id if wage above 600
+ex_mydf %&gt;% 
+      select(pgtatzeit, hwageb) %&gt;% 
+      drop_na() %&gt;% 
+  ggplot(aes(x=pgtatzeit, y=hwageb)) + 
+        geom_point(position = &quot;jitter&quot;, size = 0.21)</code></pre>
+<p><img src="ex2_soep_files/figure-html/unplausible%20cases%20ex2-1.png" width="672" /></p>
+<pre class="r"><code>  # nochmal scatter
+  ggplot(asample, aes(x=pgbilzeit, y=hwageb)) + 
+        geom_point(position = &quot;jitter&quot;, size = 0.21,
+                   na.rm = T)</code></pre>
+<p><img src="ex2_soep_files/figure-html/unplausible%20cases%20ex2-2.png" width="672" /></p>
+</div>
+<div id="visualize-income" class="section level5 tabset">
+<h5>visualize Income</h5>
+<div id="histogram" class="section level6">
+<h6>Histogram</h6>
+<pre class="r"><code># to do: make a link to a varia section where you specify the different possibilities of histograms
+# histogram
+  summary(asample$hwageb)</code></pre>
+<pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
+##       0       6      10      12      14     767      19</code></pre>
+<pre class="r"><code>  qplot(hwageb, geom=&quot;histogram&quot;,
+        binwidth = 25,  
+        main = &quot;Histogram for Hourly Wage&quot;, 
+        xlab = &quot;Hourly Wage in Prices from 2015&quot;,  
+        fill=I(&quot;grey&quot;), 
+        col=I(&quot;black&quot;), 
+        alpha= I(.2),
+        xlim=c(0,500),
+        ylim= c(0,125000),
+        data = asample)</code></pre>
+<p><img src="ex2_soep_files/figure-html/viz%20income%20ex2-1.png" width="672" /></p>
+<pre class="r"><code>  # alternative
+  # without ..density it would be counts
+  g_hist_wage &lt;- asample %&gt;% 
+        ggplot(aes(x = hwageb, y = ..density..)) +
+        geom_histogram(breaks = seq(0,767.4, by = 25)) + 
+        labs(title=&quot;Histogram for Hourly Wage in 2015 Prices&quot;,
+             x=&quot;Hourly Wage&quot;)
+  
+  g_hist_wage</code></pre>
+<p><img src="ex2_soep_files/figure-html/viz%20income%20ex2-2.png" width="672" /></p>
+<pre class="r"><code>  hist(asample$hwageb, probability = T)</code></pre>
+<p><img src="ex2_soep_files/figure-html/viz%20income%20ex2-3.png" width="672" /></p>
+</div>
+</div>
+<div id="for-2015" class="section level5">
+<h5>for 2015</h5>
+<p>summary of hourly wage and yrs of schooling, work exp, etc.</p>
+<pre class="r"><code>  # todo is there something missing here?
+  asample %&gt;%
+      filter(syear == 2015) %&gt;% 
+      select(hwageb,pgbilzeit, erf, frau, ost) %&gt;%
+      drop_na() %&gt;%  # optional if complete.obs is specified
+      cor(use = &quot;complete.obs&quot;)</code></pre>
+<pre><code>##           hwageb pgbilzeit    erf   frau    ost
+## hwageb      1.00     0.367  0.211 -0.181 -0.112
+## pgbilzeit   0.37     1.000 -0.107  0.039  0.041
+## erf         0.21    -0.107  1.000 -0.274  0.073
+## frau       -0.18     0.039 -0.274  1.000  0.017
+## ost        -0.11     0.041  0.073  0.017  1.000</code></pre>
+<pre class="r"><code>  asample %&gt;%
+        filter(syear == 2015) %&gt;% 
+        ggplot(aes(pgbilzeit, hwageb)) +
+            geom_point(na.rm=T, position = &quot;jitter&quot;)</code></pre>
+<p><img src="ex2_soep_files/figure-html/analysis%20for%202015-1.png" width="672" /></p>
+</div>
+</div>
+</div>
+</div>
+<div id="answers" class="section level2 active">
+<h2>Answers</h2>
+<div id="basic-model" class="section level3 tabset">
+<h3>2.1 Basic Model</h3>
+<p>Estimate a Linear Regression with SOEP Data using hourly wage as dependent variable for the year 2015. Include years of schooling and work experience as predictor variables and gender and region as additional controls.</p>
+<hr />
+<p>First, the basic model is calculated (2.1), then another model is run with the same sample (e(sample)), but with centralized years of education and work experience (2.1c) in order to be better able to interpret the intercept, because 0 years of education are not a realistic interpretation.</p>
+<div id="stata-1" class="section level4 tabset">
+<h4>Stata</h4>
+<div id="basic-model-1" class="section level5">
+<h5>2.1 basic model</h5>
+<pre><code>  ------------------------------------------------------------------------------
+               |               Robust
+        hwageb |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+  -------------+----------------------------------------------------------------
+     pgbilzeit |   1.637104   .0622351    26.31   0.000     1.515115    1.759093
+           erf |   .2475145    .011065    22.37   0.000     .2258255    .2692034
+          frau |  -2.754907   .2437046   -11.30   0.000      -3.2326   -2.277214
+           ost |  -4.257401   .2731506   -15.59   0.000    -4.792812   -3.721989
+         _cons |  -6.598911   .7756985    -8.51   0.000    -8.119383    -5.07844
+  ------------------------------------------------------------------------------</code></pre>
+</div>
+<div id="c-model-with-centered-predictors" class="section level5">
+<h5>2.1c model with centered predictors</h5>
+<pre><code>  ------------------------------------------------------------------------------
+               |               Robust
+        hwageb |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+  -------------+----------------------------------------------------------------
+    cpgbilzeit |   1.637104   .0622351    26.31   0.000     1.515115    1.759093
+          cerf |   .2475145    .011065    22.37   0.000     .2258255    .2692034
+          frau |  -2.754907   .2437046   -11.30   0.000      -3.2326   -2.277214
+           ost |    -4.2574   .2731506   -15.59   0.000    -4.792812   -3.721989
+         _cons |   18.52568     .21508    86.13   0.000     18.10409    18.94726
+  ------------------------------------------------------------------------------      </code></pre>
+</div>
+<div id="full-code" class="section level5">
+<h5>Full Code</h5>
+<pre class="stata"><code>use &quot;_data/ex_mydf.dta&quot;, replace
+
+* 2.1 basic model
+reg hwageb pgbilzeit erf frau ost if asample==1 &amp; syear==2015 [pw=phrf] 
+
+* sum bildungszeit only for sample of last estimation
+cap drop cpgbilzeit
+sum pgbilzeit if e(sample)
+gen cpgbilzeit = pgbilzeit - r(mean)
+
+cap drop cerf
+sum erf if e(sample)    
+gen cerf = erf -r(mean)
+
+sum pgbilzeit cpgbilzeit if e(sample)
+sum erf cerf if e(sample)
+    
+* 2.1c model with centered predictors
+reg hwageb cpgbilzeit cerf frau ost if asample==1 &amp; syear==2015 [pw=phrf] </code></pre>
+<pre><code>
+. use &quot;_data/ex_mydf.dta&quot;, replace
+(PGEN: Feb 12, 2017 13:00:53-1 DBV32L)
+
+. 
+. * 2.1 basic model
+. reg hwageb pgbilzeit erf frau ost if asample==1 &amp; syear==2015 [pw=phrf] 
+(sum of wgt is   3.3886e+07)
+
+Linear regression                               Number of obs     =     14,218
+                                                F(4, 14213)       =     259.84
+                                                Prob &gt; F          =     0.0000
+                                                R-squared         =     0.2253
+                                                Root MSE          =     10.072
+
+------------------------------------------------------------------------------
+             |               Robust
+      hwageb |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+   pgbilzeit |   1.638184   .0619018    26.46   0.000     1.516848     1.75952
+         erf |   .2431915   .0109426    22.22   0.000     .2217425    .2646405
+        frau |  -2.754198   .2425546   -11.35   0.000    -3.229636   -2.278759
+         ost |  -4.278906   .2718054   -15.74   0.000     -4.81168   -3.746132
+       _cons |  -6.573576   .7699179    -8.54   0.000    -8.082716   -5.064436
+------------------------------------------------------------------------------
+
+. 
+. * sum bildungszeit only for sample of last estimation
+. cap drop cpgbilzeit
+
+. sum pgbilzeit if e(sample)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+   pgbilzeit |     14,218    12.85849     2.77797          7         18
+
+. gen cpgbilzeit = pgbilzeit - r(mean)
+(27,340 missing values generated)
+
+. 
+. cap drop cerf
+
+. sum erf if e(sample)    
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         erf |     14,218    16.53353    10.91589          0      64.48
+
+. gen cerf = erf -r(mean)
+(13,804 missing values generated)
+
+. 
+. sum pgbilzeit cpgbilzeit if e(sample)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+   pgbilzeit |     14,218    12.85849     2.77797          7         18
+  cpgbilzeit |     14,218    1.03e-08     2.77797  -5.858489   5.141511
+
+. sum erf cerf if e(sample)
+
+    Variable |        Obs        Mean    Std. Dev.       Min        Max
+-------------+---------------------------------------------------------
+         erf |     14,218    16.53353    10.91589          0      64.48
+        cerf |     14,218    1.35e-07    10.91589  -16.53353   47.94647
+
+.         
+. * 2.1c model with centered predictors
+. reg hwageb cpgbilzeit cerf frau ost if asample==1 &amp; syear==2015 [pw=phrf] 
+(sum of wgt is   3.3886e+07)
+
+Linear regression                               Number of obs     =     14,218
+                                                F(4, 14213)       =     259.84
+                                                Prob &gt; F          =     0.0000
+                                                R-squared         =     0.2253
+                                                Root MSE          =     10.072
+
+------------------------------------------------------------------------------
+             |               Robust
+      hwageb |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+  cpgbilzeit |   1.638184   .0619018    26.46   0.000     1.516848     1.75952
+        cerf |   .2431915   .0109426    22.22   0.000     .2217425    .2646405
+        frau |  -2.754198   .2425546   -11.35   0.000    -3.229636   -2.278759
+         ost |  -4.278906   .2718054   -15.74   0.000     -4.81168   -3.746132
+       _cons |   18.51181   .2143393    86.37   0.000     18.09168    18.93194
+------------------------------------------------------------------------------</code></pre>
+</div>
+</div>
+<div id="r-1" class="section level4 tabset active">
+<h4>R</h4>
+<div id="models" class="section level5 tabset">
+<h5>Models</h5>
+<div id="basic-model-2" class="section level6">
+<h6>2.1 Basic Model</h6>
+<pre class="r"><code># fit regression model
+  # automatically drops rows with missing values
+  fit2.1 &lt;- asample %&gt;% 
+      filter(syear == 2015) %&gt;% 
+              lm(hwageb ~ pgbilzeit + erf + frau + ost, 
+                 data= ., weights = phrf)
+  
+  tidy(fit2.1)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"-6.63","3":"0.4646","4":"-14","5":"7.6e-46"},{"1":"pgbilzeit","2":"1.64","3":"0.0311","4":"53","5":"0.0e+00"},{"1":"erf","2":"0.25","3":"0.0077","4":"32","5":"1.2e-220"},{"1":"frau","2":"-2.75","3":"0.1738","4":"-16","5":"5.6e-56"},{"1":"ost","2":"-4.26","3":"0.2226","4":"-19","5":"1.6e-80"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>  # summary(fit2.1)</code></pre>
+</div>
+<div id="c-model-with-centered-predictors-1" class="section level6">
+<h6>2.1c Model with Centered Predictors</h6>
+<p>with centralized years of schooling and work experience. This can be helpful to interpret the intercept, because 0 years education are not a realistic interpretation</p>
+<pre class="r"><code># sum up time of education only for sample of last estimation. This is similar to the if e(sample) command in STATA
+  # - Sample identifier, a set of row names which can be used to subset the corresponding dataframe
+  esample &lt;- rownames(as.matrix(resid(fit2.1)))
+  # - N used
+  esample.n &lt;- nobs(fit2.1)
+
+  # regress again   with centered predictors
+  fit2.1c &lt;-  asample %&gt;% 
+        filter(syear == 2015) %&gt;% 
+        # filter only obs used in last model
+        filter(row_number() %in% esample) %&gt;%
+        # centralized values for education by year
+        mutate(cpgbilzeit = pgbilzeit - mean(pgbilzeit, na.rm = T),
+               cerf = erf - mean(erf, na.rm = T)) %&gt;% 
+        # linear model
+        lm(hwageb ~ cpgbilzeit + cerf + frau + ost,
+           data= ., weights = phrf)
+  
+  tidy(fit2.1c)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"18.51","3":"0.1246","4":"149","5":"0.0e+00"},{"1":"cpgbilzeit","2":"1.64","3":"0.0311","4":"53","5":"0.0e+00"},{"1":"cerf","2":"0.25","3":"0.0077","4":"32","5":"1.2e-220"},{"1":"frau","2":"-2.75","3":"0.1738","4":"-16","5":"5.6e-56"},{"1":"ost","2":"-4.26","3":"0.2226","4":"-19","5":"1.6e-80"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>  # summary statistics of education and job experience with sample of last regression
+  asample %&gt;%
+        filter(syear == 2015) %&gt;% 
+        filter(row_number() %in% esample) %&gt;% # this needs to be in a separate filter, otherwise wont work
+        select(pgbilzeit, erf) %&gt;%
+        summary() # other option: stat.desc(basic = T)</code></pre>
+<pre><code>##    pgbilzeit         erf    
+##  Min.   : 7.0   Min.   : 0  
+##  1st Qu.:11.0   1st Qu.: 8  
+##  Median :12.0   Median :15  
+##  Mean   :12.9   Mean   :16  
+##  3rd Qu.:15.0   3rd Qu.:24  
+##  Max.   :18.0   Max.   :59</code></pre>
+</div>
+</div>
+<div id="plots" class="section level5">
+<h5>Plots</h5>
+<pre class="r"><code># plot it 
+  asample %&gt;% 
+      filter(syear == 2015) %&gt;% 
+      ggplot(aes(pgbilzeit, hwageb)) + 
+      geom_point() + 
+      geom_smooth(method=&quot;lm&quot;, color=&quot;red&quot;, se=F) +
+      geom_line(aes(y = mean(asample$hwageb)), color=&quot;blue&quot;)</code></pre>
+<p><img src="ex2_soep_files/figure-html/plot%20fit2.1-1.png" width="384" /></p>
+</div>
+<div id="background-info" class="section level5 tabset">
+<h5>Background Info</h5>
+<p>More Information about the fit of the model</p>
+<div id="cis" class="section level6">
+<h6>CI’s</h6>
+<p>Confidence Intervals</p>
+<pre class="r"><code> confint(fit2.1)</code></pre>
+<pre><code>##             2.5 % 97.5 %
+## (Intercept) -7.54  -5.72
+## pgbilzeit    1.58   1.70
+## erf          0.23   0.26
+## frau        -3.09  -2.41
+## ost         -4.69  -3.82</code></pre>
+</div>
+<div id="different-plots" class="section level6">
+<h6>Different plots</h6>
+<p>assumptions, including that the residuals are normally distributed and homoscedastic, the errors are independent and the relationships are linear</p>
+<pre class="r"><code>plot(fit2.1)</code></pre>
+<p><img src="ex2_soep_files/figure-html/plot2%20fit2.1-1.png" width="672" /><img src="ex2_soep_files/figure-html/plot2%20fit2.1-2.png" width="672" /><img src="ex2_soep_files/figure-html/plot2%20fit2.1-3.png" width="672" /><img src="ex2_soep_files/figure-html/plot2%20fit2.1-4.png" width="672" /></p>
+</div>
+<div id="check-if-mean-close-to-0" class="section level6">
+<h6>check if mean close to 0</h6>
+<p>it is not</p>
+<pre class="r"><code>mean(fit2.1$residuals)    # no</code></pre>
+<pre><code>## [1] 0.39</code></pre>
+</div>
+<div id="correlation-resid-predict" class="section level6">
+<h6>Correlation Resid + Predict</h6>
+<p>Check the correlation between the residuals and the predictors to see if it’s close to 0.</p>
+<pre class="r"><code># cov(fit2.1$residuals, asample$pgbilzeit)      # no</code></pre>
+</div>
+<div id="extract-intercept-and-slope" class="section level6">
+<h6>Extract Intercept and Slope</h6>
+<pre class="r"><code># extract intercept
+fit2.1.ic &lt;- fit2.1$coef[1]
+# extract slope
+fit2.1.slope &lt;- fit2.1$coef[2]</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div id="coefficients-and-r" class="section level3 tabset">
+<h3>2.2 coefficients and R²</h3>
+<p>Interpret the coefficients and the value of R²</p>
+<hr />
+<p><strong>Model 2.1 Coefficients</strong></p>
+<ul>
+<li>Intercept
+<ul>
+<li>For male Germans (Gender Variable == 0) who were born in former West Germany (region variable == 0) and with average years of education and average years of work experience, the expected hourly wage is 18,86 Euro/h.</li>
+</ul></li>
+<li>Years of Education (cpgbilzeit)
+<ul>
+<li>For each increase of education by one year, the expected income increases by 1,63 Euro/h.</li>
+</ul></li>
+<li>Work Experience (cerf)
+<ul>
+<li>For each increase of working experience by one year, the expects income increases by 0,24 Euro/hour.</li>
+</ul></li>
+<li><p>Gender (frau) For women the expected income is 2,75 Euro/hour less compared to men.</p></li>
+<li>Region (ost)
+<ul>
+<li>People from East Germany are expected to earn 4,25 Euro less compared to people from West Germany.</li>
+</ul></li>
+<li>R-squared
+<ul>
+<li>The model can explain 22.59% of the overall variance of hourly wages in Germany.</li>
+</ul></li>
+</ul>
+<p><strong>Model 2.1c Coefficients</strong></p>
+<ul>
+<li>Intercept
+<ul>
+<li>The intercept is negative, which does not make theoretical sense because wages cannot be negative. Mathematically it reflects the predicted value if all explanatory variables are equal to 0. Since there is “Schulpflicht” in Germany, it is in practice not the case that there are people with no education at all. –&gt; One can center the variables and can then interpret the intercept as, for people with average education, wage is estimated to be xxx. All effects of the IV’s are significant.</li>
+</ul></li>
+<li>Years of Education (cpgbilzeit)
+<ul>
+<li>For each unit (year) increase of education, hourly wage is expected to increase by 1.4 units (Euro).</li>
+</ul></li>
+<li>Gender (frau)
+<ul>
+<li>Women are expected to earn 2.75 Euro less per hour compared to men</li>
+</ul></li>
+<li>Region (ost)
+<ul>
+<li>People who grew up in former eastern germany are estimated to earn 4.25 Euro less, compared to people who grew up in former western Germany.</li>
+</ul></li>
+<li>R-squared
+<ul>
+<li>The model can explain 22.59% of the overall variance of hourly wages in Germany.</li>
+</ul></li>
+</ul>
+<!-- #### Stata -->
+<!-- ```{r stata 2.2, results = T, engine = "stata", engine.path= statapath, comment = ""} -->
+<!--    * include interaction effects -->
+<!--    * one version:  -->
+<!--    gen intbilmen = frau*pgbilzeit -->
+<!--    * OR include terms separated with # -->
+<!--        * one raute is only ... -->
+<!--    * two ## is include main effects -->
+<!--    * with these two regressions you cqn see  -->
+<!--    reg hwageb i.frau##c.pgbilzeit cerf ost if asample==1 & syear==2015 [pw=phrf] -->
+<!--    * margins plot tells you how the predictions vary for different values of variable -->
+<!--    margins  , at(pgbilzeit=(8 (1) 18) frau=(1 0)) -->
+<!--    marginsplot -->
+<!--    * what to do if you have categorical var with more than one  -->
+<!--    * create variables dumies for all categories -1 -->
+<!-- ``` -->
+<!-- #### R {.tabset .active} -->
+<!-- ##### Model -->
+<!-- ###### include interaction effects: -->
+<!-- ```{r} -->
+<!-- # version one -->
+<!--   asample <- asample %>%  -->
+<!--         mutate(intbilmen = frau * pgbilzeit) -->
+<!--   # version two -->
+<!--   # include the frau * pgbilzeit in the formula -->
+<!--   fit2.2 <-  asample %>% -->
+<!--               filter(syear == 2015) %>%  -->
+<!--               select(pgbilzeit, hwageb, frau, cerf, ost, phrf) %>%  -->
+<!--               drop_na() %>% -->
+<!--               lm(hwageb ~ pgbilzeit*factor(frau) + cerf + ost,  -->
+<!--                  data= ., weights = phrf) -->
+<!--   tidy(fit2.2) -->
+<!--   # to do: why does stata not return all the intercepts? -->
+<!-- ``` -->
+<!-- ##### Plots -->
+<!-- Marginsplots -->
+<!-- ```{r} -->
+<!-- # marginsplots v1 -->
+<!--   # only works if frau is already a factor -->
+<!--   #plot(effect(term="pgbilzeit:frau.d",mod=fit1.3,default.levels=20), multiline=TRUE) -->
+<!--   # marginsplots v2 -->
+<!--  asample %>%  -->
+<!--       filter(syear == 2015) %>%  -->
+<!--       select(pgbilzeit, hwageb, frau) %>%  -->
+<!--       drop_na() %>%  -->
+<!--   ggplot(aes(x= pgbilzeit, y= hwageb,color= factor(frau)))+ -->
+<!--         geom_smooth(method='lm', -->
+<!--                     se=T) + -->
+<!--         labs(title = "Predictive Margins with 95% CI's", -->
+<!--              xlab = "Duration of Education, Years", -->
+<!--              ylab = "Linear Prediction for Hourly Wage") -->
+<!--  # problem with fortify -->
+<!--  # fortify(fit1.3) -->
+<!-- ``` -->
+</div>
+<div id="work-experience-and-wage" class="section level3 tabset">
+<h3>2.3 work experience and wage</h3>
+<p>Is the relationship between work experience and wage linear?</p>
+<hr />
+<p><strong>Why use log of wage?</strong> Hourly wage is very skewed and taking the log makes it more normal. but it is not very inuitive.</p>
+<ul>
+<li>before we had additive model now its a multiple model</li>
+</ul>
+<div id="stata-2" class="section level4">
+<h4>Stata</h4>
+<pre class="stata"><code>    
+use &quot;_data/ex_mydf.dta&quot;, replace
+
+      histogram hwageb, bin(25)
+    sum hwageb, d
+
+    reg hwageb i.frau pgbilzeit erf ost if asample==1 &amp; syear==2015 [pw=phrf] 
+    *cprplot erf, msize(vsmall) jitter(2) mspline msopts(bands(11) lcolor(red))
+    
+    reg hwageb i.frau##c.pgbilzeit c.erf##c.erf ost if asample==1 &amp; syear==2015 [pw=phrf] 
+    margins  , at(erf=(0(5)50) pgbilzeit=(8 13 18) frau=(1 0))
+    marginsplot
+    
+    * three way interaction would be
+    reg hwageb i.frau##c.pgbilzeit  i.frau##c.erf##c.erf ost if asample==1 &amp; syear==2015 [pw=phrf] 
+    margins  , at(erf=(0(5)50) pgbilzeit=(8 13 18) frau=(1 0))
+    marginsplot</code></pre>
+<pre><code>
+.         
+. use &quot;_data/ex_mydf.dta&quot;, replace
+(PGEN: Feb 12, 2017 13:00:53-1 DBV32L)
+
+. 
+.       histogram hwageb, bin(25)
+(bin=25, start=0, width=54.342456)
+
+.         sum hwageb, d
+
+             Hourly Brutto Income in 2015 Prices
+-------------------------------------------------------------
+      Percentiles      Smallest
+ 1%     1.542791              0
+ 5%      3.79162              0
+10%     5.755138              0       Obs             330,917
+25%     9.270056              0       Sum of Wgt.     330,917
+
+50%      13.5735                      Mean           15.83633
+                        Largest       Std. Dev.      15.79142
+75%     18.81389       1013.614
+90%     26.25628       1041.384       Variance        249.369
+95%     32.69381       1135.154       Skewness       17.82355
+99%     59.23933       1358.561       Kurtosis       731.6486
+
+. 
+.         reg hwageb i.frau pgbilzeit erf ost if asample==1 &amp; syear==2015 [pw=p
+&gt; hrf] 
+(sum of wgt is   3.3886e+07)
+
+Linear regression                               Number of obs     =     14,218
+                                                F(4, 14213)       =     259.84
+                                                Prob &gt; F          =     0.0000
+                                                R-squared         =     0.2253
+                                                Root MSE          =     10.072
+
+------------------------------------------------------------------------------
+             |               Robust
+      hwageb |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        frau |
+   weiblich  |  -2.754198   .2425546   -11.35   0.000    -3.229636   -2.278759
+   pgbilzeit |   1.638184   .0619018    26.46   0.000     1.516848     1.75952
+         erf |   .2431915   .0109426    22.22   0.000     .2217425    .2646405
+         ost |  -4.278906   .2718054   -15.74   0.000     -4.81168   -3.746132
+       _cons |  -6.573576   .7699179    -8.54   0.000    -8.082716   -5.064436
+------------------------------------------------------------------------------
+
+.         *cprplot erf, msize(vsmall) jitter(2) mspline msopts(bands(11) lcolor
+&gt; (red))
+.         
+.         reg hwageb i.frau##c.pgbilzeit c.erf##c.erf ost if asample==1 &amp; syear
+&gt; ==2015 [pw=phrf] 
+(sum of wgt is   3.3886e+07)
+
+Linear regression                               Number of obs     =     14,218
+                                                F(6, 14211)       =     241.95
+                                                Prob &gt; F          =     0.0000
+                                                R-squared         =     0.2375
+                                                Root MSE          =     9.9937
+
+------------------------------------------------------------------------------
+             |               Robust
+      hwageb |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        frau |
+   weiblich  |   2.018305   1.339491     1.51   0.132    -.6072725    4.643882
+   pgbilzeit |   1.790837   .0980965    18.26   0.000     1.598556    1.983119
+             |
+        frau#|
+ c.pgbilzeit |
+   weiblich  |  -.3821273    .113354    -3.37   0.001     -.604316   -.1599387
+             |
+         erf |   .5718543   .0346963    16.48   0.000     .5038451    .6398636
+             |
+ c.erf#c.erf |  -.0084294   .0008973    -9.39   0.000    -.0101881   -.0066707
+             |
+         ost |   -4.15973   .2665798   -15.60   0.000    -4.682261   -3.637198
+       _cons |  -10.53201    1.21738    -8.65   0.000    -12.91823   -8.145781
+------------------------------------------------------------------------------
+
+.         margins  , at(erf=(0(5)50) pgbilzeit=(8 13 18) frau=(1 0))
+
+Predictive margins                              Number of obs     =     14,218
+Model VCE    : Robust
+
+Expression   : Linear prediction, predict()
+
+1._at        : frau            =           1
+               pgbilzeit       =           8
+               erf             =           0
+
+2._at        : frau            =           1
+               pgbilzeit       =           8
+               erf             =           5
+
+3._at        : frau            =           1
+               pgbilzeit       =           8
+               erf             =          10
+
+4._at        : frau            =           1
+               pgbilzeit       =           8
+               erf             =          15
+
+5._at        : frau            =           1
+               pgbilzeit       =           8
+               erf             =          20
+
+6._at        : frau            =           1
+               pgbilzeit       =           8
+               erf             =          25
+
+7._at        : frau            =           1
+               pgbilzeit       =           8
+               erf             =          30
+
+8._at        : frau            =           1
+               pgbilzeit       =           8
+               erf             =          35
+
+9._at        : frau            =           1
+               pgbilzeit       =           8
+               erf             =          40
+
+10._at       : frau            =           1
+               pgbilzeit       =           8
+               erf             =          45
+
+11._at       : frau            =           1
+               pgbilzeit       =           8
+               erf             =          50
+
+12._at       : frau            =           1
+               pgbilzeit       =          13
+               erf             =           0
+
+13._at       : frau            =           1
+               pgbilzeit       =          13
+               erf             =           5
+
+14._at       : frau            =           1
+               pgbilzeit       =          13
+               erf             =          10
+
+15._at       : frau            =           1
+               pgbilzeit       =          13
+               erf             =          15
+
+16._at       : frau            =           1
+               pgbilzeit       =          13
+               erf             =          20
+
+17._at       : frau            =           1
+               pgbilzeit       =          13
+               erf             =          25
+
+18._at       : frau            =           1
+               pgbilzeit       =          13
+               erf             =          30
+
+19._at       : frau            =           1
+               pgbilzeit       =          13
+               erf             =          35
+
+20._at       : frau            =           1
+               pgbilzeit       =          13
+               erf             =          40
+
+21._at       : frau            =           1
+               pgbilzeit       =          13
+               erf             =          45
+
+22._at       : frau            =           1
+               pgbilzeit       =          13
+               erf             =          50
+
+23._at       : frau            =           1
+               pgbilzeit       =          18
+               erf             =           0
+
+24._at       : frau            =           1
+               pgbilzeit       =          18
+               erf             =           5
+
+25._at       : frau            =           1
+               pgbilzeit       =          18
+               erf             =          10
+
+26._at       : frau            =           1
+               pgbilzeit       =          18
+               erf             =          15
+
+27._at       : frau            =           1
+               pgbilzeit       =          18
+               erf             =          20
+
+28._at       : frau            =           1
+               pgbilzeit       =          18
+               erf             =          25
+
+29._at       : frau            =           1
+               pgbilzeit       =          18
+               erf             =          30
+
+30._at       : frau            =           1
+               pgbilzeit       =          18
+               erf             =          35
+
+31._at       : frau            =           1
+               pgbilzeit       =          18
+               erf             =          40
+
+32._at       : frau            =           1
+               pgbilzeit       =          18
+               erf             =          45
+
+33._at       : frau            =           1
+               pgbilzeit       =          18
+               erf             =          50
+
+34._at       : frau            =           0
+               pgbilzeit       =           8
+               erf             =           0
+
+35._at       : frau            =           0
+               pgbilzeit       =           8
+               erf             =           5
+
+36._at       : frau            =           0
+               pgbilzeit       =           8
+               erf             =          10
+
+37._at       : frau            =           0
+               pgbilzeit       =           8
+               erf             =          15
+
+38._at       : frau            =           0
+               pgbilzeit       =           8
+               erf             =          20
+
+39._at       : frau            =           0
+               pgbilzeit       =           8
+               erf             =          25
+
+40._at       : frau            =           0
+               pgbilzeit       =           8
+               erf             =          30
+
+41._at       : frau            =           0
+               pgbilzeit       =           8
+               erf             =          35
+
+42._at       : frau            =           0
+               pgbilzeit       =           8
+               erf             =          40
+
+43._at       : frau            =           0
+               pgbilzeit       =           8
+               erf             =          45
+
+44._at       : frau            =           0
+               pgbilzeit       =           8
+               erf             =          50
+
+45._at       : frau            =           0
+               pgbilzeit       =          13
+               erf             =           0
+
+46._at       : frau            =           0
+               pgbilzeit       =          13
+               erf             =           5
+
+47._at       : frau            =           0
+               pgbilzeit       =          13
+               erf             =          10
+
+48._at       : frau            =           0
+               pgbilzeit       =          13
+               erf             =          15
+
+49._at       : frau            =           0
+               pgbilzeit       =          13
+               erf             =          20
+
+50._at       : frau            =           0
+               pgbilzeit       =          13
+               erf             =          25
+
+51._at       : frau            =           0
+               pgbilzeit       =          13
+               erf             =          30
+
+52._at       : frau            =           0
+               pgbilzeit       =          13
+               erf             =          35
+
+53._at       : frau            =           0
+               pgbilzeit       =          13
+               erf             =          40
+
+54._at       : frau            =           0
+               pgbilzeit       =          13
+               erf             =          45
+
+55._at       : frau            =           0
+               pgbilzeit       =          13
+               erf             =          50
+
+56._at       : frau            =           0
+               pgbilzeit       =          18
+               erf             =           0
+
+57._at       : frau            =           0
+               pgbilzeit       =          18
+               erf             =           5
+
+58._at       : frau            =           0
+               pgbilzeit       =          18
+               erf             =          10
+
+59._at       : frau            =           0
+               pgbilzeit       =          18
+               erf             =          15
+
+60._at       : frau            =           0
+               pgbilzeit       =          18
+               erf             =          20
+
+61._at       : frau            =           0
+               pgbilzeit       =          18
+               erf             =          25
+
+62._at       : frau            =           0
+               pgbilzeit       =          18
+               erf             =          30
+
+63._at       : frau            =           0
+               pgbilzeit       =          18
+               erf             =          35
+
+64._at       : frau            =           0
+               pgbilzeit       =          18
+               erf             =          40
+
+65._at       : frau            =           0
+               pgbilzeit       =          18
+               erf             =          45
+
+66._at       : frau            =           0
+               pgbilzeit       =          18
+               erf             =          50
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |     Margin   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         _at |
+          1  |   2.023907    .383217     5.28   0.000     1.272751    2.775062
+          2  |   4.672443    .306192    15.26   0.000     4.072267     5.27262
+          3  |    6.89951   .2846151    24.24   0.000     6.341627    7.457393
+          4  |   8.705106   .2868491    30.35   0.000     8.142844    9.267368
+          5  |   10.08923   .2886694    34.95   0.000     9.523403    10.65506
+          6  |   11.05189   .2863062    38.60   0.000     10.49069    11.61309
+          7  |   11.59307   .2968245    39.06   0.000     11.01126    12.17489
+          8  |   11.71279   .3517178    33.30   0.000     11.02338     12.4022
+          9  |   11.41104   .4720423    24.17   0.000     10.48577     12.3363
+         10  |   10.68781    .656953    16.27   0.000     9.400098    11.97553
+         11  |   9.543118   .8989984    10.62   0.000     7.780963    11.30527
+         12  |   9.067457    .276087    32.84   0.000     8.526291    9.608624
+         13  |   11.71599   .1686138    69.48   0.000     11.38549     12.0465
+         14  |   13.94306   .1448262    96.27   0.000     13.65918    14.22694
+         15  |   15.74866   .1659113    94.92   0.000     15.42345    16.07386
+         16  |   17.13278   .1839375    93.14   0.000     16.77224    17.49332
+         17  |   18.09544   .1942075    93.18   0.000     17.71477    18.47611
+         18  |   18.63663   .2215309    84.13   0.000      18.2024    19.07085
+         19  |   18.75634   .2998098    62.56   0.000     18.16867    19.34401
+         20  |   18.45459   .4406783    41.88   0.000      17.5908    19.31837
+         21  |   17.73136    .638856    27.75   0.000     16.47912     18.9836
+         22  |   16.58667   .8887677    18.66   0.000     14.84457    18.32877
+         23  |   16.11101   .4387173    36.72   0.000     15.25106    16.97095
+         24  |   18.75954   .3872825    48.44   0.000     18.00042    19.51867
+         25  |   20.98661   .3844782    54.58   0.000     20.23298    21.74024
+         26  |   22.79221   .3995632    57.04   0.000     22.00901     23.5754
+         27  |   24.17633   .4137826    58.43   0.000     23.36527     24.9874
+         28  |   25.13899   .4246668    59.20   0.000     24.30659    25.97139
+         29  |   25.68018   .4437648    57.87   0.000     24.81034    26.55001
+         30  |   25.79989    .492896    52.34   0.000     24.83375    26.76603
+         31  |   25.49814   .5936757    42.95   0.000     24.33446    26.66182
+         32  |   24.77491   .7560204    32.77   0.000     23.29301    26.25681
+         33  |   23.63022    .979029    24.14   0.000     21.71119    25.54924
+         34  |   3.062621   .4987771     6.14   0.000     2.084952    4.040289
+         35  |   5.711157   .4391543    13.00   0.000     4.850357    6.571957
+         36  |   7.938224   .4177763    19.00   0.000     7.119327     8.75712
+         37  |    9.74382   .4092564    23.81   0.000     8.941624    10.54602
+         38  |   11.12795   .3968178    28.04   0.000     10.35013    11.90576
+         39  |    12.0906   .3772005    32.05   0.000     11.35124    12.82996
+         40  |   12.63179   .3630939    34.79   0.000     11.92008     13.3435
+         41  |    12.7515   .3848505    33.13   0.000     11.99715    13.50586
+         42  |   12.44975    .474499    26.24   0.000     11.51967    13.37983
+         43  |   11.72653   .6395954    18.33   0.000     10.47284    12.98022
+         44  |   10.58183   .8706961    12.15   0.000     8.875153    12.28851
+         45  |   12.01681     .29385    40.89   0.000     11.44082    12.59279
+         46  |   14.66534    .225079    65.16   0.000     14.22416    15.10653
+         47  |   16.89241   .2261554    74.69   0.000     16.44912    17.33571
+         48  |   18.69801   .2479426    75.41   0.000     18.21201    19.18401
+         49  |   20.08213   .2596053    77.36   0.000     19.57327    20.59099
+         50  |   21.04479   .2583156    81.47   0.000     20.53846    21.55112
+         51  |   21.58598   .2633827    81.96   0.000     21.06971    22.10224
+         52  |   21.70569   .3119296    69.59   0.000     21.09427    22.31711
+         53  |   21.40394   .4296123    49.82   0.000     20.56184    22.24603
+         54  |   20.68071   .6142453    33.67   0.000     19.47671    21.88471
+         55  |   19.53602   .8565598    22.81   0.000     17.85705    21.21499
+         56  |     20.971   .6364455    32.95   0.000     19.72348    22.21851
+         57  |   23.61953   .6241878    37.84   0.000     22.39604    24.84302
+         58  |    25.8466   .6394539    40.42   0.000     24.59318    27.10001
+         59  |   27.65219   .6607618    41.85   0.000     26.35701    28.94737
+         60  |   29.03632   .6771051    42.88   0.000     27.70911    30.36354
+         61  |   29.99898   .6872551    43.65   0.000     28.65187    31.34609
+         62  |   30.54016   .6986054    43.72   0.000      29.1708    31.90952
+         63  |   30.65988   .7263856    42.21   0.000     29.23607    32.08369
+         64  |   30.35812   .7906516    38.40   0.000     28.80834    31.90791
+         65  |    29.6349   .9092074    32.59   0.000     27.85273    31.41707
+         66  |   28.49021   1.091065    26.11   0.000     26.35158    30.62884
+------------------------------------------------------------------------------
+
+.         marginsplot
+
+  Variables that uniquely identify margins: erf pgbilzeit frau
+
+.         
+.         * three way interaction would be
+.         reg hwageb i.frau##c.pgbilzeit  i.frau##c.erf##c.erf ost if asample==
+&gt; 1 &amp; syear==2015 [pw=phrf] 
+(sum of wgt is   3.3886e+07)
+
+Linear regression                               Number of obs     =     14,218
+                                                F(8, 14209)       =     188.65
+                                                Prob &gt; F          =     0.0000
+                                                R-squared         =     0.2392
+                                                Root MSE          =     9.9835
+
+------------------------------------------------------------------------------
+             |               Robust
+      hwageb |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        frau |
+   weiblich  |   4.611863   1.565154     2.95   0.003     1.543957     7.67977
+   pgbilzeit |   1.793504   .0987253    18.17   0.000      1.59999    1.987019
+             |
+        frau#|
+ c.pgbilzeit |
+   weiblich  |  -.4065564   .1160411    -3.50   0.000    -.6340122   -.1791006
+             |
+         erf |   .6997297   .0521667    13.41   0.000     .5974761    .8019833
+             |
+  frau#c.erf |
+   weiblich  |  -.2725678   .0674033    -4.04   0.000    -.4046871   -.1404484
+             |
+ c.erf#c.erf |   -.011065   .0012959    -8.54   0.000    -.0136051    -.008525
+             |
+  frau#c.erf#|
+       c.erf |
+   weiblich  |   .0057027   .0017251     3.31   0.001     .0023212    .0090841
+             |
+         ost |  -4.139043   .2667629   -15.52   0.000    -4.661933   -3.616153
+       _cons |  -11.69561   1.321313    -8.85   0.000    -14.28556   -9.105662
+------------------------------------------------------------------------------
+
+.         margins  , at(erf=(0(5)50) pgbilzeit=(8 13 18) frau=(1 0))
+
+Predictive margins                              Number of obs     =     14,218
+Model VCE    : Robust
+
+Expression   : Linear prediction, predict()
+
+1._at        : frau            =           1
+               pgbilzeit       =           8
+               erf             =           0
+
+2._at        : frau            =           1
+               pgbilzeit       =           8
+               erf             =           5
+
+3._at        : frau            =           1
+               pgbilzeit       =           8
+               erf             =          10
+
+4._at        : frau            =           1
+               pgbilzeit       =           8
+               erf             =          15
+
+5._at        : frau            =           1
+               pgbilzeit       =           8
+               erf             =          20
+
+6._at        : frau            =           1
+               pgbilzeit       =           8
+               erf             =          25
+
+7._at        : frau            =           1
+               pgbilzeit       =           8
+               erf             =          30
+
+8._at        : frau            =           1
+               pgbilzeit       =           8
+               erf             =          35
+
+9._at        : frau            =           1
+               pgbilzeit       =           8
+               erf             =          40
+
+10._at       : frau            =           1
+               pgbilzeit       =           8
+               erf             =          45
+
+11._at       : frau            =           1
+               pgbilzeit       =           8
+               erf             =          50
+
+12._at       : frau            =           1
+               pgbilzeit       =          13
+               erf             =           0
+
+13._at       : frau            =           1
+               pgbilzeit       =          13
+               erf             =           5
+
+14._at       : frau            =           1
+               pgbilzeit       =          13
+               erf             =          10
+
+15._at       : frau            =           1
+               pgbilzeit       =          13
+               erf             =          15
+
+16._at       : frau            =           1
+               pgbilzeit       =          13
+               erf             =          20
+
+17._at       : frau            =           1
+               pgbilzeit       =          13
+               erf             =          25
+
+18._at       : frau            =           1
+               pgbilzeit       =          13
+               erf             =          30
+
+19._at       : frau            =           1
+               pgbilzeit       =          13
+               erf             =          35
+
+20._at       : frau            =           1
+               pgbilzeit       =          13
+               erf             =          40
+
+21._at       : frau            =           1
+               pgbilzeit       =          13
+               erf             =          45
+
+22._at       : frau            =           1
+               pgbilzeit       =          13
+               erf             =          50
+
+23._at       : frau            =           1
+               pgbilzeit       =          18
+               erf             =           0
+
+24._at       : frau            =           1
+               pgbilzeit       =          18
+               erf             =           5
+
+25._at       : frau            =           1
+               pgbilzeit       =          18
+               erf             =          10
+
+26._at       : frau            =           1
+               pgbilzeit       =          18
+               erf             =          15
+
+27._at       : frau            =           1
+               pgbilzeit       =          18
+               erf             =          20
+
+28._at       : frau            =           1
+               pgbilzeit       =          18
+               erf             =          25
+
+29._at       : frau            =           1
+               pgbilzeit       =          18
+               erf             =          30
+
+30._at       : frau            =           1
+               pgbilzeit       =          18
+               erf             =          35
+
+31._at       : frau            =           1
+               pgbilzeit       =          18
+               erf             =          40
+
+32._at       : frau            =           1
+               pgbilzeit       =          18
+               erf             =          45
+
+33._at       : frau            =           1
+               pgbilzeit       =          18
+               erf             =          50
+
+34._at       : frau            =           0
+               pgbilzeit       =           8
+               erf             =           0
+
+35._at       : frau            =           0
+               pgbilzeit       =           8
+               erf             =           5
+
+36._at       : frau            =           0
+               pgbilzeit       =           8
+               erf             =          10
+
+37._at       : frau            =           0
+               pgbilzeit       =           8
+               erf             =          15
+
+38._at       : frau            =           0
+               pgbilzeit       =           8
+               erf             =          20
+
+39._at       : frau            =           0
+               pgbilzeit       =           8
+               erf             =          25
+
+40._at       : frau            =           0
+               pgbilzeit       =           8
+               erf             =          30
+
+41._at       : frau            =           0
+               pgbilzeit       =           8
+               erf             =          35
+
+42._at       : frau            =           0
+               pgbilzeit       =           8
+               erf             =          40
+
+43._at       : frau            =           0
+               pgbilzeit       =           8
+               erf             =          45
+
+44._at       : frau            =           0
+               pgbilzeit       =           8
+               erf             =          50
+
+45._at       : frau            =           0
+               pgbilzeit       =          13
+               erf             =           0
+
+46._at       : frau            =           0
+               pgbilzeit       =          13
+               erf             =           5
+
+47._at       : frau            =           0
+               pgbilzeit       =          13
+               erf             =          10
+
+48._at       : frau            =           0
+               pgbilzeit       =          13
+               erf             =          15
+
+49._at       : frau            =           0
+               pgbilzeit       =          13
+               erf             =          20
+
+50._at       : frau            =           0
+               pgbilzeit       =          13
+               erf             =          25
+
+51._at       : frau            =           0
+               pgbilzeit       =          13
+               erf             =          30
+
+52._at       : frau            =           0
+               pgbilzeit       =          13
+               erf             =          35
+
+53._at       : frau            =           0
+               pgbilzeit       =          13
+               erf             =          40
+
+54._at       : frau            =           0
+               pgbilzeit       =          13
+               erf             =          45
+
+55._at       : frau            =           0
+               pgbilzeit       =          13
+               erf             =          50
+
+56._at       : frau            =           0
+               pgbilzeit       =          18
+               erf             =           0
+
+57._at       : frau            =           0
+               pgbilzeit       =          18
+               erf             =           5
+
+58._at       : frau            =           0
+               pgbilzeit       =          18
+               erf             =          10
+
+59._at       : frau            =           0
+               pgbilzeit       =          18
+               erf             =          15
+
+60._at       : frau            =           0
+               pgbilzeit       =          18
+               erf             =          20
+
+61._at       : frau            =           0
+               pgbilzeit       =          18
+               erf             =          25
+
+62._at       : frau            =           0
+               pgbilzeit       =          18
+               erf             =          30
+
+63._at       : frau            =           0
+               pgbilzeit       =          18
+               erf             =          35
+
+64._at       : frau            =           0
+               pgbilzeit       =          18
+               erf             =          40
+
+65._at       : frau            =           0
+               pgbilzeit       =          18
+               erf             =          45
+
+66._at       : frau            =           0
+               pgbilzeit       =          18
+               erf             =          50
+
+------------------------------------------------------------------------------
+             |            Delta-method
+             |     Margin   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         _at |
+          1  |   3.283403   .4207847     7.80   0.000      2.45861    4.108196
+          2  |   5.285154   .3232132    16.35   0.000     4.651613    5.918694
+          3  |   7.018786   .2985526    23.51   0.000     6.433584    7.603988
+          4  |     8.4843   .3024736    28.05   0.000     7.891412    9.077188
+          5  |   9.681696   .3021566    32.04   0.000      9.08943    10.27396
+          6  |   10.61097   .2960619    35.84   0.000     10.03065    11.19129
+          7  |   11.27213   .3146082    35.83   0.000     10.65546    11.88881
+          8  |   11.66518   .4037745    28.89   0.000     10.87372    12.45663
+          9  |    11.7901   .5804389    20.31   0.000     10.65236    12.92783
+         10  |    11.6469   .8348815    13.95   0.000     10.01043    13.28338
+         11  |   11.23559   1.157213     9.71   0.000     8.967302    13.50388
+         12  |   10.21814   .3185345    32.08   0.000     9.593772    10.84251
+         13  |   12.21989   .1784748    68.47   0.000     11.87006    12.56973
+         14  |   13.95352   .1478962    94.35   0.000     13.66363    14.24342
+         15  |   15.41904   .1787574    86.26   0.000     15.06865    15.76943
+         16  |   16.61643   .2045922    81.22   0.000     16.21541    17.01746
+         17  |   17.54571   .2251187    77.94   0.000     17.10445    17.98697
+         18  |   18.20687   .2772035    65.68   0.000     17.66352    18.75023
+         19  |   18.59991   .3976254    46.78   0.000     17.82052    19.37931
+         20  |   18.72484   .5929261    31.58   0.000     17.56262    19.88705
+         21  |   18.58164    .856522    21.69   0.000     16.90275    20.26054
+         22  |   18.17033   1.183244    15.36   0.000     15.85102    20.48964
+         23  |   17.15288   .4656717    36.83   0.000      16.2401    18.06566
+         24  |   19.15463   .3875838    49.42   0.000     18.39492    19.91435
+         25  |   20.88826   .3815684    54.74   0.000     20.14034    21.63619
+         26  |   22.35378   .4042273    55.30   0.000     21.56144    23.14612
+         27  |   23.55117   .4282509    54.99   0.000     22.71175     24.3906
+         28  |   24.48045   .4524221    54.11   0.000     23.59364    25.36726
+         29  |   25.14161   .4956679    50.72   0.000     24.17004    26.11318
+         30  |   25.53465   .5866512    43.53   0.000     24.38474    26.68457
+         31  |   25.65958   .7464548    34.38   0.000     24.19643    27.12272
+         32  |   25.51638   .9804154    26.03   0.000     23.59464    27.43812
+         33  |   25.10507   1.285291    19.53   0.000     22.58573    27.62441
+         34  |   1.923991   .6240554     3.08   0.002     .7007607    3.147221
+         35  |   5.146014   .5011025    10.27   0.000     4.163787     6.12824
+         36  |   7.814784   .4525365    17.27   0.000     6.927754    8.701815
+         37  |   9.930304   .4372791    22.71   0.000     9.073179    10.78743
+         38  |   11.49257   .4198515    27.37   0.000     10.66961    12.31553
+         39  |   12.50159   .3886719    32.16   0.000     11.73974    13.26343
+         40  |   12.95735   .3631303    35.68   0.000     12.24557    13.66913
+         41  |   12.85986    .400171    32.14   0.000     12.07548    13.64425
+         42  |   12.20912    .550039    22.20   0.000     11.13097    13.28727
+         43  |   11.00513   .8068016    13.64   0.000     9.423695    12.58657
+         44  |   9.247889   1.149926     8.04   0.000     6.993883    11.50189
+         45  |   10.89151   .3967123    27.45   0.000      10.1139    11.66912
+         46  |   14.11353   .2531127    55.76   0.000      13.6174    14.60967
+         47  |   16.78231   .2400502    69.91   0.000     16.31178    17.25283
+         48  |   18.89782   .2806529    67.34   0.000     18.34771    19.44794
+         49  |   20.46009   .3056014    66.95   0.000     19.86107    21.05911
+         50  |   21.46911     .30429    70.55   0.000     20.87266    22.06556
+         51  |   21.92487   .3043773    72.03   0.000     21.32825    22.52149
+         52  |   21.82738   .3674504    59.40   0.000     21.10713    22.54763
+         53  |   21.17664    .535138    39.57   0.000      20.1277    22.22558
+         54  |   19.97265   .7990939    24.99   0.000     18.40632    21.53898
+         55  |   18.21541   1.143937    15.92   0.000     15.97314    20.45767
+         56  |   19.85903   .6423786    30.91   0.000     18.59989    21.11818
+         57  |   23.08105   .6036245    38.24   0.000     21.89787    24.26424
+         58  |   25.74983   .6307084    40.83   0.000     24.51355     26.9861
+         59  |   27.86534   .6735378    41.37   0.000     26.54512    29.18557
+         60  |   29.42761   .7055801    41.71   0.000     28.04458    30.81064
+         61  |   30.43663   .7221171    42.15   0.000     29.02118    31.85207
+         62  |   30.89239   .7353649    42.01   0.000     29.45098     32.3338
+         63  |    30.7949   .7728111    39.85   0.000     29.28009    32.30971
+         64  |   30.14416   .8703658    34.63   0.000     28.43813     31.8502
+         65  |   28.94017   1.055229    27.43   0.000     26.87179    31.00856
+         66  |   27.18293   1.334985    20.36   0.000     24.56618    29.79968
+------------------------------------------------------------------------------
+
+.         marginsplot
+
+  Variables that uniquely identify margins: erf pgbilzeit frau</code></pre>
+</div>
+<div id="r-2" class="section level4 tabset active">
+<h4>R</h4>
+<div id="models-1" class="section level5">
+<h5>Models</h5>
+<div id="base-model" class="section level6">
+<h6>Base Model</h6>
+<pre class="r"><code># base model
+  fit2.3_base &lt;- asample%&gt;% 
+      filter(syear == 2015) %&gt;%
+      lm(hwageb ~ frau + pgbilzeit + erf + ost, 
+                      data= ., weights = phrf)
+  
+  tidy(fit2.3_base)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"-6.63","3":"0.4646","4":"-14","5":"7.6e-46"},{"1":"frau","2":"-2.75","3":"0.1738","4":"-16","5":"5.6e-56"},{"1":"pgbilzeit","2":"1.64","3":"0.0311","4":"53","5":"0.0e+00"},{"1":"erf","2":"0.25","3":"0.0077","4":"32","5":"1.2e-220"},{"1":"ost","2":"-4.26","3":"0.2226","4":"-19","5":"1.6e-80"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>  # to do: how to do cpr plot
+  # cprplot erf, msize(vsmall) jitter(2) mspline msopts(bands(11) lcolor(red))</code></pre>
+<p>in Labour market research, labour force experience and income is not linear</p>
+<ul>
+<li>you can square erf
+<ul>
+<li>one version <code>mutate(erfq = erf*erf)</code> beforehand</li>
+<li>or include directly in model: <code>I(erf^2)</code> or include as interaction <code>erf * erf</code></li>
+</ul></li>
+</ul>
+</div>
+<div id="exp-model-with-squared-experience" class="section level6">
+<h6>2.3_exp model with squared experience</h6>
+<pre class="r"><code>  fit2.3_exp &lt;- asample %&gt;%
+       filter(syear == 2015) %&gt;%
+       mutate(frau.d = factor(frau)) %&gt;% 
+       lm(hwageb ~ frau.d * pgbilzeit + erf + I(erf^2) + ost, 
+          data= ., weights = phrf)
+  
+  tidy(fit2.3_exp)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"-10.5813","3":"0.59364","4":"-17.8","5":"2.7e-70"},{"1":"frau.d1","2":"2.1048","3":"0.81079","4":"2.6","5":"9.4e-03"},{"1":"pgbilzeit","2":"1.7924","3":"0.04177","4":"42.9","5":"0.0e+00"},{"1":"erf","2":"0.5756","3":"0.02656","4":"21.7","5":"1.7e-102"},{"1":"I(erf^2)","2":"-0.0085","3":"0.00066","4":"-12.8","5":"2.2e-37"},{"1":"ost","2":"-4.1419","3":"0.22103","4":"-18.7","5":"2.1e-77"},{"1":"frau.d1:pgbilzeit","2":"-0.3879","3":"0.06135","4":"-6.3","5":"2.7e-10"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="int-three-way-interaction-model" class="section level6">
+<h6>2.3_3int three way interaction model</h6>
+<pre class="r"><code># three way interaction model
+  fit2.3_3int &lt;- asample %&gt;%
+      filter(syear == 2015) %&gt;% 
+      lm(hwageb ~ factor(frau) * pgbilzeit +
+               factor(frau) * I(erf^2) + ost, 
+         data= ., weights = phrf)
+  
+  tidy(fit2.3_3int)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"-7.11767","3":"0.60099","4":"-11.84","5":"3.3e-32"},{"1":"factor(frau)1","2":"3.35243","3":"0.87267","4":"3.84","5":"1.2e-04"},{"1":"pgbilzeit","2":"1.84405","3":"0.04271","4":"43.17","5":"0.0e+00"},{"1":"I(erf^2)","2":"0.00517","3":"0.00024","4":"21.44","5":"2.0e-100"},{"1":"ost","2":"-4.18448","3":"0.22499","4":"-18.60","5":"2.7e-76"},{"1":"factor(frau)1:pgbilzeit","2":"-0.49184","3":"0.06299","4":"-7.81","5":"6.2e-15"},{"1":"factor(frau)1:I(erf^2)","2":"0.00023","3":"0.00040","4":"0.57","5":"5.7e-01"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+</div>
+<div id="plots-1" class="section level5">
+<h5>Plots</h5>
+<div id="histogram-of-hourly-wage" class="section level6">
+<h6>Histogram of Hourly Wage</h6>
+<pre class="r"><code>  g_hist_wage</code></pre>
+<p><img src="ex2_soep_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r"><code>  asample %&gt;% 
+        filter(syear == 2015) %&gt;% 
+        select(hwageb) %&gt;% 
+        stat.desc(basic = T)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["hwageb"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"1.5e+04","_rn_":"nbr.val"},{"1":"7.3e+01","_rn_":"nbr.null"},{"1":"0.0e+00","_rn_":"nbr.na"},{"1":"0.0e+00","_rn_":"min"},{"1":"4.6e+02","_rn_":"max"},{"1":"4.6e+02","_rn_":"range"},{"1":"2.4e+05","_rn_":"sum"},{"1":"1.4e+01","_rn_":"median"},{"1":"1.7e+01","_rn_":"mean"},{"1":"9.7e-02","_rn_":"SE.mean"},{"1":"1.9e-01","_rn_":"CI.mean.0.95"},{"1":"1.4e+02","_rn_":"var"},{"1":"1.2e+01","_rn_":"std.dev"},{"1":"7.1e-01","_rn_":"coef.var"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="marginsplot" class="section level6">
+<h6>Marginsplot</h6>
+<pre class="r"><code># # marginsplots v2
+  # asample15 %&gt;%
+  #       mutate(frau.d = factor(frau)) %&gt;%
+  # ggplot(aes(x= erf,
+  #            y= hwageb,
+  #            group = interaction(frau.d, pgbilzeit),
+  #            shape = frau.d,
+  #            colour = factor(pgbilzeit))) +
+  #       geom_smooth(method=&#39;lm&#39;,
+  #                   se=F) +
+  #       labs(title = &quot;Predictive Margins with 95% CI&#39;s&quot;,
+  #            xlab = &quot;Duration of Education, Years&quot;,
+  #            ylab = &quot;Linear Prediction for Hourly Wage&quot;)
+  # )
+  # # marginsplots v3
+  #     asample15 %&gt;%
+  #     mutate(frau.d = factor(frau)) %&gt;%
+  # ggplot(aes(x = erf, y = hwageb,
+  #            group = interaction(frau.d, pgbilzeit),
+  #            shape = frau.d,
+  #            colour = factor(pgbilzeit))) +
+  #     stat_summary(fun.data=mean_cl_normal) + 
+  #     geom_smooth(method=&#39;lm&#39;,
+  #                   formula = hwageb ~ frau.d * pgbilzeit + I(erf^2) + ost,
+  #                   se = T)</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div id="log-model" class="section level3 tabset">
+<h3>2.4 Log Model</h3>
+<p>Specifiy the same regression model but use the natural logarithm as dependent variable instead. How does the the interpretation of coefficients change?</p>
+<hr />
+<p>to do: dis exp() is still stata code</p>
+<p>Notes log level regression: - errors should have constant variance - interpretation is not very inuitive</p>
+<p>How does the the interpretation of coefficients change? - before we had additive model now its a multiple model - you can interpret this as percentage change - <code>dis exp(.0868897)</code> - e.g. 1.09 -&gt; for every more year of education, expected wage is raised by 9% - change after 8 years: <code>dis exp(.0868897)^8</code> = 2,003 -&gt; 100% increase</p>
+<ul>
+<li>standardization:
+<ul>
+<li>if you standardize you do it on both sides of the equations, (add , beta to command) then coefficients are called beta- coeff.</li>
+<li>interpretation: change of y in terms of its SD when x changes by 1 SD</li>
+<li>what is it useful for?</li>
+<li>how to get them
+<ul>
+<li>is good to interpret how large the effect is</li>
+<li>the square of beta coef. tell you portion of variance axplained by var of variable</li>
+<li><code>dis  .3956569^2</code> (beta coeff of yrs of education squared)</li>
+</ul></li>
+<li>15 percent of wage is due to variation in years if education</li>
+<li>issues, you can only do than in one model, not compare across models</li>
+<li>if you have interaction in your model, can (not?) interpret beta’s</li>
+</ul></li>
+</ul>
+<div id="stata-3" class="section level4">
+<h4>Stata</h4>
+<pre class="stata"><code>
+use &quot;_data/ex_mydf.dta&quot;, replace
+    
+* Mincer-Equation
+    reg lnhwageb pgbilzeit erf frau ost if asample==1 &amp; syear==2015 [pw=phrf]
+    
+* Standardization
+      reg hwageb pgbilzeit frau erf ost if asample==1 &amp; syear==2015 [pw=phrf], beta
+      
+      dis exp(.0868897) // 0.08.. if coef. of yrs of education is constant
+      dis  .3956569^2   // (beta coeff of yrs of education squared)</code></pre>
+<pre><code>
+. 
+. use &quot;_data/ex_mydf.dta&quot;, replace
+(PGEN: Feb 12, 2017 13:00:53-1 DBV32L)
+
+.         
+. * Mincer-Equation
+.         reg lnhwageb pgbilzeit erf frau ost if asample==1 &amp; syear==2015 [pw=p
+&gt; hrf]
+variable lnhwageb not found
+r(111);
+
+end of do-file
+r(111);</code></pre>
+</div>
+<div id="r-3" class="section level4 tabset active">
+<h4>R</h4>
+<div id="models-2" class="section level5">
+<h5>Models</h5>
+<div id="mincer-model" class="section level6">
+<h6>Mincer Model</h6>
+<pre class="r"><code> fit2.4 &lt;- asample %&gt;% 
+        # filter because income variable has 0&#39;s
+        filter(syear == 2015,
+               hwageb &gt; 0) %&gt;% 
+        lm(log(hwageb) ~ pgbilzeit + erf + frau + ost,
+           data = ., weights = phrf)
+
+ tidy(fit2.4)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"1.387","3":"0.02244","4":"62","5":"0.0e+00"},{"1":"pgbilzeit","2":"0.087","3":"0.00150","4":"58","5":"0.0e+00"},{"1":"erf","2":"0.015","3":"0.00037","4":"42","5":"0.0e+00"},{"1":"frau","2":"-0.135","3":"0.00840","4":"-16","5":"7.8e-58"},{"1":"ost","2":"-0.270","3":"0.01077","4":"-25","5":"6.7e-136"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="coefficients" class="section level6">
+<h6>Coefficients</h6>
+<p>How does the the interpretation of coefficients change? -&gt; before we had additive model now its a multiple model you can interpret this as percentage change Example: 1.09 -&gt; for every more year of education, expected wage is raised by 9%</p>
+<pre class="r"><code>  exp(.0868897) # 0.08.. if coef. of yrs of education</code></pre>
+<pre><code>## [1] 1.1</code></pre>
+<p>if you want to know the change after 8 years:</p>
+<pre class="r"><code>   exp(.0868897)^8   # 2,003 -&gt; 100% increase</code></pre>
+<pre><code>## [1] 2</code></pre>
+</div>
+<div id="standardization" class="section level6">
+<h6>standardization</h6>
+<p>if you standardize you do it on both sides of the equations, (add , beta to command) then they are called beta- coeff.</p>
+<p>interpretation: change of y in terms of its SD when x changes by 1 SD what is it useful for? - how to get them? - is good to interpret how large the effect is the square of beta coef. tell you portion of variance axplained by var of variable</p>
+<ul>
+<li>15 % of wage is due to variation in bilzeit issues, you can only do than in one model, not compare across models if you have interaction in your model, can (not?) interpret beta’s</li>
+</ul>
+<pre class="r"><code> # to do: betas
+   # reg hwageb pgbilzeit frau erf ost if asample==1 &amp; syear==2015 [pw=phrf], beta 
+
+  .3956569^2    # beta coeff of yrs of education squared</code></pre>
+<pre><code>## [1] 0.16</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div id="gender-pay-gap" class="section level3 tabset">
+<h3>2.5 Gender Pay Gap</h3>
+<p>How large is the gender pay gap?</p>
+<hr />
+<p>to do: write answer</p>
+<div id="stata-4" class="section level4">
+<h4>Stata</h4>
+<pre class="stata"><code>use &quot;_data/ex_mydf.dta&quot;, replace
+
+reg lnhwageb ost frau pgbilzeit c.erf##c.erf pgexpue if asample==1 &amp; syear==2015 [pw=phrf]
+margins  , at(erf=(0(5)50) pgbilzeit=(8 13 18))
+marginsplot
+dis exp(-.1437791)
+
+* raw gap
+reg lnhwageb frau if asample==1 &amp; syear==2015 [pw=phrf]
+dis exp(-.1983373)
+</code></pre>
+<pre><code>
+. use &quot;_data/ex_mydf.dta&quot;, replace
+(PGEN: Feb 12, 2017 13:00:53-1 DBV32L)
+
+. 
+. reg lnhwageb ost frau pgbilzeit c.erf##c.erf pgexpue if asample==1 &amp; syear==2
+&gt; 015 [pw=phrf]
+variable lnhwageb not found
+r(111);
+
+end of do-file
+r(111);</code></pre>
+</div>
+<div id="r-4" class="section level4 tabset active">
+<h4>R</h4>
+<div id="models-3" class="section level5">
+<h5>Models</h5>
+<pre class="r"><code>    # reg lnhwageb ost frau pgbilzeit c.erf##c.erf pgexpue if asample==1 &amp; syear==2015 [pw=phrf]
+    # margins  , at(erf=(0(5)50) pgbilzeit=(8 13 18))
+    # marginsplot
+    exp(-.1437791)</code></pre>
+<pre><code>## [1] 0.87</code></pre>
+<pre class="r"><code>    # 
+    # * raw gap
+    # reg lnhwageb frau if asample==1 &amp; syear==2015 [pw=phrf]
+    # 
+    exp(-.1983373)</code></pre>
+<pre><code>## [1] 0.82</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

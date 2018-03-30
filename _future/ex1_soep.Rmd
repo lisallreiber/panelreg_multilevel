@@ -1,0 +1,179 @@
+---
+output:
+  html_document:
+    code_folding: "show"
+    df_print: paged
+    toc: true
+    toc_float: true
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+source("0_packages.R")
+
+knitr::opts_chunk$set(echo = TRUE, cache = T)
+statapath = "/Applications/Stata/StataMP.app/Contents/MacOS/Stata-MP"
+
+```
+
+1.  Replicate the tables concerning 
+    current monthly individual gross labor income from SOEP-Monitor (p.73):
+    https://www.diw.de/de/diw_02.c.222728.de/soepmonitor.html
+
+2.  Use the long-file pgen as master data und 
+    merge the variables sampreg, psample, pop, sex, gebjahr and phrf 
+    from the file ppfadl to it. 
+    You will find gross labor income in the variable pglabgro.
+
+3.  You will have to transform the income data using a consumer price index
+    (see table A2 in SOEPmonitor).#### install missing packages and load needed
+
+Load Packages
+```{r load packages,results=F, message=F, echo=FALSE}
+#### packages ####
+# is there a way to show the packages used from this doc?
+```
+
+Paths
+```{r}
+#### Paths ####
+      #inpath <- "M:/Gsoep32long/"                    # Uni
+      #inpath <- "S:/DATA/soep32_de_l/stata"          # DIW
+      inpath <- "/Volumes/gsoep32l/Gsoep32long" # home
+```
+
+
+```{r}
+#### 1. generate  and merge dataset mydf_raw  ####
+# PGEN
+pgen <- read.dta13(paste0(inpath,"/pgen.dta"), convert.factors = F)
+saveRDS(pgen, file = "../../data/pgen.rds")
+
+# PPFADL
+ppfadl <- read.dta13(paste0(inpath,"/ppfadl.dta"), convert.factors = F) %>% 
+            tbl_df() %>% 
+            select(sampreg,
+                   psample,
+                   pop,
+                   sex,
+                   gebjahr,
+                   phrf,
+                   phrf0,
+                   pid,
+                   syear,
+                   phrf1)
+
+saveRDS(ppfadl, file = "../../data/ppfadl.rds")
+```
+
+# CPI Preisindex bezogen auf das Jahr 2010
+```{r}
+# CPI Preisindex bezogen auf das Jahr 2010
+# download.file("http://research.stlouisfed.org/fred2/data/DEUCPIALLMINMEI.txt", "~/Desktop") 
+
+# look for how many lines to skip
+cpi_url <- "https://research.stlouisfed.org/fred2/data/DEUCPIALLMINMEI.txt"
+cpi_url2 <- "https://www.destatis.de/DE/Publikationen/Thematisch/Preise/Verbraucherpreise/VerbraucherpreisindexLangeReihenXLS_5611103.xlsx"
+
+# cpi from the net
+cpi_raw <-read.table(cpi_url, skip = 15, header = TRUE)
+cpi <- cpi_raw %>% 
+      mutate(cpi_year = year(.$DATE)) %>% 
+      # convert from monthly to yearly cpi values:
+      group_by(cpi_year) %>% 
+      dplyr::summarize(cpi = mean(VALUE)) %>% 
+      # create adjustment factor relative 2010 year's prices:
+      mutate(adj_fac2010 = cpi/cpi[cpi_year == 2010],
+             adj_fac2015 = cpi/cpi[cpi_year == 2015])
+
+# cpi from SOEP
+cpi_raw_s <- read.table("/Users/LR/Git/clone/soeples/data/cpi.csv", header = T)
+cpi_s <- cpi_raw_s %>% 
+      select(year, cpi_west, cpi_ost) %>%
+      # add missing values based on destatis data
+      add_row(year = c(2014,2015), 
+              cpi_west = c(106.6, 106.9),
+              cpi_ost = c(106.6, 106.9)) %>% 
+      mutate(cpi_ost = as.numeric(as.character(cpi_ost)),
+             adj_fac2010_s = cpi_west / cpi_west[year == 2010],
+             adj_fac2015_s = cpi_west / cpi_west[year == 2015]
+      )
+
+```
+
+```{r}
+#  merge datasets
+mydf_raw <- merge(x = ppfadl, y = pgen, by= c("pid", "syear"), all.x = T) %>% 
+            merge(., cpi, by.x = c("syear"), by.y=c("cpi_year"), all.x = T) %>% 
+            merge(., cpi_s, by.x = c("syear"), by.y=c("year"), all.x = T) %>% 
+      mutate(cpi_s = case_when(
+            sampreg == 2 ~ cpi_ost, 
+            sampreg == 1 ~ cpi_west)) %>% 
+      select(-cpi_west, -cpi_ost)
+```
+
+```{r }
+#### 2. cleaning data ####
+#  2.1 Define Missings
+      na_codes <- c(-1: -8)
+      for (i in seq_along(mydf_raw)) {
+            mydf_raw[[i]][mydf_raw[[i]] %in% na_codes] <- NA
+      }
+```
+
+
+```{r}
+# 2.2 Generate Variables
+ex1 <- mydf_raw %>% 
+      # Demographics
+      mutate(ost = sampreg - 1, # ost = 1 west = 2
+      # Einkommen, Hourly Wage
+             breink10 = pglabgro /cpi_s*100
+            )
+
+      # Erwerbsstatus
+      ex1$erwstatus <- ex1 %>% 
+      mutate(erwstatus = case_when(
+                              pgemplst == 1 ~ 1, 
+                              pgemplst %in% c(2, 4) ~ 2
+                              )
+            ) %>%
+      select(erwstatus) %>% unlist() %>% 
+      labelled(c("Vollzeit" = 1, "Teilzeit" = 2)) 
+      
+#### 3. Describe Data ####
+# Means by Region 
+ergebnis1 <- ex1 %>% 
+      filter(pop <= 2) %>% 
+      select(syear, breink10, erwstatus, ost, phrf) %>% 
+      dplyr::group_by(syear, ost) %>% 
+      # mutate_at(c("breink10"), funs(Total = mean(., na.rm = T))) %>% 
+      dplyr::summarise(TotalMean = mean(breink10, weights = phrf, na.rm = T))
+
+     xtabs(TotalMean ~ syear + ost, ergebnis1) 
+
+# Means by Region and Job Status
+ergebnis2 <- ex1%>% 
+      group_by(syear, ost, erwstatus) %>%
+      dplyr::summarise(mean = mean(breink10, weights = phrf, na.rm = T))
+
+xtabs(mean ~ syear + erwstatus + ost, ergebnis2) 
+
+# ergebnis3 <- ex1 %>% 
+#       group_by(syear, ost, erwstatus) %>%
+#       select()
+      
+# to do merge so that totals are also in output
+# ergebnis3 <- merge(ergebnis2, ergebnis1, by=c("syear", "ost"), incomparables = NA)
+# try addmargins()
+# try this https://stackoverflow.com/questions/33565949/add-row-to-data-frame-with-dplyr
+# also try add_tally()
+# for ergebnis3 http://www.stats.uwo.ca/faculty/murdoch/ism2013/4tables.pdf
+
+     
+# save dataset
+#### save asample ####
+saveRDS(ex1, file = "../../data/ex1.rds")
+```
+

@@ -1,0 +1,99 @@
+---
+output:
+  html_document:
+    code_folding: "show"
+    df_print: paged
+    toc: true
+    toc_float: true
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = T)
+statapath = "/Applications/Stata/StataMP.app/Contents/MacOS/Stata-MP"
+
+source("0_packages.R")
+
+load("../data/ess50prep.Rds")
+```
+
+# 3. Random Coefficient Model {.tabset}
+## 3.1 Without gender variable   {.tabset}
+
+### Models
+#### Stata
+```{r, results = T, engine = "stata", engine.path= statapath, comment = ""}
+use "../data/ess50prep.dta", clear
+
+xtmixed stfdem polintr nwsptot || cntry: polintr nwsptot, cov(unstructured)
+estat icc
+```
+
+#### R
+##### First: Save Model (like Stata's `est store`)
+```{r}
+multi3 <- lmer(stfdem ~ polintr + nwsptot + (1 + polintr + nwsptot |cntry), data = ess, REML = FALSE)
+
+```
+`1 + ` is not necessarily needed because random coefficient models imply that the intercept is also random
+
+##### Then: Inspect model
+```{r}
+tidy(multi3)
+glance(multi3)
+icc(multi3)
+```
+
+## 3.2 With gender variable    {.tabset}
+
+### Model 
+#### Stata
+```{r no converge, results = T, engine = "stata", engine.path= statapath, comment = ""}
+set maxiter 20
+use "../data/ess50prep.dta", clear
+
+xtmixed stfdem || cntry: polintr nwsptot gndr, cov(unstructured)
+```
+
+#### R
+##### First: Save Model (like Stata's `est store`)
+```{r}
+multi3 <- lmer(stfdem ~ (1 + polintr + nwsptot + gndr |cntry), data = ess, REML = FALSE)
+```
+
+##### Then: Inspect model
+```{r}
+tidy(multi3)
+glance(multi3)
+icc(multi3)
+```
+
+## 3.3 Plotting data
+
+#### Random effect plots
+##### Sorted alphabetically
+```{r message=FALSE, warning=FALSE}
+sjp.lmer(multi3, y.offset = .6)
+```
+
+##### Everything sorted by values of intercept
+```{r message=FALSE, warning=FALSE}
+sjp.lmer(multi3, sort.est = "(Intercept)", y.offset = .6)
+```
+
+##### Every plot sorted by its own values
+```{r message=FALSE, warning=FALSE}
+sjp.lmer(multi3, sort.est = "sort.all", y.offset = .6, facet.grid = FALSE)
+```
+
+#### Random slopes plots
+##### Random slopes depending on random intercepts
+```{r}
+sjp.lmer(multi3, type = "rs.ri", vars = "polintr", show.legend = TRUE)
+```
+
+##### Random slopes depending on random intercepts highlighting **Denmark**, **Portugal**, **Luxemburg**
+```{r}
+sjp.lmer(multi3, type = "rs.ri", vars = "polintr", sample.n = c(6, 16, 20),  show.legend = TRUE)
+```

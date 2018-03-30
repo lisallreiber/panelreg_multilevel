@@ -1,0 +1,995 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title></title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 64px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+
+.section h2 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h3 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h4 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h5 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h6 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Panelregression and Multilevel Models</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Models
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Random Intercept</li>
+    <li>
+      <a href="1_rimodel.html">1. without independent variable</a>
+    </li>
+    <li>
+      <a href="2_rimodel.html">2. with independent variable</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="3_rcmodel.html">3. Random Coefficient</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="4_crosslevelint.html">4. Cross-Level Interaction</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="5_crossclass.html">5. Cross-Classified</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="6_3level.html">6. Three Level</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="7_lrtest.html">7. Likelihood Ratio test</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Exercises
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="ex1_soep.html">Ex1</a>
+    </li>
+    <li>
+      <a href="ex2_soep.html">Ex2</a>
+    </li>
+    <li>
+      <a href="ex3_soep.html">Ex3</a>
+    </li>
+    <li>
+      <a href="ex4_soep.html">Ex4</a>
+    </li>
+    <li>
+      <a href="ex5_soep.html">Ex5</a>
+    </li>
+    <li>
+      <a href="ex6_soep.html">Ex6</a>
+    </li>
+    <li>
+      <a href="ex7_soep.html">Ex7</a>
+    </li>
+    <li>
+      <a href="ex8_soep.html">Ex8</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data Preparation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="ex0_create.html">Exercises</a>
+    </li>
+    <li>
+      <a href="0_create.html">Models</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/TripLLL">
+    <span class="fa fa-github"></span>
+     
+    
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+
+</div>
+
+
+<div id="exercise-5" class="section level1 tabset">
+<h1>Exercise 5</h1>
+<div id="questions" class="section level2">
+<h2>Questions</h2>
+<p>5.1 Apply a chow-test for structural change on the returns to education and the gender wage gap comparing the years 2005 and 2015.</p>
+</div>
+<div id="data-prep" class="section level2 tabset">
+<h2>Data Prep</h2>
+<div id="stata" class="section level3">
+<h3>Stata</h3>
+<pre class="stata"><code>set more off
+capt clear
+version 14
+
+use &quot;_data/ex_mydf.dta&quot;, clear</code></pre>
+<pre><code>
+. set more off
+
+. capt clear
+
+. version 14
+
+. 
+. use &quot;_data/ex_mydf.dta&quot;, clear
+(PGEN: Feb 12, 2017 13:00:53-1 DBV32L)</code></pre>
+</div>
+<div id="r" class="section level3">
+<h3>R</h3>
+<div id="load-data" class="section level4">
+<h4>Load Data</h4>
+<pre class="r"><code>#### load dataset ####
+# https://stackoverflow.com/questions/29012141/between-and-within-standard-deviation-of-panel-data-in-r
+
+
+#### load dataset ####
+ex_mydf &lt;- readRDS(file = &quot;_data/ex_mydf.rds&quot;)
+
+asample &lt;- ex_mydf %&gt;% 
+      filter(
+            # Working Hours
+            pgtatzeit &gt;= 6,
+            # age
+            alter %&gt;% dplyr::between(18, 65),
+            # Employment Status
+            pgemplst %in% c(1,2,4),   # full-time(1), part-time(2), marg.-empl(4)
+            # population status
+            pop &lt; 3 # only private households
+            ) %&gt;%
+      # filter unplausible cases
+      mutate(na = case_when(
+              pid %in% c(1380202, 1380202, 607602, 2555301) ~ 1,
+              pid == 8267202 &amp; syear == 2007 ~ 1,
+              pid == 2633801 &amp; syear == 2006 ~ 1,
+              pid == 2582901 &amp; syear &gt; 2006 ~ 1 )
+             ) %&gt;% 
+      filter(is.na(na)) %&gt;% 
+      dplyr::select(syear, pgbilzeit, frau, ost, lnwage, erf)</code></pre>
+</div>
+</div>
+</div>
+<div id="answers" class="section level2 active">
+<h2>Answers</h2>
+<div id="section" class="section level3 tabset">
+<h3>5.1</h3>
+<p>Apply a chow-test for structural change on the returns to education and the gender wage gap comparing the years 2005 and 2015.</p>
+<hr />
+<div id="stata-1" class="section level4">
+<h4>Stata</h4>
+<pre class="stata"><code>use &quot;_data/ex_mydf.dta&quot;, clear
+
+*** Pooled OLS
+* 2015
+reg lnwage ost frau pgbilzeit c.erf##c.erf pgexpue i.pgallbet if asample==1 &amp; syear==2015 [pw=phrf], cluster(hid)
+estimates store m2015
+
+* 2005
+reg lnwage ost frau pgbilzeit c.erf##c.erf pgexpue i.pgallbet if asample==1 &amp; syear==2005 [pw=phrf], cluster(hid)
+estimates store m2005
+
+gen per2015 = syear == 2015
+reg lnwage ost frau pgbilzeit c.erf##c.erf pgexpue i.pgallbet per2015 if asample==1 &amp; syear==2005 | syear==2015 [pw=phrf], cluster(pid)
+estimates store pooled
+
+esttab m2005 m2015 pooled , ar2 abs star(* .05 ** .01) replace nobase ///
+nobase mtitle(&quot;2005&quot; &quot;2015&quot; &quot;pooled&quot;) nogaps
+
+esttab m2005 m2015 pooled using table.rtf  , ar2 abs star(* .05 ** .01) replace ///
+nobase mtitle(&quot;2005&quot; &quot;2015&quot; &quot;pooled&quot;)
+
+*** Test for structural change
+reg lnwage i.per2015##i.ost i.per2015##i.frau  i.per2015##c.pgbilzeit c.erf##c.erf pgexpue i.pgallbet per2015 if asample==1 &amp; syear==2005 | syear==2015 [pw=phrf], cluster(pid)
+
+reg lnwage ost frau pgbilzeit c.erf##c.erf pgexpue i.pgallbet if asample==1 &amp; syear==2015 [iw=phrf], 
+estimates store m2015
+reg lnwage ost frau pgbilzeit c.erf##c.erf pgexpue i.pgallbet if asample==1 &amp; syear==2005 [iw=phrf],
+estimates store m2005
+
+suest m2005 m2015  , cluster(hid)
+
+est table m2005 m2015, star
+
+test [m2005_mean = m2015_mean] 
+
+test [m2005_mean]pgbilzeit=[m2015_mean]pgbilzeit
+ 
+
+test [f1_mean]alter = [m1_mean]alter
+test [f1_mean]_cons = [m1_mean]_cons</code></pre>
+<pre><code>
+. use &quot;_data/ex_mydf.dta&quot;, clear
+(PGEN: Feb 12, 2017 13:00:53-1 DBV32L)
+
+. 
+. *** Pooled OLS
+. * 2015
+. reg lnwage ost frau pgbilzeit c.erf##c.erf pgexpue i.pgallbet if asample==1 &amp;
+&gt;  syear==2015 [pw=phrf], cluster(hid)
+(sum of wgt is   3.3458e+07)
+
+Linear regression                               Number of obs     =     14,034
+                                                F(10, 9953)       =     330.48
+                                                Prob &gt; F          =     0.0000
+                                                R-squared         =     0.3760
+                                                Root MSE          =     .45056
+
+                                (Std. Err. adjusted for 9,954 clusters in hid)
+------------------------------------------------------------------------------
+             |               Robust
+      lnwage |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         ost |  -.1987729   .0179708   -11.06   0.000    -.2339993   -.1635465
+        frau |  -.1328419   .0130426   -10.19   0.000    -.1584081   -.1072758
+   pgbilzeit |   .0746257   .0024972    29.88   0.000     .0697307    .0795208
+         erf |   .0385242    .002168    17.77   0.000     .0342744     .042774
+             |
+ c.erf#c.erf |  -.0006413   .0000501   -12.79   0.000    -.0007395    -.000543
+             |
+     pgexpue |  -.0471266   .0047512    -9.92   0.000      -.05644   -.0378132
+             |
+    pgallbet |
+[2] GE 20..  |   .1147761   .0176681     6.50   0.000      .080143    .1494092
+[3] GE 20..  |   .2098906   .0203239    10.33   0.000     .1700517    .2497296
+[4] GE 2000  |    .312486   .0193109    16.18   0.000     .2746327    .3503392
+[5] Selbs..  |  -.0744961   .0496536    -1.50   0.134    -.1718271    .0228349
+             |
+       _cons |   1.291813   .0391646    32.98   0.000     1.215042    1.368583
+------------------------------------------------------------------------------
+
+. estimates store m2015
+
+. 
+. * 2005
+. reg lnwage ost frau pgbilzeit c.erf##c.erf pgexpue i.pgallbet if asample==1 &amp;
+&gt;  syear==2005 [pw=phrf], cluster(hid)
+(sum of wgt is   2.8666e+07)
+
+Linear regression                               Number of obs     =      9,522
+                                                F(10, 6696)       =     302.93
+                                                Prob &gt; F          =     0.0000
+                                                R-squared         =     0.3550
+                                                Root MSE          =     .45353
+
+                                (Std. Err. adjusted for 6,697 clusters in hid)
+------------------------------------------------------------------------------
+             |               Robust
+      lnwage |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         ost |  -.3387678   .0176441   -19.20   0.000    -.3733558   -.3041797
+        frau |  -.1809541   .0139264   -12.99   0.000    -.2082544   -.1536539
+   pgbilzeit |   .0721785   .0031806    22.69   0.000     .0659435    .0784136
+         erf |   .0384176   .0022836    16.82   0.000     .0339411    .0428942
+             |
+ c.erf#c.erf |  -.0006552   .0000536   -12.22   0.000    -.0007603   -.0005501
+             |
+     pgexpue |  -.0548967   .0070044    -7.84   0.000    -.0686275   -.0411658
+             |
+    pgallbet |
+[2] GE 20..  |   .1116015   .0186546     5.98   0.000     .0750326    .1481704
+[3] GE 20..  |   .2419907   .0175713    13.77   0.000     .2075453    .2764361
+[4] GE 2000  |   .2698741   .0207693    12.99   0.000     .2291597    .3105886
+[5] Selbs..  |  -.1874213   .0791409    -2.37   0.018    -.3425627   -.0322799
+             |
+       _cons |   1.417531   .0466424    30.39   0.000     1.326097    1.508965
+------------------------------------------------------------------------------
+
+. estimates store m2005
+
+. 
+. gen per2015 = syear == 2015
+
+. reg lnwage ost frau pgbilzeit c.erf##c.erf pgexpue i.pgallbet per2015 if asam
+&gt; ple==1 &amp; syear==2005 | syear==2015 [pw=phrf], cluster(pid)
+(sum of wgt is   6.4782e+07)
+
+Linear regression                               Number of obs     =     24,633
+                                                F(11, 21331)      =     527.17
+                                                Prob &gt; F          =     0.0000
+                                                R-squared         =     0.3652
+                                                Root MSE          =     .48016
+
+                               (Std. Err. adjusted for 21,332 clusters in pid)
+------------------------------------------------------------------------------
+             |               Robust
+      lnwage |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         ost |  -.2742035   .0134076   -20.45   0.000    -.3004833   -.2479237
+        frau |  -.1418909   .0103735   -13.68   0.000    -.1622237   -.1215581
+   pgbilzeit |   .0792116   .0021235    37.30   0.000     .0750493    .0833739
+         erf |   .0447061   .0016721    26.74   0.000     .0414286    .0479836
+             |
+ c.erf#c.erf |  -.0007516   .0000408   -18.42   0.000    -.0008316   -.0006716
+             |
+     pgexpue |  -.0429604   .0038216   -11.24   0.000     -.050451   -.0354698
+             |
+    pgallbet |
+[2] GE 20..  |   .1030256   .0136136     7.57   0.000     .0763419    .1297094
+[3] GE 20..  |   .2173511   .0146506    14.84   0.000     .1886348    .2460674
+[4] GE 2000  |   .2873069   .0144674    19.86   0.000     .2589497    .3156641
+[5] Selbs..  |  -.0994286   .0420419    -2.36   0.018    -.1818339   -.0170233
+             |
+     per2015 |  -.0569487   .0091188    -6.25   0.000    -.0748223   -.0390752
+       _cons |   1.228242   .0321654    38.19   0.000     1.165195    1.291289
+------------------------------------------------------------------------------
+
+. estimates store pooled
+
+. 
+. esttab m2005 m2015 pooled , ar2 abs star(* .05 ** .01) replace nobase ///
+&gt; nobase mtitle(&quot;2005&quot; &quot;2015&quot; &quot;pooled&quot;) nogaps
+
+---------------------------------------------------------
+                      (1)            (2)            (3)  
+                     2005           2015         pooled  
+---------------------------------------------------------
+ost                -0.339**       -0.199**       -0.274**
+                  (19.20)        (11.06)        (20.45)  
+frau               -0.181**       -0.133**       -0.142**
+                  (12.99)        (10.19)        (13.68)  
+pgbilzeit          0.0722**       0.0746**       0.0792**
+                  (22.69)        (29.88)        (37.30)  
+erf                0.0384**       0.0385**       0.0447**
+                  (16.82)        (17.77)        (26.74)  
+c.erf#c.erf     -0.000655**    -0.000641**    -0.000752**
+                  (12.22)        (12.79)        (18.42)  
+pgexpue           -0.0549**      -0.0471**      -0.0430**
+                   (7.84)         (9.92)        (11.24)  
+2.pgallbet          0.112**        0.115**        0.103**
+                   (5.98)         (6.50)         (7.57)  
+3.pgallbet          0.242**        0.210**        0.217**
+                  (13.77)        (10.33)        (14.84)  
+4.pgallbet          0.270**        0.312**        0.287**
+                  (12.99)        (16.18)        (19.86)  
+5.pgallbet         -0.187*       -0.0745        -0.0994* 
+                   (2.37)         (1.50)         (2.36)  
+per2015                                         -0.0569**
+                                                 (6.25)  
+_cons               1.418**        1.292**        1.228**
+                  (30.39)        (32.98)        (38.19)  
+---------------------------------------------------------
+N                    9522          14034          24633  
+adj. R-sq           0.354          0.376          0.365  
+---------------------------------------------------------
+Absolute t statistics in parentheses
+* p&lt;.05, ** p&lt;.01
+
+. 
+. esttab m2005 m2015 pooled using table.rtf  , ar2 abs star(* .05 ** .01) repla
+&gt; ce ///
+&gt; nobase mtitle(&quot;2005&quot; &quot;2015&quot; &quot;pooled&quot;)
+(note: file table.rtf not found)
+(output written to table.rtf)
+
+. 
+. *** Test for structural change
+. reg lnwage i.per2015##i.ost i.per2015##i.frau  i.per2015##c.pgbilzeit c.erf##
+&gt; c.erf pgexpue i.pgallbet per2015 if asample==1 &amp; syear==2005 | syear==2015 [p
+&gt; w=phrf], cluster(pid)
+(sum of wgt is   6.4782e+07)
+note: per2015 omitted because of collinearity
+
+Linear regression                               Number of obs     =     24,633
+                                                F(14, 21331)      =     425.08
+                                                Prob &gt; F          =     0.0000
+                                                R-squared         =     0.3678
+                                                Root MSE          =     .47922
+
+                               (Std. Err. adjusted for 21,332 clusters in pid)
+------------------------------------------------------------------------------
+             |               Robust
+      lnwage |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+   1.per2015 |  -.2139276   .0485717    -4.40   0.000    -.3091317   -.1187234
+             |
+         ost |
+        Ost  |  -.3496436   .0169352   -20.65   0.000    -.3828379   -.3164494
+             |
+ per2015#ost |
+      1#Ost  |   .1351972    .022936     5.89   0.000     .0902409    .1801536
+             |
+        frau |
+   weiblich  |  -.1687139   .0141056   -11.96   0.000     -.196362   -.1410657
+             |
+per2015#frau |
+ 1#weiblich  |   .0473041   .0181299     2.61   0.009     .0117682      .08284
+             |
+   pgbilzeit |   .0739746   .0030055    24.61   0.000     .0680836    .0798656
+             |
+     per2015#|
+ c.pgbilzeit |
+          1  |   .0090171   .0037316     2.42   0.016      .001703    .0163313
+             |
+         erf |   .0445412   .0016719    26.64   0.000     .0412642    .0478182
+             |
+ c.erf#c.erf |  -.0007475   .0000408   -18.32   0.000    -.0008275   -.0006676
+             |
+     pgexpue |  -.0437749   .0038146   -11.48   0.000    -.0512517   -.0362981
+             |
+    pgallbet |
+[2] GE 20..  |   .1016492   .0135954     7.48   0.000     .0750011    .1282973
+[3] GE 20..  |   .2143009   .0146149    14.66   0.000     .1856546    .2429473
+[4] GE 2000  |   .2855804   .0144287    19.79   0.000     .2572989    .3138618
+[5] Selbs..  |  -.1000737   .0420785    -2.38   0.017    -.1825507   -.0175966
+             |
+     per2015 |          0  (omitted)
+       _cons |   1.320129   .0416619    31.69   0.000     1.238468    1.401789
+------------------------------------------------------------------------------
+
+. 
+. reg lnwage ost frau pgbilzeit c.erf##c.erf pgexpue i.pgallbet if asample==1 &amp;
+&gt;  syear==2015 [iw=phrf], 
+
+      Source |       SS           df       MS      Number of obs   =  33458470
+-------------+----------------------------------   F(10, 33458459) &gt;  99999.00
+       Model |  4089743.87        10  408974.387   Prob &gt; F        =    0.0000
+    Residual |  6786878.59  33458459  .202844925   R-squared       =    0.3760
+-------------+----------------------------------   Adj R-squared   =    0.3760
+       Total |  10876622.5  33458469  .325078307   Root MSE        =    .45038
+
+------------------------------------------------------------------------------
+      lnwage |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         ost |  -.1987729   .0002097  -947.86   0.000    -.1991839   -.1983618
+        frau |  -.1328419   .0001607  -826.85   0.000    -.1331568    -.132527
+   pgbilzeit |   .0746257   .0000296  2523.19   0.000     .0745678    .0746837
+         erf |   .0385242   .0000244  1581.12   0.000     .0384765     .038572
+             |
+ c.erf#c.erf |  -.0006413   5.99e-07 -1069.73   0.000    -.0006424   -.0006401
+             |
+     pgexpue |  -.0471266   .0000405 -1162.86   0.000     -.047206   -.0470472
+             |
+    pgallbet |
+[2] GE 20..  |   .1147761   .0002259   508.19   0.000     .1143334    .1152188
+[3] GE 20..  |   .2098906   .0002369   886.12   0.000     .2094264    .2103549
+[4] GE 2000  |    .312486   .0002238  1396.20   0.000     .3120473    .3129246
+[5] Selbs..  |  -.0744961   .0004086  -182.33   0.000    -.0752969   -.0736953
+             |
+       _cons |   1.291813   .0004696  2750.97   0.000     1.290892    1.292733
+------------------------------------------------------------------------------
+
+. estimates store m2015
+
+. reg lnwage ost frau pgbilzeit c.erf##c.erf pgexpue i.pgallbet if asample==1 &amp;
+&gt;  syear==2005 [iw=phrf],
+
+      Source |       SS           df       MS      Number of obs   =  28666228
+-------------+----------------------------------   F(10, 28666217) &gt;  99999.00
+       Model |   3240784.2        10   324078.42   Prob &gt; F        =    0.0000
+    Residual |  5889449.86  28666217  .205449148   R-squared       =    0.3550
+-------------+----------------------------------   Adj R-squared   =    0.3550
+       Total |  9130234.05  28666227  .318501422   Root MSE        =    .45326
+
+------------------------------------------------------------------------------
+      lnwage |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+         ost |  -.3387678   .0002323 -1458.61   0.000     -.339223   -.3383125
+        frau |  -.1809541   .0001764 -1025.65   0.000    -.1812999   -.1806084
+   pgbilzeit |   .0721785    .000034  2122.53   0.000     .0721119    .0722452
+         erf |   .0384176   .0000287  1340.03   0.000     .0383615    .0384738
+             |
+ c.erf#c.erf |  -.0006552   6.98e-07  -938.13   0.000    -.0006566   -.0006538
+             |
+     pgexpue |  -.0548967   .0000627  -875.20   0.000    -.0550196   -.0547737
+             |
+    pgallbet |
+[2] GE 20..  |   .1116015   .0002286   488.16   0.000     .1111534    .1120496
+[3] GE 20..  |   .2419907   .0002503   966.98   0.000     .2415002    .2424812
+[4] GE 2000  |   .2698741   .0002497  1080.72   0.000     .2693847    .2703636
+[5] Selbs..  |  -.1874213   .0005092  -368.04   0.000    -.1884194   -.1864232
+             |
+       _cons |   1.417531   .0005342  2653.58   0.000     1.416484    1.418578
+------------------------------------------------------------------------------
+
+. estimates store m2005
+
+. 
+. suest m2005 m2015  , cluster(hid)
+
+Simultaneous results for m2005, m2015
+
+                                                Number of obs     =     23,556
+
+                               (Std. Err. adjusted for 14,186 clusters in hid)
+------------------------------------------------------------------------------
+             |               Robust
+             |      Coef.   Std. Err.      z    P&gt;|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+m2005_mean   |
+         ost |  -.3387678   .0176341   -19.21   0.000      -.37333   -.3042055
+        frau |  -.1809541   .0139186   -13.00   0.000     -.208234   -.1536743
+   pgbilzeit |   .0721785   .0031788    22.71   0.000     .0659482    .0784089
+         erf |   .0384176   .0022823    16.83   0.000     .0339444    .0428909
+             |
+ c.erf#c.erf |  -.0006552   .0000536   -12.23   0.000    -.0007602   -.0005502
+             |
+     pgexpue |  -.0548967   .0070004    -7.84   0.000    -.0686173   -.0411761
+             |
+    pgallbet |
+[2] GE 20..  |   .1116015   .0186441     5.99   0.000     .0750598    .1481432
+[3] GE 20..  |   .2419907   .0175614    13.78   0.000      .207571    .2764104
+[4] GE 2000  |   .2698741   .0207576    13.00   0.000       .22919    .3105583
+[5] Selbs..  |  -.1874213   .0790962    -2.37   0.018     -.342447   -.0323955
+             |
+       _cons |   1.417531   .0466161    30.41   0.000     1.326165    1.508897
+-------------+----------------------------------------------------------------
+m2005_lnvar  |
+       _cons |  -1.582557   .0681554   -23.22   0.000    -1.716139   -1.448975
+-------------+----------------------------------------------------------------
+m2015_mean   |
+         ost |  -.1987729   .0179641   -11.06   0.000    -.2339819   -.1635638
+        frau |  -.1328419   .0130378   -10.19   0.000    -.1583955   -.1072884
+   pgbilzeit |   .0746257   .0024963    29.89   0.000     .0697331    .0795184
+         erf |   .0385242   .0021672    17.78   0.000     .0342765    .0427719
+             |
+ c.erf#c.erf |  -.0006413   .0000501   -12.80   0.000    -.0007395    -.000543
+             |
+     pgexpue |  -.0471266   .0047495    -9.92   0.000    -.0564354   -.0378178
+             |
+    pgallbet |
+[2] GE 20..  |   .1147761   .0176616     6.50   0.000       .08016    .1493922
+[3] GE 20..  |   .2098906   .0203164    10.33   0.000     .1700713    .2497099
+[4] GE 2000  |    .312486   .0193037    16.19   0.000     .2746513    .3503206
+[5] Selbs..  |  -.0744961   .0496351    -1.50   0.133    -.1717792     .022787
+             |
+       _cons |   1.291813   .0391501    33.00   0.000      1.21508    1.368545
+-------------+----------------------------------------------------------------
+m2015_lnvar  |
+       _cons |  -1.595314   .0333955   -47.77   0.000    -1.660768    -1.52986
+------------------------------------------------------------------------------
+
+. 
+. est table m2005 m2015, star
+
+----------------------------------------------
+    Variable |     m2005           m2015      
+-------------+--------------------------------
+         ost | -.33876775***   -.19877286***  
+        frau | -.18095415***   -.13284194***  
+   pgbilzeit |  .07217854***    .07462573***  
+         erf |  .03841764***    .03852422***  
+             |
+ c.erf#c.erf |  -.0006552***   -.00064125***  
+             |
+     pgexpue | -.05489668***    -.0471266***  
+             |
+    pgallbet |
+[2] GE 20..  |   .1116015***    .11477611***  
+[3] GE 20..  |   .2419907***    .20989062***  
+[4] GE 2000  |  .26987415***    .31248596***  
+[5] Selbs..  | -.18742128***    -.0744961***  
+             |
+       _cons |  1.4175307***    1.2918125***  
+----------------------------------------------
+      legend: * p&lt;0.05; ** p&lt;0.01; *** p&lt;0.001
+
+. 
+. test [m2005_mean = m2015_mean] 
+
+ ( 1)  [m2005_mean]ost - [m2015_mean]ost = 0
+ ( 2)  [m2005_mean]frau - [m2015_mean]frau = 0
+ ( 3)  [m2005_mean]pgbilzeit - [m2015_mean]pgbilzeit = 0
+ ( 4)  [m2005_mean]erf - [m2015_mean]erf = 0
+ ( 5)  [m2005_mean]c.erf#c.erf - [m2015_mean]c.erf#c.erf = 0
+ ( 6)  [m2005_mean]pgexpue - [m2015_mean]pgexpue = 0
+ ( 7)  [m2005_mean]1b.pgallbet - [m2015_mean]1b.pgallbet = 0
+ ( 8)  [m2005_mean]2.pgallbet - [m2015_mean]2.pgallbet = 0
+ ( 9)  [m2005_mean]3.pgallbet - [m2015_mean]3.pgallbet = 0
+ (10)  [m2005_mean]4.pgallbet - [m2015_mean]4.pgallbet = 0
+ (11)  [m2005_mean]5.pgallbet - [m2015_mean]5.pgallbet = 0
+       Constraint 7 dropped
+
+           chi2( 10) =   60.97
+         Prob &gt; chi2 =    0.0000
+
+. 
+. test [m2005_mean]pgbilzeit=[m2015_mean]pgbilzeit
+
+ ( 1)  [m2005_mean]pgbilzeit - [m2015_mean]pgbilzeit = 0
+
+           chi2(  1) =    0.40
+         Prob &gt; chi2 =    0.5262
+
+.  
+. 
+. test [f1_mean]alter = [m1_mean]alter
+equation [f1_mean] not found
+r(303);
+
+end of do-file
+r(303);</code></pre>
+</div>
+<div id="r-1" class="section level4 tabset active">
+<h4>R</h4>
+<div id="test" class="section level5">
+<h5>Test</h5>
+<p>Chow Test</p>
+<pre class="r"><code>dv05 &lt;- asample %&gt;% 
+      mutate(erf_q = erf^2) %&gt;% 
+      filter(syear == 2005) %&gt;%
+      drop_na() %&gt;% 
+      pull(lnwage)
+
+dv15 &lt;- asample %&gt;% 
+      mutate(erf_q = erf^2) %&gt;% 
+      filter(syear == 2015) %&gt;%
+      drop_na() %&gt;% 
+      pull(lnwage)  
+
+ivs05 &lt;- asample %&gt;% 
+      mutate(erf_q = erf^2) %&gt;% 
+      filter(syear == 2005) %&gt;%
+      drop_na() %&gt;% 
+      select(-lnwage) %&gt;%
+      as.matrix()
+
+ivs15 &lt;- asample %&gt;% 
+      mutate(erf_q = erf^2) %&gt;% 
+      filter(syear == 2015) %&gt;%
+      drop_na() %&gt;% 
+      select(-lnwage) %&gt;%
+      as.matrix() 
+
+sctest(c(dv05, dv15) ~ rbind(ivs05, ivs15), type = &quot;Chow&quot;, point = length(dv05), data = asample)</code></pre>
+<pre><code>## 
+##  Chow test
+## 
+## data:  c(dv05, dv15) ~ rbind(ivs05, ivs15)
+## F = 10, p-value &lt;2e-16</code></pre>
+</div>
+<div id="plot" class="section level5">
+<h5>Plot</h5>
+<p><a href="https://thetarzan.wordpress.com/2011/06/16/the-chow-test-in-r-a-case-study-of-yellowstones-old-faithful-geyser/" class="uri">https://thetarzan.wordpress.com/2011/06/16/the-chow-test-in-r-a-case-study-of-yellowstones-old-faithful-geyser/</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,188 @@
+---
+output:
+  html_document:
+    code_folding: hide
+    df_print: paged
+    toc: true
+    toc_float: true
+    toc_depth: 3
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r setup, include=FALSE}
+source("0_packages.R")
+
+knitr::opts_chunk$set(echo = TRUE, cache = T)
+statapath = "/Applications/Stata/StataMP.app/Contents/MacOS/Stata-MP"
+
+```
+
+# Exercise 6 {.tabset}
+## Questions
+
+6.1 Using Soep Data: Specify the fixed effects model of the mincer equation and compare your results to the pooled OLS specification.
+
+## Data Prep {.tabset}
+### Stata
+```{r stata create and clean, results = T, engine = "stata", engine.path= statapath, comment = ""}
+set more off
+capt clear
+version 14
+
+use "_data/ex_mydf.dta", clear
+```
+### R
+#### Load Data
+```{r load data}
+#### load dataset ####
+ex_mydf <- readRDS(file = "_data/ex_mydf.rds")
+
+asample <- ex_mydf %>% 
+      filter(
+            # Working Hours
+            pgtatzeit >= 6,
+            # age
+            alter %>% dplyr::between(18, 65),
+            # Employment Status
+            pgemplst %in% c(1,2,4),   # full-time(1), part-time(2), marg.-empl(4)
+            # population status
+            pop < 3 # only private households
+            ) %>%
+      # filter unplausible cases
+      mutate(na = case_when(
+              pid %in% c(1380202, 1380202, 607602, 2555301) ~ 1,
+              pid == 8267202 & syear == 2007 ~ 1,
+              pid == 2633801 & syear == 2006 ~ 1,
+              pid == 2582901 & syear > 2006 ~ 1 )
+             ) %>% 
+      filter(is.na(na), 
+             syear > 2002) %>% 
+      select(pid, syear, lnwage, pgbilzeit, erf, ost, frau, pgexpue, pgallbet, phrf )
+
+## Sample For Analysis for 2015
+asample15 <- asample %>% filter(syear == 2015)
+
+# panel data frame
+p.asample <- pdata.frame(asample, index = c("pid", "syear"))
+p.asample15 <- pdata.frame(asample15, index = c("pid", "syear"))
+
+```
+## Answers {.active}
+### 6.1 {.tabset}
+Using Soep Data: Specify the fixed effects model of the mincer equation and compare your results to the pooled OLS specification.
+
+***
+Note: Because the size of the dataset is so large and the computing for fixed effects models is takes long, for this exercise the sample is restricted to years 2002 and up.
+
+
+The coefficients fo the fixed effects regression are identical to the OLS dummy regression.
+- Fixed effects regression does not show any effects of an intercept or sex on Lebenszufriedenheit since constant variables drop out.
+- The coefficient on sex cannot be interpreted in a fixed effects regression.
+
+The coefficients of the standard OLS/pooled regression with intercept are all strongly significant.
+The effects differ in intensity (gesund_org) and also direction (anz_kind, bildung) from the fixed effects regression.
+This is partially related to the consideration of of an intercept and sex.
+
+By ignoring the clustering in persnr, we just calculate a pooled statistical relation.
+Instead the fixed panel regression exaluates changes with the persnr and 
+therefore we can speak or (causal) effects induced by changes of our chosen covariates
+
+i) gesund_org is strongly significant. 
+An increase by 1 in gesund_org (with {1,2,3,4,5} in the dataset) leads to an average increase of 0.45 in lebensz_org
+
+ii) anz_kind is significant at a significance level of 0.015 (P-value)
+An increase by one child (with {1,2,3} in this dataset) leads to an average increase of 0.13 in lebensz_org
+
+#### Stata
+* rho := Intraklassenkorrleation := sigma_u²/(sigma_u² + sigma_e²)
+* Maß der Ähnlichkeit der Beobachtungen innerhalb eines Clusters
+* wenn 1, dann ist gesamte Variation auf die Between-Ebene zurückzuführen; 
+* Beobachtungen innerhalb eines Clusters sind dann identisch.
+* fe unterstützt keine zeitvariierenden Gewichte --> workaround über areg , absorb
+* FE schätzt ATET --> mangelnde Generalisierbarkeit
+* two-wayfixed effect
+      * neben Individuenspezifischen unbeobachteten Effekten werden nun zusätzlich periodenspezifische Effekte kontrolliert
+```{r, results = T, engine = "stata", engine.path= statapath, comment = ""}
+use "_data/ex_mydf.dta", clear
+
+* POLS-Model
+reg lnwage pgbilzeit c.erf##c.erf pgexpue ost frau i.pgallbet if asample==1 & syear>2002
+reg lnwage pgbilzeit c.erf##c.erf pgexpue ost frau i.pgallbet if asample==1 & syear>2002 [pw = phrf]
+
+* FE-Model
+xtset pid syear
+xtreg lnwage pgbilzeit c.erf##c.erf pgexpue ost frau i.pgallbet i.syear if asample==1 & syear>2002,  fe cluster(pid)
+
+areg  lnwage pgbilzeit c.erf##c.erf pgexpue ost frau i.pgallbet i.syear  if asample==1 & syear>2002,  absorb(pid) cluster(pid)
+
+* two-way-fixed-effect
+xtreg lnwage pgbilzeit c.erf##c.erf pgexpue ost frau i.pgallbet i.syear  if asample==1 & syear>2002 & pgbilztch==0,  fe
+
+```
+ 
+#### R {.tabset .active}
+##### Model
+Note: Here is the problem, that the p-values seem not to be working
+```{r model 6.1}
+
+# POLS- and FE-model ------------------------------------------------------
+pols <- plm(lnwage ~ pgbilzeit + erf + I(erf^2) + pgexpue + ost + frau + factor(pgallbet),
+                        data = p.asample, 
+                        weights = phrf,
+                        model = "pooling") 
+
+# other way of writing
+# pols <- lm(lnwage ~  pgbilzeit + erf + I(erf^2) + ost + frau, 
+#            weights = phrf,
+#            data = asample)
+
+fe  <- plm(lnwage ~ pgbilzeit + erf + I(erf^2) + pgexpue + ost + frau + pgallbet, 
+            data = p.asample,
+            weights = phrf,
+            model = "within")
+
+tidy(pols)
+
+fe
+# t.fe   <- tidy(fe) # takes too long
+# display results
+      # smy_fe <- summary(fe) # takes too long
+      # summary(fe, robust = T) # like the robust function in STATA
+
+# just show general coefficients and no dummies
+      # smy_fe$coef[1:5,] # takes too long
+
+```
+
+fixed effects like areg in STATA
+```{r areg}
+ # fixed effects like areg in STATA
+fe_areg <- felm(lnwage ~ pgbilzeit + erf + I(erf^2) + ost 
+                         | pid | 0 | pid, data = asample, weights = asample$phrf)
+
+fe_areg      
+# areg y x1 [w=x3], a(id1) cl(id1) 
+# felm(y ~ x1 | id1 | 0 | id1, df, weight = x3))
+```
+
+##### Plot
+output as nice table
+```{r stargazer}
+# stargazer(fe, pols, title="Results", align=TRUE) # takes too long
+```
+
+##### Tests
+```{r plmtest}
+# Pooled Model
+# LM test for random effects versus OLS
+plmtest(pols) 
+
+# FE Model
+# coeftest(fe, vcov.=vcovHC(fe,type="HC1")) # takes too long
+
+```
+
+info on fixed effects / LSDV Reg
+https://stats.stackexchange.com/questions/41916/within-model-with-plm-package

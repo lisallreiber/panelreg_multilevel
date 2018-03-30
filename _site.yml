@@ -1,0 +1,74 @@
+name: Panelregression and Multilevel Models
+output_dir: docs
+navbar:
+  title: Panelregression and Multilevel Models
+  left:
+  - text: Home
+    href: index.html
+  - text: Models
+    menu:
+    - text: Random Intercept
+    - text: 1. without independent variable
+      href: 1_rimodel.html
+    - text: 2. with independent variable
+      href: 2_rimodel.html
+    - text: '---------'
+    - text: 3. Random Coefficient
+      href: 3_rcmodel.html
+    - text: '---------'
+    - text: 4. Cross-Level Interaction
+      href: 4_crosslevelint.html
+    - text: '---------'
+    - text: 5. Cross-Classified
+      href: 5_crossclass.html
+    - text: '---------'
+    - text: 6. Three Level
+      href: 6_3level.html
+    - text: '---------'
+    - text: 7. Likelihood Ratio test
+      href: 7_lrtest.html
+  - text: Exercises
+    menu:
+    - text: Ex1
+      href: ex1_soep.html
+    - text: Ex2
+      href: ex2_soep.html
+    - text: Ex3
+      href: ex3_soep.html
+    - text: Ex4
+      href: ex4_soep.html
+    - text: Ex5
+      href: ex5_soep.html
+    - text: Ex6
+      href: ex6_soep.html
+    - text: Ex7
+      href: ex7_soep.html
+    - text: Ex8
+      href: ex8_soep.html
+  - text: Data Preparation
+    menu:
+    - text: Exercises
+      href: ex0_create.html
+    - text: Models
+      href: 0_create.html
+  right:
+  - text: ''
+    icon: fa-github
+    href: https://github.com/TripLLL
+output:
+  html_document:
+    theme: spacelab
+    lib_dir: site_libs
+    self_contained: no
+exclude:
+- '*.rda'
+- '*.pdf'
+- '*.dta'
+- '*.csv'
+- geo
+- item_tables
+- '*.csl'
+- '*.bibtex'
+- '*.docx'
+- '*.Rpres'
+

@@ -1,0 +1,153 @@
+---
+output:
+  html_document:
+    code_folding: hide
+    df_print: paged
+    toc: true
+    toc_float: true
+    toc_depth: 3
+editor_options: 
+  chunk_output_type: console
+---
+
+
+```{r setup, include=FALSE}
+source("0_packages.R")
+
+knitr::opts_chunk$set(echo = TRUE, cache = T)
+statapath = "/Applications/Stata/StataMP.app/Contents/MacOS/Stata-MP"
+
+```
+
+# Exercise 7 {.tabset}
+## Questions
+
+7.1 Specify a random and a fixed effects model. Compare the results.
+
+7.2 Execute the hausman test. Which model specification is more appropriate and why?
+
+## Data Prep {.tabset}
+### Stata
+```{r stata create and clean, results = T, engine = "stata", engine.path= statapath, comment = ""}
+
+set more off
+capt clear
+version 14
+
+use "_data/ex_mydf.dta", clear
+```
+### R
+#### Load Data
+```{r load data}
+#### load dataset ####
+ex_mydf <- readRDS(file = "_data/ex_mydf.rds")
+
+asample <- ex_mydf %>% 
+      filter(
+            # Working Hours
+            pgtatzeit >= 6,
+            # age
+            alter %>% dplyr::between(18, 65),
+            # Employment Status
+            pgemplst %in% c(1,2,4),   # full-time(1), part-time(2), marg.-empl(4)
+            # population status
+            pop <= 2, # only private households
+            # restrict number of years
+            syear > 2002) %>%
+      # filter unplausible cases
+      mutate(na = case_when(
+              pid %in% c(1380202, 1380202, 607602, 2555301) ~ 1,
+              pid == 8267202 & syear == 2007 ~ 1,
+              pid == 2633801 & syear == 2006 ~ 1,
+              pid == 2582901 & syear > 2006 ~ 1 )
+             ) %>% 
+      filter(is.na(na))
+
+# Prepare Panel Dataset
+p.asample <- pdata.frame(asample, index = c("pid", "syear"))
+
+# information if panel dataframe
+pdim(p.asample)
+# summary(p.asample)
+```
+## Answers {.active}
+### 7.1 {.tabset}
+Specify a random and a fixed effects model. Compare the results.
+
+***
+
+#### Stata
+```{r, results = T, engine = "stata", engine.path= statapath, comment = ""}
+use "_data/ex_mydf.dta", clear
+
+xtset pid syear
+* FE model
+
+xtreg lnwage pgbilzeit c.erf##c.erf pgexpue ost frau i.pgallbet i.syear if asample==1 & syear>2002 ,   fe
+
+* RE model 
+xtreg lnwage pgbilzeit c.erf##c.erf pgexpue ost frau i.pgallbet i.syear if asample==1 & syear>2002 ,  re 
+
+```
+ 
+#### R {.tabset .active}
+##### Model
+```{r model 7.1}
+
+# FE Model
+fixed   <- p.asample %>% 
+      filter(syear > 2002) %>% 
+      plm(lnwage ~  pgbilzeit + erf + I(erf^2) + pgexpue + ost + pgallbet + syear,
+             data = p.asample[], 
+             model = "within" 
+             # weights = phrf
+             )
+
+tidy(fixed)
+
+# RE Model
+random  <- plm(lnwage ~  pgbilzeit + erf + I(erf^2) + pgexpue + ost + pgallbet + syear,
+             data = p.asample, 
+             model = "random" 
+             # weights = phrf
+             )
+
+tidy(random)
+
+```
+
+##### Plot
+
+### 7.2 {.tabset}
+Execute the hausman test. Which model specification is more appropriate and why?
+
+***
+
+#### Stata
+```{r, results = T, engine = "stata", engine.path= statapath, comment = ""}
+use "_data/ex_mydf.dta", clear
+
+xtreg lnwage pgbilzeit c.erf##c.erf pgexpue ost frau i.pgallbet i.syear if asample==1 & syear>2002 ,   fe
+estimates store fixed
+
+xtreg lnwage pgbilzeit c.erf##c.erf pgexpue ost frau i.pgallbet i.syear if asample==1 & syear>2002 ,  re 
+estimates store random
+
+hausman fixed random
+```
+ 
+#### R {.tabset .active}
+##### Model
+```{r model 7.2}
+# Hausman Test
+hausman <- phtest(fixed, random)
+hausman
+```
+
+##### Plot
+
+other things
+```{r}
+pvar(p.asample)
+```
+

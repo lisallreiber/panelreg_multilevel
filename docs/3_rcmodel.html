@@ -1,0 +1,655 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title></title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 64px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+
+.section h2 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h3 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h4 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h5 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h6 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Panelregression and Multilevel Models</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Models
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Random Intercept</li>
+    <li>
+      <a href="1_rimodel.html">1. without independent variable</a>
+    </li>
+    <li>
+      <a href="2_rimodel.html">2. with independent variable</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="3_rcmodel.html">3. Random Coefficient</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="4_crosslevelint.html">4. Cross-Level Interaction</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="5_crossclass.html">5. Cross-Classified</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="6_3level.html">6. Three Level</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="7_lrtest.html">7. Likelihood Ratio test</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="0_create.html">Data Preparation</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/TripLLL">
+    <span class="fa fa-github"></span>
+     
+    
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+
+</div>
+
+
+<div id="random-coefficient-model" class="section level1 tabset">
+<h1>3. Random Coefficient Model</h1>
+<div id="without-gender-variable" class="section level2 tabset">
+<h2>3.1 Without gender variable</h2>
+<div id="models" class="section level3">
+<h3>Models</h3>
+<div id="stata" class="section level4">
+<h4>Stata</h4>
+<pre class="stata"><code>use &quot;../data/ess50prep.dta&quot;, clear
+
+xtmixed stfdem polintr nwsptot || cntry: polintr nwsptot, cov(unstructured)
+estat icc</code></pre>
+<pre><code>
+. use &quot;../data/ess50prep.dta&quot;, clear
+
+. 
+. xtmixed stfdem polintr nwsptot || cntry: polintr nwsptot, cov(unstructured)
+
+Performing EM optimization: 
+
+Performing gradient-based optimization: 
+
+Iteration 0:   log likelihood = -24343.339  
+Iteration 1:   log likelihood =  -24342.86  
+Iteration 2:   log likelihood = -24342.858  
+
+Computing standard errors:
+standard-error calculation failed
+
+Mixed-effects ML regression                     Number of obs     =     10,977
+Group variable: cntry                           Number of groups  =         22
+
+                                                Obs per group:
+                                                              min =         46
+                                                              avg =      499.0
+                                                              max =      1,544
+
+                                                Wald chi2(2)      =      41.94
+Log likelihood = -24342.858                     Prob &gt; chi2       =     0.0000
+
+------------------------------------------------------------------------------
+      stfdem |      Coef.   Std. Err.      z    P&gt;|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+     polintr |  -.2418052   .0385597    -6.27   0.000    -.3173807   -.1662297
+     nwsptot |   .0075553   .0177033     0.43   0.670    -.0271425    .0422531
+       _cons |    6.06071   .2056077    29.48   0.000     5.657726    6.463694
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+cntry: Unstructured          |
+                 sd(polintr) |   .1269699          .             .           .
+                 sd(nwsptot) |   .0058373          .             .           .
+                   sd(_cons) |   .8789842          .             .           .
+       corr(polintr,nwsptot) |   .6191228          .             .           .
+         corr(polintr,_cons) |  -.5714132          .             .           .
+         corr(nwsptot,_cons) |  -.9982364          .             .           .
+-----------------------------+------------------------------------------------
+                sd(Residual) |   2.212509          .             .           .
+------------------------------------------------------------------------------
+LR test vs. linear model: chi2(6) = 1099.26               Prob &gt; chi2 = 0.0000
+
+Note: LR test is conservative and provided only for reference.
+
+. estat icc
+
+Conditional intraclass correlation
+
+------------------------------------------------------------------------------
+                       Level |        ICC   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+                       cntry |    .136316          0       .136316     .136316
+------------------------------------------------------------------------------
+Note: ICC is conditional on zero values of random-effects covariates.</code></pre>
+</div>
+<div id="r" class="section level4">
+<h4>R</h4>
+<div id="first-save-model-like-statas-est-store" class="section level5">
+<h5>First: Save Model (like Stata’s <code>est store</code>)</h5>
+<pre class="r"><code>multi3 &lt;- lmer(stfdem ~ polintr + nwsptot + (1 + polintr + nwsptot |cntry), data = ess, REML = FALSE)</code></pre>
+<p><code>1 +</code> is not necessarily needed because random coefficient models imply that the intercept is also random</p>
+</div>
+<div id="then-inspect-model" class="section level5">
+<h5>Then: Inspect model</h5>
+<pre class="r"><code>tidy(multi3)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["group"],"name":[5],"type":["chr"],"align":["left"]}],"data":[{"1":"(Intercept)","2":"5.423643092","3":"0.1591175","4":"34.08577","5":"fixed"},{"1":"sd_(Intercept).cntry","2":"1.054070795","3":"NA","4":"NA","5":"cntry"},{"1":"sd_polintr.cntry","2":"0.269630446","3":"NA","4":"NA","5":"cntry"},{"1":"sd_nwsptot.cntry","2":"0.007319598","3":"NA","4":"NA","5":"cntry"},{"1":"cor_(Intercept).polintr.cntry","2":"-0.705323961","3":"NA","4":"NA","5":"cntry"},{"1":"cor_(Intercept).nwsptot.cntry","2":"-0.488945719","3":"NA","4":"NA","5":"cntry"},{"1":"cor_polintr.nwsptot.cntry","2":"-0.273505431","3":"NA","4":"NA","5":"cntry"},{"1":"sd_Observation.Residual","2":"2.212440749","3":"NA","4":"NA","5":"Residual"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>glance(multi3)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["sigma"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["logLik"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["AIC"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["deviance"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df.residual"],"name":[6],"type":["int"],"align":["right"]}],"data":[{"1":"2.212441","2":"-24354.01","3":"48724.02","4":"48782.45","5":"48708.02","6":"10969"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>icc(multi3)</code></pre>
+<pre><code>## 
+## Linear mixed model
+##  Family: gaussian (identity)
+## Formula: stfdem ~ (1 + polintr + nwsptot | cntry)
+## 
+##   ICC (cntry): 0.184994</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div id="with-gender-variable" class="section level2 tabset">
+<h2>3.2 With gender variable</h2>
+<div id="model" class="section level3">
+<h3>Model</h3>
+<div id="stata-1" class="section level4">
+<h4>Stata</h4>
+<pre class="stata"><code>set maxiter 20
+use &quot;../data/ess50prep.dta&quot;, clear
+
+xtmixed stfdem || cntry: polintr nwsptot gndr, cov(unstructured)</code></pre>
+<pre><code>
+. set maxiter 20
+
+. use &quot;../data/ess50prep.dta&quot;, clear
+
+. 
+. xtmixed stfdem || cntry: polintr nwsptot gndr, cov(unstructured)
+
+Performing EM optimization: 
+
+Performing gradient-based optimization: 
+
+Iteration 0:   log likelihood = -24320.636  
+Iteration 1:   log likelihood = -24320.137  
+Iteration 2:   log likelihood = -24320.135  (not concave)
+Iteration 3:   log likelihood = -24320.135  (not concave)
+Iteration 4:   log likelihood = -24320.135  (not concave)
+Iteration 5:   log likelihood = -24320.135  (not concave)
+Iteration 6:   log likelihood = -24320.135  (not concave)
+Iteration 7:   log likelihood = -24320.135  (not concave)
+Iteration 8:   log likelihood = -24320.135  (not concave)
+Iteration 9:   log likelihood = -24320.135  (not concave)
+Iteration 10:  log likelihood = -24320.135  (not concave)
+Iteration 11:  log likelihood = -24320.135  (not concave)
+Iteration 12:  log likelihood = -24320.135  (not concave)
+Iteration 13:  log likelihood = -24320.135  (not concave)
+Iteration 14:  log likelihood = -24320.135  (not concave)
+Iteration 15:  log likelihood = -24320.135  (not concave)
+Iteration 16:  log likelihood = -24320.135  (not concave)
+Iteration 17:  log likelihood = -24320.135  (not concave)
+Iteration 18:  log likelihood = -24320.135  (not concave)
+Iteration 19:  log likelihood = -24320.135  (not concave)
+Iteration 20:  log likelihood = -24320.135  (not concave)
+convergence not achieved
+
+Computing standard errors:
+standard-error calculation failed
+
+Mixed-effects ML regression                     Number of obs     =     10,963
+Group variable: cntry                           Number of groups  =         22
+
+                                                Obs per group:
+                                                              min =         46
+                                                              avg =      498.3
+                                                              max =      1,544
+
+                                                Wald chi2(0)      =          .
+Log likelihood = -24320.135                     Prob &gt; chi2       =          .
+
+------------------------------------------------------------------------------
+      stfdem |      Coef.   Std. Err.      z    P&gt;|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       _cons |   5.413475     .15805    34.25   0.000     5.103703    5.723247
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+cntry: Unstructured          |
+                 sd(polintr) |   .2580515          .             .           .
+                 sd(nwsptot) |   .0113277          .             .           .
+                    sd(gndr) |   .1666332          .             .           .
+                   sd(_cons) |   1.186181          .             .           .
+       corr(polintr,nwsptot) |  -.0364619          .             .           .
+          corr(polintr,gndr) |   .6040483          .             .           .
+         corr(polintr,_cons) |  -.7291646          .             .           .
+          corr(nwsptot,gndr) |  -.4848374          .             .           .
+         corr(nwsptot,_cons) |  -.3091991          .             .           .
+            corr(gndr,_cons) |  -.6714956          .             .           .
+-----------------------------+------------------------------------------------
+                sd(Residual) |   2.211121          .             .           .
+------------------------------------------------------------------------------
+LR test vs. linear model: chi2(10) = 1252.33              Prob &gt; chi2 = 0.0000
+
+Note: LR test is conservative and provided only for reference.
+Warning: convergence not achieved; estimates are based on iterated EM</code></pre>
+</div>
+<div id="r-1" class="section level4">
+<h4>R</h4>
+<div id="first-save-model-like-statas-est-store-1" class="section level5">
+<h5>First: Save Model (like Stata’s <code>est store</code>)</h5>
+<pre class="r"><code>multi3 &lt;- lmer(stfdem ~ (1 + polintr + nwsptot + gndr |cntry), data = ess, REML = FALSE)</code></pre>
+</div>
+<div id="then-inspect-model-1" class="section level5">
+<h5>Then: Inspect model</h5>
+<pre class="r"><code>tidy(multi3)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["group"],"name":[5],"type":["chr"],"align":["left"]}],"data":[{"1":"(Intercept)","2":"5.41343630","3":"0.1580475","4":"34.25196","5":"fixed"},{"1":"sd_(Intercept).cntry","2":"1.18622542","3":"NA","4":"NA","5":"cntry"},{"1":"sd_polintr.cntry","2":"0.25804989","3":"NA","4":"NA","5":"cntry"},{"1":"sd_nwsptot.cntry","2":"0.01132676","3":"NA","4":"NA","5":"cntry"},{"1":"sd_gndr.cntry","2":"0.16663718","3":"NA","4":"NA","5":"cntry"},{"1":"cor_(Intercept).polintr.cntry","2":"-0.72919954","3":"NA","4":"NA","5":"cntry"},{"1":"cor_(Intercept).nwsptot.cntry","2":"-0.30943761","3":"NA","4":"NA","5":"cntry"},{"1":"cor_(Intercept).gndr.cntry","2":"-0.67152314","3":"NA","4":"NA","5":"cntry"},{"1":"cor_polintr.nwsptot.cntry","2":"-0.03617759","3":"NA","4":"NA","5":"cntry"},{"1":"cor_polintr.gndr.cntry","2":"0.60408533","3":"NA","4":"NA","5":"cntry"},{"1":"cor_nwsptot.gndr.cntry","2":"-0.48460394","3":"NA","4":"NA","5":"cntry"},{"1":"sd_Observation.Residual","2":"2.21112075","3":"NA","4":"NA","5":"Residual"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>glance(multi3)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["sigma"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["logLik"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["AIC"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["deviance"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df.residual"],"name":[6],"type":["int"],"align":["right"]}],"data":[{"1":"2.211121","2":"-24320.14","3":"48664.27","4":"48751.9","5":"48640.27","6":"10951"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>icc(multi3)</code></pre>
+<pre><code>## 
+## Linear mixed model
+##  Family: gaussian (identity)
+## Formula: stfdem ~ (1 + polintr + nwsptot + gndr | cntry)
+## 
+##   ICC (cntry): 0.223489</code></pre>
+</div>
+</div>
+</div>
+</div>
+<div id="plotting-data" class="section level2">
+<h2>3.3 Plotting data</h2>
+<div id="random-effect-plots" class="section level4">
+<h4>Random effect plots</h4>
+<div id="sorted-alphabetically" class="section level5">
+<h5>Sorted alphabetically</h5>
+<pre class="r"><code>sjp.lmer(multi3, y.offset = .6)</code></pre>
+<p><img src="3_rcmodel_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+</div>
+<div id="everything-sorted-by-values-of-intercept" class="section level5">
+<h5>Everything sorted by values of intercept</h5>
+<pre class="r"><code>sjp.lmer(multi3, sort.est = &quot;(Intercept)&quot;, y.offset = .6)</code></pre>
+<p><img src="3_rcmodel_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+</div>
+<div id="every-plot-sorted-by-its-own-values" class="section level5">
+<h5>Every plot sorted by its own values</h5>
+<pre class="r"><code>sjp.lmer(multi3, sort.est = &quot;sort.all&quot;, y.offset = .6, facet.grid = FALSE)</code></pre>
+<p><img src="3_rcmodel_files/figure-html/unnamed-chunk-8-1.png" width="672" /><img src="3_rcmodel_files/figure-html/unnamed-chunk-8-2.png" width="672" /><img src="3_rcmodel_files/figure-html/unnamed-chunk-8-3.png" width="672" /><img src="3_rcmodel_files/figure-html/unnamed-chunk-8-4.png" width="672" /></p>
+</div>
+</div>
+<div id="random-slopes-plots" class="section level4">
+<h4>Random slopes plots</h4>
+<div id="random-slopes-depending-on-random-intercepts" class="section level5">
+<h5>Random slopes depending on random intercepts</h5>
+<pre class="r"><code>sjp.lmer(multi3, type = &quot;rs.ri&quot;, vars = &quot;polintr&quot;, show.legend = TRUE)</code></pre>
+<p><img src="3_rcmodel_files/figure-html/unnamed-chunk-9-1.png" width="672" /><img src="3_rcmodel_files/figure-html/unnamed-chunk-9-2.png" width="672" /><img src="3_rcmodel_files/figure-html/unnamed-chunk-9-3.png" width="672" /></p>
+</div>
+<div id="random-slopes-depending-on-random-intercepts-highlighting-denmark-portugal-luxemburg" class="section level5">
+<h5>Random slopes depending on random intercepts highlighting <strong>Denmark</strong>, <strong>Portugal</strong>, <strong>Luxemburg</strong></h5>
+<pre class="r"><code>sjp.lmer(multi3, type = &quot;rs.ri&quot;, vars = &quot;polintr&quot;, sample.n = c(6, 16, 20),  show.legend = TRUE)</code></pre>
+<p><img src="3_rcmodel_files/figure-html/unnamed-chunk-10-1.png" width="672" /><img src="3_rcmodel_files/figure-html/unnamed-chunk-10-2.png" width="672" /><img src="3_rcmodel_files/figure-html/unnamed-chunk-10-3.png" width="672" /></p>
+</div>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

@@ -1,0 +1,17 @@
+---
+title: "ex9_ess"
+author: "Lisa Reiber"
+date: "11 1 2018"
+output: html_document
+---
+
+```{r}
+library(readstata13)
+
+ess50 <- read.dta13("/Volumes/gsoep32l/newdata/0_Introduction to Panel and Multilevel Modeling/ess50.dta", convert.factors = F)
+
+
+
+
+```
+

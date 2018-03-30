@@ -1,0 +1,45 @@
+---
+output:
+  html_document:
+    code_folding: "show"
+    df_print: paged
+    toc: true
+    toc_float: true
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = T)
+statapath = "/Applications/Stata/StataMP.app/Contents/MacOS/Stata-MP"
+
+source("0_packages.R")
+
+load("../data/ess50prep.Rds")
+```
+
+# 7. Likelihood Ratio Test {.tabset}
+
+### Test Model
+#### Stata
+##### Model needs to be restriced to same sample with `if e(sample)`
+```{r, results = T, engine = "stata", engine.path= statapath, comment = ""}
+use "../data/ess50prep.dta", clear
+
+quietly: xtmixed stfdem || cntry: || region: 
+est store level3
+
+quietly: xtmixed stfdem || cntry: if e(sample)
+est store level2
+lrtest level2 level3
+```
+
+#### R
+##### Model needs to be restriced to same sample with `ess[esample, ]`
+```{r}
+level2 <- lmer(stfdem ~ (1|cntry/region), data = ess, REML = FALSE)
+esample<-rownames(as.matrix(resid(level2)))  # restricts model to same sample
+level3 <- lmer(stfdem ~ (1|cntry), data = ess[esample, ], REML = FALSE)
+lrtest(level2, level3)
+r2(level2, level3)
+```

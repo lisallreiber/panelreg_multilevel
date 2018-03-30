@@ -1,0 +1,607 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title></title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 64px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+
+.section h2 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h3 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h4 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h5 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h6 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("show" === "show");
+});
+</script>
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Panelregression and Multilevel Models</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Models
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Random Intercept</li>
+    <li>
+      <a href="1_rimodel.html">1. without independent variable</a>
+    </li>
+    <li>
+      <a href="2_rimodel.html">2. with independent variable</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="3_rcmodel.html">3. Random Coefficient</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="4_crosslevelint.html">4. Cross-Level Interaction</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="5_crossclass.html">5. Cross-Classified</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="6_3level.html">6. Three Level</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="7_lrtest.html">7. Likelihood Ratio test</a>
+    </li>
+  </ul>
+</li>
+<li>
+  <a href="0_create.html">Data Preparation</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/TripLLL">
+    <span class="fa fa-github"></span>
+     
+    
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+
+</div>
+
+
+<div id="random-intercept-model-without-independent-variables" class="section level1 tabset">
+<h1>1. Random intercept model without independent variables</h1>
+<div id="ml-estimation" class="section level2 tabset">
+<h2>1.1 ML-estimation</h2>
+<div id="models" class="section level3">
+<h3>Models</h3>
+<div id="stata" class="section level4">
+<h4>Stata</h4>
+<pre class="stata"><code>use &quot;../data/ess50.dta&quot;, clear
+
+xtmixed stfdem || cntry:  // ML is default in Stata
+estat icc</code></pre>
+<pre><code>
+. use &quot;../data/ess50.dta&quot;, clear
+
+. 
+. xtmixed stfdem || cntry:  // ML is default in Stata
+
+Performing EM optimization: 
+
+Performing gradient-based optimization: 
+
+Iteration 0:   log likelihood = -24517.125  
+Iteration 1:   log likelihood = -24517.125  
+
+Computing standard errors:
+
+Mixed-effects ML regression                     Number of obs     =     11,026
+Group variable: cntry                           Number of groups  =         22
+
+                                                Obs per group:
+                                                              min =         46
+                                                              avg =      501.2
+                                                              max =      1,547
+
+                                                Wald chi2(0)      =          .
+Log likelihood = -24517.125                     Prob &gt; chi2       =          .
+
+------------------------------------------------------------------------------
+      stfdem |      Coef.   Std. Err.      z    P&gt;|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       _cons |   5.455405   .1666017    32.75   0.000     5.128871    5.781938
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+cntry: Identity              |
+                   sd(_cons) |    .771068   .1197082      .5687793    1.045302
+-----------------------------+------------------------------------------------
+                sd(Residual) |   2.227136   .0150127      2.197906    2.256756
+------------------------------------------------------------------------------
+LR test vs. linear model: chibar2(01) = 1157.51       Prob &gt;= chibar2 = 0.0000
+
+. estat icc
+
+Intraclass correlation
+
+------------------------------------------------------------------------------
+                       Level |        ICC   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+                       cntry |   .1070351   .0297069      .0611934    .1806113
+------------------------------------------------------------------------------</code></pre>
+</div>
+<div id="r" class="section level4">
+<h4>R</h4>
+<div id="first-save-model-like-statas-est-store" class="section level5">
+<h5>First: Save Model (like Stata’s <code>est store</code>)</h5>
+<pre class="r"><code>multi1 &lt;- lmer(stfdem ~ (1|cntry), data = ess, REML = FALSE) # REML is default in R</code></pre>
+<p><code>1</code> is R’s way of refering to an intercept</p>
+</div>
+<div id="then-inspect-model" class="section level5">
+<h5>Then: Inspect model</h5>
+<div id="coefficients-lower-block-in-stata-output-std.dev-no-variance" class="section level6">
+<h6>Coefficients (Lower block in Stata output; std.dev no variance)</h6>
+<pre class="r"><code>tidy(multi1)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["group"],"name":[5],"type":["chr"],"align":["left"]}],"data":[{"1":"(Intercept)","2":"5.455405","3":"0.1666015","4":"32.74523","5":"fixed"},{"1":"sd_(Intercept).cntry","2":"0.771067","3":"NA","4":"NA","5":"cntry"},{"1":"sd_Observation.Residual","2":"2.227136","3":"NA","4":"NA","5":"Residual"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="model-fit-upper-block-in-stata-output" class="section level6">
+<h6>Model fit (Upper block in Stata output)</h6>
+<pre class="r"><code>glance(multi1)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["sigma"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["logLik"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["AIC"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["deviance"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df.residual"],"name":[6],"type":["int"],"align":["right"]}],"data":[{"1":"2.227136","2":"-24517.13","3":"49040.25","4":"49062.17","5":"49034.25","6":"11023"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="regression-values-for-each-observation-head-shows-only-first-6-rows" class="section level6">
+<h6>Regression values for each observation, head shows only first 6 rows</h6>
+<pre class="r"><code>augment(multi1) %&gt;% head()</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":[".rownames"],"name":[1],"type":["chr"],"align":["left"]},{"label":["stfdem"],"name":[2],"type":["S3: labelled"],"align":["right"]},{"label":["cntry"],"name":[3],"type":["fctr"],"align":["left"]},{"label":[".fitted"],"name":[4],"type":["dbl"],"align":["right"]},{"label":[".resid"],"name":[5],"type":["dbl"],"align":["right"]},{"label":[".fixed"],"name":[6],"type":["dbl"],"align":["right"]},{"label":[".mu"],"name":[7],"type":["dbl"],"align":["right"]},{"label":[".offset"],"name":[8],"type":["dbl"],"align":["right"]},{"label":[".sqrtXwt"],"name":[9],"type":["dbl"],"align":["right"]},{"label":[".sqrtrwt"],"name":[10],"type":["dbl"],"align":["right"]},{"label":[".weights"],"name":[11],"type":["dbl"],"align":["right"]},{"label":[".wtres"],"name":[12],"type":["dbl"],"align":["right"]}],"data":[{"1":"1","2":"7","3":"AT","4":"5.691657","5":"1.3083434","6":"5.455405","7":"5.691657","8":"0","9":"1","10":"1","11":"1","12":"1.3083434","_rn_":"1"},{"1":"2","2":"7","3":"AT","4":"5.691657","5":"1.3083434","6":"5.455405","7":"5.691657","8":"0","9":"1","10":"1","11":"1","12":"1.3083434","_rn_":"2"},{"1":"3","2":"5","3":"AT","4":"5.691657","5":"-0.6916566","6":"5.455405","7":"5.691657","8":"0","9":"1","10":"1","11":"1","12":"-0.6916566","_rn_":"3"},{"1":"4","2":"6","3":"AT","4":"5.691657","5":"0.3083434","6":"5.455405","7":"5.691657","8":"0","9":"1","10":"1","11":"1","12":"0.3083434","_rn_":"4"},{"1":"5","2":"5","3":"AT","4":"5.691657","5":"-0.6916566","6":"5.455405","7":"5.691657","8":"0","9":"1","10":"1","11":"1","12":"-0.6916566","_rn_":"5"},{"1":"6","2":"3","3":"AT","4":"5.691657","5":"-2.6916566","6":"5.455405","7":"5.691657","8":"0","9":"1","10":"1","11":"1","12":"-2.6916566","_rn_":"6"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+</div>
+<div id="shows-intraclass-correlation" class="section level6">
+<h6>Shows intraclass correlation</h6>
+<pre class="r"><code>icc(multi1) </code></pre>
+<pre><code>## 
+## Linear mixed model
+##  Family: gaussian (identity)
+## Formula: stfdem ~ (1 | cntry)
+## 
+##   ICC (cntry): 0.107035</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div id="reml-estimation" class="section level2 tabset">
+<h2>1.2 REML-estimation</h2>
+<div id="models-1" class="section level3">
+<h3>Models</h3>
+<div id="stata-1" class="section level4">
+<h4>Stata</h4>
+<div id="ml-is-default-in-stata-reml-estimation-can-be-achieved-with-option-reml" class="section level5">
+<h5>ML is default in stata, REML-estimation can be achieved with option <code>, reml</code></h5>
+<pre class="stata"><code>use &quot;../data/ess50.dta&quot;, clear
+xtmixed stfdem || cntry:, reml
+estat icc</code></pre>
+<pre><code>
+. use &quot;../data/ess50.dta&quot;, clear
+
+. xtmixed stfdem || cntry:, reml
+
+Performing EM optimization: 
+
+Performing gradient-based optimization: 
+
+Iteration 0:   log restricted-likelihood = -24517.987  
+Iteration 1:   log restricted-likelihood = -24517.987  
+
+Computing standard errors:
+
+Mixed-effects REML regression                   Number of obs     =     11,026
+Group variable: cntry                           Number of groups  =         22
+
+                                                Obs per group:
+                                                              min =         46
+                                                              avg =      501.2
+                                                              max =      1,547
+
+                                                Wald chi2(0)      =          .
+Log restricted-likelihood = -24517.987          Prob &gt; chi2       =          .
+
+------------------------------------------------------------------------------
+      stfdem |      Coef.   Std. Err.      z    P&gt;|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+       _cons |   5.455717   .1705508    31.99   0.000     5.121443     5.78999
+------------------------------------------------------------------------------
+
+------------------------------------------------------------------------------
+  Random-effects Parameters  |   Estimate   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+cntry: Identity              |
+                   sd(_cons) |   .7898175   .1253521      .5786719    1.078006
+-----------------------------+------------------------------------------------
+                sd(Residual) |   2.227136   .0150127      2.197905    2.256755
+------------------------------------------------------------------------------
+LR test vs. linear model: chibar2(01) = 1161.54       Prob &gt;= chibar2 = 0.0000
+
+. estat icc
+
+Intraclass correlation
+
+------------------------------------------------------------------------------
+                       Level |        ICC   Std. Err.     [95% Conf. Interval]
+-----------------------------+------------------------------------------------
+                       cntry |   .1117152   .0315294      .0632058    .1899076
+------------------------------------------------------------------------------</code></pre>
+</div>
+</div>
+<div id="r-1" class="section level4">
+<h4>R</h4>
+<div id="reml-is-default-in-r-option-needs-to-be-turned-off-for-ml-estimation-reml-false" class="section level5">
+<h5>REML is default in R, option needs to be turned off for ML-estimation (<code>REML = FALSE</code>)</h5>
+<pre class="r"><code>reml &lt;- lmer(stfdem ~ (1|cntry), data = ess)               
+ml   &lt;- lmer(stfdem ~ (1|cntry), data = ess, REML = FALSE) 
+icc(reml)</code></pre>
+<pre><code>## 
+## Linear mixed model
+##  Family: gaussian (identity)
+## Formula: stfdem ~ (1 | cntry)
+## 
+##   ICC (cntry): 0.111715</code></pre>
+<pre class="r"><code>icc(ml)    </code></pre>
+<pre><code>## 
+## Linear mixed model
+##  Family: gaussian (identity)
+## Formula: stfdem ~ (1 | cntry)
+## 
+##   ICC (cntry): 0.107035</code></pre>
+</div>
+<div id="reml-results-differ-from-ml" class="section level5">
+<h5>-&gt; REML results differ from ML</h5>
+</div>
+</div>
+</div>
+</div>
+<div id="plot-data" class="section level2">
+<h2>1.3 Plot Data</h2>
+<div id="r-2" class="section level4">
+<h4>R</h4>
+<pre class="r"><code>sjp.lmer(multi1, type = &quot;fe.slope&quot;, vars = c(&quot;country&quot;))</code></pre>
+<p><img src="1_rimodel_files/figure-html/unnamed-chunk-9-1.png" width="672" /></p>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

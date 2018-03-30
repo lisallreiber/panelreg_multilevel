@@ -1,0 +1,119 @@
+---
+author: "Lisa Reiber"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_notebook:
+    code_folding: show
+    toc: yes
+    toc_float: yes
+  html_document:
+    df_print: paged
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load Packages and Data
+```{r, results=F, message=F, echo=FALSE}
+#### install missing packages and load needed packages ####
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(foreign, readstata13, ggplot2, lme4, broom, sjPlot, tidyverse)      
+
+#### load dataset ####
+ess50 <- read.dta13(file = "../../data/ess50.dta", convert.factor = F)
+```
+
+
+# 1. Hybrid Model
+Specify a hybrid model decomposing covariates in between and within effects. Your model should at least include female, new and one additional covariate.
+
+**Data Wrangling**
+```{r}
+sample <- ess50 %>% 
+      mutate(cntry.id = as.numeric(as.factor(cntry)),
+             new = ifelse(cntry.id %in% c(7,20,11),1,0),
+             new2 = ifelse(cntry.id %in% c(4,12,19,22), 1, 0),
+             old = ifelse(new == 0 & new2 == 1 , 1, 0)
+             )
+
+# prep hybrid model
+sample1 <- sample %>%
+  filter(!is.na(polintr), !is.na(nwsptot)) %>% 
+  group_by(cntry.id) %>% 
+  mutate(m.polintr = mean(polintr), 
+         m.nwsptot = mean(nwsptot),  
+         m.rel     = mean(rlgdgr),
+         dev.polintr = polintr - m.polintr, 
+         dev.nwsptot = nwsptot - m.nwsptot,
+         dev.rel   = rlgdgr - m.rel)
+```
+
+**Hybrid Model**
+```{r}
+multi <- lmer(stfdem ~ new + new2 + female + m.polintr + dev.polintr +
+              m.nwsptot + dev.nwsptot + (1|cntry), data =sample1)
+
+tidy(multi, conf.int = TRUE)
+
+sjp.lmer(multi, y.offset = .6, sort.est = "sort.all", facet.grid = FALSE)
+```
+
+
+# 2. Empirical Bayes Prediction
+Calculate Empirical Bayes Predictions for the random intercepts. Present the BLUPS graphically.
+
+```{r}
+# ML-Estimates:
+ranef(multi)
+
+# Bayes-Predictions:
+psi   <- tidy(multi)$estimate[9]
+theta <- tidy(multi)$estimate[10]
+ess50 %>% 
+  group_by(cntry) %>% 
+  summarise(clusterN = n()) ->
+essN
+
+b.correction <- psi/(psi + theta/essN$clusterN)
+b.correction
+
+b.prediction <- cbind(ml = unlist(ranef(multi)), b.correction)
+row.names(b.prediction) <- unique(ess50$cntry)
+
+b.prediction %>% 
+  as.data.frame() %>% 
+  mutate(b.prediction = ml * b.correction)
+
+
+# varCluster = psi
+# varIndi = Theta
+# J = cluster
+
+```
+
+# 3. Random Coefficients
+Specify at least one level-1-covariate as random coefficient.
+
+```{r}
+multi <- lmer(stfdem ~ new + new2 + female + polintr + 
+              nwsptot + (1 + polintr + nwsptot|cntry), data = sample)
+
+```
+
+# 4. Empirical Bayes Prediction
+Calculate Empirical Bayes Predictions for the random coefficient and present the results graphically.
+
+```{r}
+sjp.lmer(multi, y.offset = .6, sort.est = "sort.all", facet.grid = FALSE)
+sjp.lmer(multi, type = "rs.ri", vars = "nwsptot")
+```
+
+# 5. Cross-Level Interaction
+Specify one cross-level-interaction-effect and interpret the results.
+
+```{r}
+
+```
+

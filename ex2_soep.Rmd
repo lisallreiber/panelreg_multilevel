@@ -1,0 +1,633 @@
+---
+output:
+  html_document:
+    code_folding: hide
+    df_print: paged
+    toc: true
+    toc_float: true
+    toc_depth: 3
+editor_options: 
+  chunk_output_type: console
+---
+
+```{r setup, include=FALSE}
+source("0_packages.R")
+
+knitr::opts_chunk$set(echo = TRUE, cache = T, warning = F)
+statapath = "/Applications/Stata/StataMP.app/Contents/MacOS/Stata-MP"
+
+```
+
+# Exercise 2 {.tabset}
+
+## Questions
+- 2.1    Estimate a Linear Regression with SOEP Data using hourly wage `hwageb` as dependent variable for the year 2015. Include years of schooling `pgbilzeit` and work experience `erf` as predictor variables and gender `frau` and region `ost` as additional controls. 
+
+- 2.2    Interpret the coefficients and the value of R²
+
+- 2.3    Is the relationship between work experience and wage linear?
+
+- 2.4    Specifiy the same regression model but use the natural logarithm as dependent variable instead. 
+
+- 2.5 How large is the gender pay gap?
+
+## Data Prep {.tabset}
+### Stata
+```{r stata data prep, results = T, engine = "stata", engine.path= statapath, comment = ""}
+use "_data/ex_mydf.dta", replace
+
+* Unplausible Beobachtungen identifizieren
+********************************************************************************
+      twoway (scatter hwageb pgtatzeit, msymbol(point) jitter(2))
+
+* Visualize Income
+********************************************************************************
+      histogram hwageb if asample==1, bin(25)
+	sum hwageb if asample==1, d
+	twoway (scatter hwageb pgtatzeit, msymbol(point) jitter(2)) if asample==1
+      
+```
+
+### R {.tabset}
+#### Load Data
+```{r load data}
+ex_mydf <- readRDS(file = "_data/ex_mydf.rds")
+
+asample <- ex_mydf %>% 
+        filter(pgtatzeit > 5,
+               alter %>% dplyr::between(18, 64),
+               pgemplst %in% c(1,2,4),
+               pop < 3
+               )
+```
+
+#### Descriptive Pre - Analysis
+##### unplausible Cases
+```{r unplausible cases ex2}
+# to do: show id if wage above 600
+ex_mydf %>% 
+      select(pgtatzeit, hwageb) %>% 
+      drop_na() %>% 
+  ggplot(aes(x=pgtatzeit, y=hwageb)) + 
+        geom_point(position = "jitter", size = 0.21)
+
+  # nochmal scatter
+  ggplot(asample, aes(x=pgbilzeit, y=hwageb)) + 
+        geom_point(position = "jitter", size = 0.21,
+                   na.rm = T)
+```
+
+##### visualize Income {.tabset}
+###### Histogram
+```{r viz income ex2}
+# to do: make a link to a varia section where you specify the different possibilities of histograms
+# histogram
+  summary(asample$hwageb)
+  
+  qplot(hwageb, geom="histogram",
+        binwidth = 25,  
+        main = "Histogram for Hourly Wage", 
+        xlab = "Hourly Wage in Prices from 2015",  
+        fill=I("grey"), 
+        col=I("black"), 
+        alpha= I(.2),
+        xlim=c(0,500),
+        ylim= c(0,125000),
+        data = asample)
+  
+  # alternative
+  # without ..density it would be counts
+  g_hist_wage <- asample %>% 
+        ggplot(aes(x = hwageb, y = ..density..)) +
+        geom_histogram(breaks = seq(0,767.4, by = 25)) + 
+        labs(title="Histogram for Hourly Wage in 2015 Prices",
+             x="Hourly Wage")
+  
+  g_hist_wage
+  
+  hist(asample$hwageb, probability = T)
+```
+
+##### for 2015
+summary of hourly wage and yrs of schooling, work exp, etc.
+```{r analysis for 2015}
+  # todo is there something missing here?
+  asample %>%
+      filter(syear == 2015) %>% 
+      select(hwageb,pgbilzeit, erf, frau, ost) %>%
+      drop_na() %>%  # optional if complete.obs is specified
+      cor(use = "complete.obs")
+  
+  asample %>%
+        filter(syear == 2015) %>% 
+        ggplot(aes(pgbilzeit, hwageb)) +
+            geom_point(na.rm=T, position = "jitter")
+```
+
+## Answers  {.active}
+### 2.1 Basic Model{.tabset}
+Estimate a Linear Regression with SOEP Data using hourly wage as dependent variable for the year 2015. Include years of schooling and work experience as predictor variables and gender and region as additional controls. 
+
+***
+
+First, the basic model is calculated (2.1), then another model is run with the same sample (e(sample)), but with centralized years of education and work experience (2.1c) in order to be better able to interpret the intercept, because 0 years of education are not a realistic interpretation.
+
+#### Stata {.tabset}
+##### 2.1 basic model
+
+      ------------------------------------------------------------------------------
+                   |               Robust
+            hwageb |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+      -------------+----------------------------------------------------------------
+         pgbilzeit |   1.637104   .0622351    26.31   0.000     1.515115    1.759093
+               erf |   .2475145    .011065    22.37   0.000     .2258255    .2692034
+              frau |  -2.754907   .2437046   -11.30   0.000      -3.2326   -2.277214
+               ost |  -4.257401   .2731506   -15.59   0.000    -4.792812   -3.721989
+             _cons |  -6.598911   .7756985    -8.51   0.000    -8.119383    -5.07844
+      ------------------------------------------------------------------------------
+
+##### 2.1c model with centered predictors
+
+      ------------------------------------------------------------------------------
+                   |               Robust
+            hwageb |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+      -------------+----------------------------------------------------------------
+        cpgbilzeit |   1.637104   .0622351    26.31   0.000     1.515115    1.759093
+              cerf |   .2475145    .011065    22.37   0.000     .2258255    .2692034
+              frau |  -2.754907   .2437046   -11.30   0.000      -3.2326   -2.277214
+               ost |    -4.2574   .2731506   -15.59   0.000    -4.792812   -3.721989
+             _cons |   18.52568     .21508    86.13   0.000     18.10409    18.94726
+      ------------------------------------------------------------------------------      
+
+##### Full Code
+```{r stata 2.1, results = T, engine = "stata", engine.path= statapath, comment = ""}
+use "_data/ex_mydf.dta", replace
+
+* 2.1 basic model
+reg hwageb pgbilzeit erf frau ost if asample==1 & syear==2015 [pw=phrf] 
+
+* sum bildungszeit only for sample of last estimation
+cap drop cpgbilzeit
+sum pgbilzeit if e(sample)
+gen cpgbilzeit = pgbilzeit - r(mean)
+
+cap drop cerf
+sum erf if e(sample)	
+gen cerf = erf -r(mean)
+
+sum pgbilzeit cpgbilzeit if e(sample)
+sum erf cerf if e(sample)
+	
+* 2.1c model with centered predictors
+reg hwageb cpgbilzeit cerf frau ost if asample==1 & syear==2015 [pw=phrf] 
+```
+
+#### R {.tabset .active}
+##### Models {.tabset}
+###### 2.1 Basic Model
+```{r fit 2.1}
+# fit regression model
+  # automatically drops rows with missing values
+  fit2.1 <- asample %>% 
+      filter(syear == 2015) %>% 
+              lm(hwageb ~ pgbilzeit + erf + frau + ost, 
+                 data= ., weights = phrf)
+  
+  tidy(fit2.1)
+  # summary(fit2.1)
+```
+
+###### 2.1c Model with Centered Predictors
+with centralized years of schooling and work experience. This can be helpful to interpret the intercept, because 0 years education are not a realistic interpretation
+```{r fit 2.1c}
+# sum up time of education only for sample of last estimation. This is similar to the if e(sample) command in STATA
+  # - Sample identifier, a set of row names which can be used to subset the corresponding dataframe
+  esample <- rownames(as.matrix(resid(fit2.1)))
+  # - N used
+  esample.n <- nobs(fit2.1)
+
+  # regress again	with centered predictors
+  fit2.1c <-  asample %>% 
+        filter(syear == 2015) %>% 
+        # filter only obs used in last model
+        filter(row_number() %in% esample) %>%
+        # centralized values for education by year
+        mutate(cpgbilzeit = pgbilzeit - mean(pgbilzeit, na.rm = T),
+               cerf = erf - mean(erf, na.rm = T)) %>% 
+        # linear model
+        lm(hwageb ~ cpgbilzeit + cerf + frau + ost,
+           data= ., weights = phrf)
+  
+  tidy(fit2.1c)
+  
+  # summary statistics of education and job experience with sample of last regression
+  asample %>%
+        filter(syear == 2015) %>% 
+        filter(row_number() %in% esample) %>% # this needs to be in a separate filter, otherwise wont work
+        select(pgbilzeit, erf) %>%
+        summary() # other option: stat.desc(basic = T)
+```
+  
+##### Plots
+```{r plot fit2.1, fig.width=4, fig.height = 3}
+# plot it 
+  asample %>% 
+      filter(syear == 2015) %>% 
+      ggplot(aes(pgbilzeit, hwageb)) + 
+      geom_point() + 
+      geom_smooth(method="lm", color="red", se=F) +
+      geom_line(aes(y = mean(asample$hwageb)), color="blue")
+```
+
+##### Background Info {.tabset}
+More Information about the fit of the model
+
+###### CI's
+Confidence Intervals
+```{r CI fit2.1}
+ confint(fit2.1)
+```
+
+###### Different plots
+assumptions, including that the residuals are normally distributed and homoscedastic, the errors are independent and the relationships are linear
+```{r plot2 fit2.1}
+plot(fit2.1)
+```
+  
+###### check if mean close to 0
+it is not 
+```{r mean close to 0 fit2.1}
+mean(fit2.1$residuals)    # no
+```
+  
+###### Correlation Resid + Predict
+Check the correlation between the residuals and the predictors to see if it's close to 0.
+```{r}
+# cov(fit2.1$residuals, asample$pgbilzeit)      # no
+```
+  
+###### Extract Intercept and Slope
+```{r get intercept and slope fit2.1}
+# extract intercept
+fit2.1.ic <- fit2.1$coef[1]
+# extract slope
+fit2.1.slope <- fit2.1$coef[2]
+```
+
+### 2.2 coefficients and R² {.tabset}
+Interpret the coefficients and the value of R² 
+
+***
+
+**Model 2.1 Coefficients**
+
+- Intercept
+      - For male Germans (Gender Variable == 0) who were born in former West Germany (region variable == 0) and with average years of education and average years of work experience, the expected hourly wage is 18,86 Euro/h. 
+      
+- Years of Education (cpgbilzeit)
+      - For each increase of education by one year, the expected income increases by 1,63 Euro/h. 
+      
+- Work Experience (cerf)
+      - For each increase of working experience by one year, the expects income increases by 0,24 Euro/hour. 
+      
+- Gender (frau)
+       For women the expected income is 2,75 Euro/hour less compared to men. 
+       
+- Region (ost)
+      - People from East Germany are expected to earn 4,25 Euro less compared to people from West Germany.
+      
+- R-squared
+      - The model can explain 22.59% of the overall variance of hourly wages in Germany.
+
+**Model 2.1c Coefficients**
+
+- Intercept
+      - The intercept is negative, which does not make theoretical sense because wages cannot be negative. Mathematically it reflects the predicted value if all explanatory variables are equal to 0. Since there is "Schulpflicht" in Germany, it is in practice not the case that there are people with no education at all.
+      --> One can center the variables and can then interpret the intercept as, for people with average education, wage is estimated to be xxx. All effects of the IV's are significant.
+      
+- Years of Education (cpgbilzeit)
+      - For each unit (year) increase of education, hourly wage is expected to increase by 1.4 units (Euro).
+      
+- Gender (frau)
+      - Women are expected to earn 2.75 Euro less per hour compared to men
+      
+- Region (ost)
+      - People who grew up in former eastern germany are estimated to earn 4.25 Euro less, compared to people who grew up in former western Germany.
+      
+- R-squared
+      - The model can explain 22.59% of the overall variance of hourly wages in Germany.
+	  
+<!-- #### Stata -->
+<!-- ```{r stata 2.2, results = T, engine = "stata", engine.path= statapath, comment = ""} -->
+<!-- 	* include interaction effects -->
+<!-- 	* one version:  -->
+<!-- 	gen intbilmen = frau*pgbilzeit -->
+<!-- 	* OR include terms separated with # -->
+<!-- 		* one raute is only ... -->
+<!-- 	* two ## is include main effects -->
+
+<!-- 	* with these two regressions you cqn see  -->
+<!-- 	reg hwageb i.frau##c.pgbilzeit cerf ost if asample==1 & syear==2015 [pw=phrf] -->
+
+<!-- 	* margins plot tells you how the predictions vary for different values of variable -->
+<!-- 	margins  , at(pgbilzeit=(8 (1) 18) frau=(1 0)) -->
+<!-- 	marginsplot -->
+
+<!-- 	* what to do if you have categorical var with more than one  -->
+<!-- 	* create variables dumies for all categories -1 -->
+<!-- ``` -->
+
+<!-- #### R {.tabset .active} -->
+<!-- ##### Model -->
+<!-- ###### include interaction effects: -->
+<!-- ```{r} -->
+<!-- # version one -->
+<!--   asample <- asample %>%  -->
+<!--         mutate(intbilmen = frau * pgbilzeit) -->
+
+<!--   # version two -->
+<!--   # include the frau * pgbilzeit in the formula -->
+
+<!--   fit2.2 <-  asample %>% -->
+<!--               filter(syear == 2015) %>%  -->
+<!--               select(pgbilzeit, hwageb, frau, cerf, ost, phrf) %>%  -->
+<!--               drop_na() %>% -->
+<!--               lm(hwageb ~ pgbilzeit*factor(frau) + cerf + ost,  -->
+<!--                  data= ., weights = phrf) -->
+
+<!--   tidy(fit2.2) -->
+<!--   # to do: why does stata not return all the intercepts? -->
+<!-- ``` -->
+
+<!-- ##### Plots -->
+<!-- Marginsplots -->
+<!-- ```{r} -->
+<!-- # marginsplots v1 -->
+<!--   # only works if frau is already a factor -->
+<!--   #plot(effect(term="pgbilzeit:frau.d",mod=fit1.3,default.levels=20), multiline=TRUE) -->
+
+<!--   # marginsplots v2 -->
+<!--  asample %>%  -->
+<!--       filter(syear == 2015) %>%  -->
+<!--       select(pgbilzeit, hwageb, frau) %>%  -->
+<!--       drop_na() %>%  -->
+<!--   ggplot(aes(x= pgbilzeit, y= hwageb,color= factor(frau)))+ -->
+<!--         geom_smooth(method='lm', -->
+<!--                     se=T) + -->
+<!--         labs(title = "Predictive Margins with 95% CI's", -->
+<!--              xlab = "Duration of Education, Years", -->
+<!--              ylab = "Linear Prediction for Hourly Wage") -->
+
+<!--  # problem with fortify -->
+<!--  # fortify(fit1.3) -->
+<!-- ``` -->
+
+### 2.3 work experience and wage {.tabset}
+Is the relationship between work experience and wage linear?
+
+***
+
+**Why use log of wage?** 
+Hourly wage is very skewed and taking the log makes it more normal. 
+but it is not very inuitive.
+
+- before we had additive model now its a multiple model
+
+
+#### Stata
+```{r stata 2.3, results = T, engine = "stata", engine.path= statapath, comment = ""}
+	
+use "_data/ex_mydf.dta", replace
+
+      histogram hwageb, bin(25)
+	sum hwageb, d
+
+	reg hwageb i.frau pgbilzeit erf ost if asample==1 & syear==2015 [pw=phrf] 
+	*cprplot erf, msize(vsmall) jitter(2) mspline msopts(bands(11) lcolor(red))
+	
+	reg hwageb i.frau##c.pgbilzeit c.erf##c.erf ost if asample==1 & syear==2015 [pw=phrf] 
+	margins  , at(erf=(0(5)50) pgbilzeit=(8 13 18) frau=(1 0))
+	marginsplot
+	
+	* three way interaction would be
+	reg hwageb i.frau##c.pgbilzeit  i.frau##c.erf##c.erf ost if asample==1 & syear==2015 [pw=phrf] 
+	margins  , at(erf=(0(5)50) pgbilzeit=(8 13 18) frau=(1 0))
+	marginsplot
+```
+
+#### R {.tabset .active}
+##### Models
+###### Base Model
+```{r}
+# base model
+  fit2.3_base <- asample%>% 
+      filter(syear == 2015) %>%
+      lm(hwageb ~ frau + pgbilzeit + erf + ost, 
+                      data= ., weights = phrf)
+  
+  tidy(fit2.3_base)
+
+  # to do: how to do cpr plot
+  # cprplot erf, msize(vsmall) jitter(2) mspline msopts(bands(11) lcolor(red))
+```
+
+in Labour market research, labour force experience and income is not linear
+
+- you can square erf
+      - one version `mutate(erfq = erf*erf)` beforehand
+      - or include directly in model: `I(erf^2)` or include as interaction  `erf * erf`
+
+###### 2.3_exp model with squared experience
+```{r}
+  fit2.3_exp <- asample %>%
+       filter(syear == 2015) %>%
+       mutate(frau.d = factor(frau)) %>% 
+       lm(hwageb ~ frau.d * pgbilzeit + erf + I(erf^2) + ost, 
+          data= ., weights = phrf)
+  
+  tidy(fit2.3_exp)
+  
+```
+
+###### 2.3_3int three way interaction model
+```{r}
+# three way interaction model
+  fit2.3_3int <- asample %>%
+      filter(syear == 2015) %>% 
+      lm(hwageb ~ factor(frau) * pgbilzeit +
+               factor(frau) * I(erf^2) + ost, 
+         data= ., weights = phrf)
+  
+  tidy(fit2.3_3int)
+```
+
+##### Plots
+###### Histogram of Hourly Wage
+```{r}
+  g_hist_wage
+
+  asample %>% 
+        filter(syear == 2015) %>% 
+        select(hwageb) %>% 
+        stat.desc(basic = T)
+```
+  
+###### Marginsplot
+```{r}
+# # marginsplots v2
+  # asample15 %>%
+  #       mutate(frau.d = factor(frau)) %>%
+  # ggplot(aes(x= erf,
+  #            y= hwageb,
+  #            group = interaction(frau.d, pgbilzeit),
+  #            shape = frau.d,
+  #            colour = factor(pgbilzeit))) +
+  #       geom_smooth(method='lm',
+  #                   se=F) +
+  #       labs(title = "Predictive Margins with 95% CI's",
+  #            xlab = "Duration of Education, Years",
+  #            ylab = "Linear Prediction for Hourly Wage")
+  # )
+  # # marginsplots v3
+  #     asample15 %>%
+  #     mutate(frau.d = factor(frau)) %>%
+  # ggplot(aes(x = erf, y = hwageb,
+  #            group = interaction(frau.d, pgbilzeit),
+  #            shape = frau.d,
+  #            colour = factor(pgbilzeit))) +
+  #     stat_summary(fun.data=mean_cl_normal) + 
+  #     geom_smooth(method='lm',
+  #                   formula = hwageb ~ frau.d * pgbilzeit + I(erf^2) + ost,
+  #                   se = T)
+  
+```
+
+
+### 2.4 Log Model {.tabset}
+Specifiy the same regression model but use the natural logarithm as dependent variable instead.
+How does the the interpretation of coefficients change?
+
+***
+to do: dis exp() is still stata code 
+
+Notes log level regression:
+      - errors should have constant variance
+	- interpretation is not very inuitive
+
+How does the the interpretation of coefficients change?
+ - before we had additive model now its a multiple model
+ - you can interpret this as percentage change
+      - `dis exp(.0868897)`	
+ 	- e.g. 1.09 -> for every more year of education, expected wage is raised by 9%
+ - change after 8 years:
+ 	`dis exp(.0868897)^8` = 2,003 -> 100% increase
+
+ - standardization:
+      - if you standardize you do it on both sides of the equations, (add , beta to command) then coefficients are called beta- coeff.
+ 	- interpretation: change of y in terms of its SD when x changes by 1 SD
+ 	- what is it useful for?
+ 	- how to get them
+ 		- is good to interpret how large the effect is
+ 		- the square of beta coef. tell you portion of variance axplained by  var of variable
+ 		- `dis  .3956569^2`	(beta coeff of yrs of education squared)
+ 	- 15 percent of wage is due to variation in years if education
+ 	- issues, you can only do than in one model, not compare across models
+ 	- if you have interaction in your model, can (not?) interpret beta's
+ 	
+#### Stata
+```{r stata 2.4, results = T, engine = "stata", engine.path= statapath, comment = ""}
+
+use "_data/ex_mydf.dta", replace
+	
+* Mincer-Equation
+	reg lnhwageb pgbilzeit erf frau ost if asample==1 & syear==2015 [pw=phrf]
+	
+* Standardization
+      reg hwageb pgbilzeit frau erf ost if asample==1 & syear==2015 [pw=phrf], beta
+      
+      dis exp(.0868897)	// 0.08.. if coef. of yrs of education is constant
+      dis  .3956569^2	// (beta coeff of yrs of education squared)
+```
+#### R {.tabset .active}
+##### Models
+###### Mincer Model
+```{r}
+ fit2.4 <- asample %>% 
+        # filter because income variable has 0's
+        filter(syear == 2015,
+               hwageb > 0) %>% 
+        lm(log(hwageb) ~ pgbilzeit + erf + frau + ost,
+           data = ., weights = phrf)
+
+ tidy(fit2.4)
+```
+
+###### Coefficients
+How does the the interpretation of coefficients change?
+-> before we had additive model now its a multiple model you can interpret this as percentage change
+Example:
+1.09 -> for every more year of education, expected wage is raised by 9%
+```{r}
+  exp(.0868897)	# 0.08.. if coef. of yrs of education
+```
+  
+if you want to know the change after 8 years:
+```{r}
+   exp(.0868897)^8   # 2,003 -> 100% increase
+```
+
+###### standardization
+if you standardize you do it on both sides of the equations, (add , beta to command) then they are called beta- coeff.
+
+interpretation: change of y in terms of its SD when x changes by 1 SD  what is it useful for?
+ - how to get them?
+ - is good to interpret how large the effect is the square of beta coef. tell you portion of variance axplained by  var of variable
+ 
+ - 15 % of wage is due to variation in bilzeit issues, you can only do than in one model, not compare across models if you have interaction in your model, can (not?) interpret beta's
+
+```{r}
+ # to do: betas
+   # reg hwageb pgbilzeit frau erf ost if asample==1 & syear==2015 [pw=phrf], beta 
+
+  .3956569^2	# beta coeff of yrs of education squared
+```
+
+
+### 2.5 Gender Pay Gap {.tabset}
+How large is the gender pay gap?
+
+***
+
+to do: write answer
+
+#### Stata
+```{r stata 2.5, results = T, engine = "stata", engine.path= statapath, comment = ""}
+use "_data/ex_mydf.dta", replace
+
+reg lnhwageb ost frau pgbilzeit c.erf##c.erf pgexpue if asample==1 & syear==2015 [pw=phrf]
+margins  , at(erf=(0(5)50) pgbilzeit=(8 13 18))
+marginsplot
+dis exp(-.1437791)
+
+* raw gap
+reg lnhwageb frau if asample==1 & syear==2015 [pw=phrf]
+dis exp(-.1983373)
+
+```
+#### R {.tabset .active}
+##### Models
+```{r}
+    # reg lnhwageb ost frau pgbilzeit c.erf##c.erf pgexpue if asample==1 & syear==2015 [pw=phrf]
+    # margins  , at(erf=(0(5)50) pgbilzeit=(8 13 18))
+    # marginsplot
+    exp(-.1437791)
+    # 
+    # * raw gap
+    # reg lnhwageb frau if asample==1 & syear==2015 [pw=phrf]
+    # 
+    exp(-.1983373)
+```
+
+  
+
+ 

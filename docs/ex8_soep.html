@@ -1,0 +1,811 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title></title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 64px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+
+.section h2 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h3 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h4 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h5 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h6 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Panelregression and Multilevel Models</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Models
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Random Intercept</li>
+    <li>
+      <a href="1_rimodel.html">1. without independent variable</a>
+    </li>
+    <li>
+      <a href="2_rimodel.html">2. with independent variable</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="3_rcmodel.html">3. Random Coefficient</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="4_crosslevelint.html">4. Cross-Level Interaction</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="5_crossclass.html">5. Cross-Classified</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="6_3level.html">6. Three Level</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="7_lrtest.html">7. Likelihood Ratio test</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Exercises
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="ex1_soep.html">Ex1</a>
+    </li>
+    <li>
+      <a href="ex2_soep.html">Ex2</a>
+    </li>
+    <li>
+      <a href="ex3_soep.html">Ex3</a>
+    </li>
+    <li>
+      <a href="ex4_soep.html">Ex4</a>
+    </li>
+    <li>
+      <a href="ex5_soep.html">Ex5</a>
+    </li>
+    <li>
+      <a href="ex6_soep.html">Ex6</a>
+    </li>
+    <li>
+      <a href="ex7_soep.html">Ex7</a>
+    </li>
+    <li>
+      <a href="ex8_soep.html">Ex8</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data Preparation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="ex0_create.html">Exercises</a>
+    </li>
+    <li>
+      <a href="0_create.html">Models</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/TripLLL">
+    <span class="fa fa-github"></span>
+     
+    
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+
+</div>
+
+
+<div id="exercise-8" class="section level1 tabset">
+<h1>Exercise 8</h1>
+<div id="questions" class="section level2">
+<h2>Questions</h2>
+<p>8.1 Does a divorce (famstat==4) causally affect mental health (mcs)? Construct binary variables for the categories of famstat (tab famstat, gen(fam)) and a binary indicator of low mental health (gen mcs01=mcs&lt;40 if mcs !=.) Estimate the effect of a divorce (fam4) on mental health (mcs01) in two different model specifications: Pooled Logit (logit, cluster()) and FE-Logit (xtlogit, fe). Add relevant third variables, if necessary. Summarize the estimates in a table (est tab)</p>
+<p>8.2 Interpret your findings and the differences between the models.</p>
+</div>
+<div id="data-prep" class="section level2 tabset">
+<h2>Data Prep</h2>
+<div id="stata" class="section level3">
+<h3>Stata</h3>
+<pre class="stata"><code>set more off
+capt clear
+version 14
+
+* Open the healtl-file.
+use &quot;_data/healthl.dta&quot;, clear
+
+* Does a divorce (famstat==4) causally affect mental health (mcs)?
+
+/* Construct binary variables for the categories of famstat (tab famstat, gen(fam))
+and a binary indicator of low mental health (gen mcs01=mcs&lt;40 if mcs !=.) */
+    
+    tab famstat, gen(fam)
+    tab occupation, gen(occ)
+
+    gen mcs01 = mcs&lt;40 if !missing(mcs)
+    
+</code></pre>
+<pre><code>
+. set more off
+
+. capt clear
+
+. version 14
+
+. 
+. * Open the healtl-file.
+. use &quot;_data/healthl.dta&quot;, clear
+(HEALTH: 09/10/10 10:14:13-634 DB09)
+
+. 
+. * Does a divorce (famstat==4) causally affect mental health (mcs)?
+. 
+. /* Construct binary variables for the categories of famstat (tab famstat, gen
+&gt; (fam))
+&gt; and a binary indicator of low mental health (gen mcs01=mcs&lt;40 if mcs !=.) */
+.         
+.         tab famstat, gen(fam)
+
+                     famstat |      Freq.     Percent        Cum.
+-----------------------------+-----------------------------------
+                 [1] Married |     17,566       65.22       65.22
+  [2] Married, But Separated |        529        1.96       67.18
+                  [3] Single |      5,101       18.94       86.12
+                [4] Divorced |      2,014        7.48       93.60
+                 [5] Widowed |      1,725        6.40      100.00
+-----------------------------+-----------------------------------
+                       Total |     26,935      100.00
+
+.         tab occupation, gen(occ)
+
+   occupation |      Freq.     Percent        Cum.
+--------------+-----------------------------------
+  Blue-Collar |      4,412       16.38       16.38
+ White-Collar |      7,804       28.97       45.35
+Self-Employed |      1,721        6.39       51.74
+Civil Service |      1,076        3.99       55.74
+    Pensioner |      6,939       25.76       81.50
+   Unemployed |      1,543        5.73       87.23
+  Not working |      3,440       12.77      100.00
+--------------+-----------------------------------
+        Total |     26,935      100.00
+
+. 
+.         gen mcs01 = mcs&lt;40 if !missing(mcs)
+
+.     
+. </code></pre>
+</div>
+<div id="r" class="section level3">
+<h3>R</h3>
+<div id="load-data" class="section level4">
+<h4>Load Data</h4>
+<pre class="r"><code>#### load dataset ####
+health_raw &lt;- read_dta(&quot;_data/healthl.dta&quot;)</code></pre>
+<p>Construct binary variables for the categories of famstat and a binary indicator of low mental health (mcs01 = 1 if mcs&lt;40, otherwise 0)</p>
+<pre class="r"><code># Generate Binary Variables
+health &lt;- health_raw %&gt;% 
+      # mutate mcs
+      mutate(mcs01 = ifelse(mcs &lt; 40, 1, 0)) %&gt;% 
+      # generate multiple binary vars from categorical var
+      tibble::rownames_to_column() %&gt;%
+      group_by_all()%&gt;% 
+      dplyr:: summarize(count = n()) %&gt;% 
+      spread(famstat, count, sep = &quot;_&quot;, fill = 0) %&gt;% 
+      ungroup() %&gt;% 
+      dplyr:: select(-rowname) %&gt;% 
+      drop_na()
+
+
+health %&gt;% 
+      dplyr:: select(mcs, mcs01, starts_with(&quot;famstat&quot;)) %&gt;% 
+      head()</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["mcs"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["mcs01"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["famstat_1"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["famstat_2"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["famstat_3"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["famstat_4"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["famstat_5"],"name":[7],"type":["dbl"],"align":["right"]}],"data":[{"1":"31","2":"1","3":"0","4":"0","5":"1","6":"0","7":"0"},{"1":"59","2":"0","3":"0","4":"0","5":"0","6":"1","7":"0"},{"1":"38","2":"1","3":"1","4":"0","5":"0","6":"0","7":"0"},{"1":"27","2":"1","3":"1","4":"0","5":"0","6":"0","7":"0"},{"1":"53","2":"0","3":"0","4":"0","5":"1","6":"0","7":"0"},{"1":"44","2":"0","3":"0","4":"0","5":"1","6":"0","7":"0"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code># transform into panel data frame
+p.health &lt;- pdata.frame(health, index = c(&quot;id&quot;, &quot;year&quot;))</code></pre>
+</div>
+</div>
+</div>
+<div id="answers" class="section level2 active">
+<h2>Answers</h2>
+<div id="section" class="section level3 tabset">
+<h3>8.1</h3>
+<p>Does a divorce (famstat==4) causally affect mental health (mcs)? Construct binary variables for the categories of famstat (tab famstat, gen(fam)) and a binary indicator of low mental health (gen mcs01=mcs&lt;40 if mcs !=.)</p>
+<ul>
+<li>Estimate the effect of a divorce (fam4) on mental health (mcs01) in two different model specifications:
+<ul>
+<li>Pooled Logit (logit, cluster()) and</li>
+<li>FE-Logit (xtlogit, fe).</li>
+</ul></li>
+<li>Add relevant third variables, if necessary.</li>
+<li>Summarize the estimates in a table (est tab)</li>
+</ul>
+<hr />
+<div id="stata-1" class="section level4">
+<h4>Stata</h4>
+<pre class="stata"><code>/* Estimate the effect of a divorce (fam4) on mental health (mcs01) in two different model specifications: Pooled Logit (logit, cluster()) and FE-Logit (xtlogit, fe).*/
+    
+* Pooled Logit
+logit mcs01 fam4, cluster(id)
+    
+* Fixed-Logit 
+xtset id year
+xtlogit mcs01 fam4, fe
+    
+* Add relevant third variables, if necessary.
+
+* Pooled Logit
+logit mcs01 fam4, cluster(id)
+
+* Fixed-Logit 
+xtlogit mcs01 fam4 partner##i.gender i.occupation hhinc, fe
+
+    
+* Summarize the estimates in a table (est tab)
+
+
+* Interpret your findings and the differences between the models.
+</code></pre>
+<pre><code>
+. /* Estimate the effect of a divorce (fam4) on mental health (mcs01) in two di
+&gt; fferent model specifications: Pooled Logit (logit, cluster()) and FE-Logit (x
+&gt; tlogit, fe).*/
+.     
+. * Pooled Logit
+. logit mcs01 fam4, cluster(id)
+no variables defined
+r(111);
+
+end of do-file
+r(111);</code></pre>
+</div>
+<div id="r-1" class="section level4 tabset active">
+<h4>R</h4>
+<div id="models" class="section level5">
+<h5>Models</h5>
+<p>Note: pglm package is not supported for paneldata: <a href="https://stats.stackexchange.com/questions/146434/why-pglm-fails-for-within-model" class="uri">https://stats.stackexchange.com/questions/146434/why-pglm-fails-for-within-model</a></p>
+<p>Pooled Logit Model</p>
+<pre class="r"><code># Pooled Logit Model
+plogit &lt;- glm(mcs01 ~  famstat_4, family = binomial(), data = health)
+
+
+tidy(plogit)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"-1.72","3":"0.018","4":"-93.2","5":"0.0e+00"},{"1":"famstat_4","2":"0.34","3":"0.061","4":"5.6","5":"1.7e-08"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>summary(plogit)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = mcs01 ~ famstat_4, family = binomial(), data = health)
+## 
+## Deviance Residuals: 
+##    Min      1Q  Median      3Q     Max  
+## -0.671  -0.574  -0.574  -0.574   1.941  
+## 
+## Coefficients:
+##             Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)  -1.7195     0.0185  -93.16  &lt; 2e-16 ***
+## famstat_4     0.3419     0.0607    5.64  1.7e-08 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 21311  on 24640  degrees of freedom
+## Residual deviance: 21281  on 24639  degrees of freedom
+## AIC: 21285
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<p>Fixed Effects Logit Model</p>
+<pre class="r"><code># Fixed Effects Logit Model
+felogit &lt;- felm(mcs01 ~ famstat_4 | id , data = health)
+
+tidy(felogit)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"famstat_4","2":"-0.05","3":"0.021","4":"-2.4","5":"0.014"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>summary(felogit)</code></pre>
+<pre><code>## 
+## Call:
+##    felm(formula = mcs01 ~ famstat_4 | id, data = health) 
+## 
+## Residuals:
+##    Min     1Q Median     3Q    Max 
+## -0.788  0.000  0.000  0.000  0.775 
+## 
+## Coefficients:
+##           Estimate Std. Error t value Pr(&gt;|t|)  
+## famstat_4  -0.0505     0.0206   -2.45    0.014 *
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.29 on 17472 degrees of freedom
+## Multiple R-squared(full model): 0.534   Adjusted R-squared: 0.343 
+## Multiple R-squared(proj model): 0.000343   Adjusted R-squared: -0.41 
+## F-statistic(full model):2.79 on 7168 and 17472 DF, p-value: &lt;2e-16 
+## F-statistic(proj model): 5.99 on 1 and 17472 DF, p-value: 0.0144</code></pre>
+<ul>
+<li>Add relevant third variables, if necessary.</li>
+</ul>
+<pre class="r"><code># Pooled OLS Model
+plogit2 &lt;- glm(mcs01 ~  famstat_4 + partner*gender + factor(occupation)+ hhinc, 
+               family = binomial, 
+               data = health)
+
+# Fixed Effects Logit Model
+felogit2 &lt;- felm(mcs01 ~ famstat_4 + partner + partner:gender + factor(occupation) + hhinc | id , 
+                   data = health)
+
+felogit2.2 &lt;- plm(mcs01 ~  famstat_4 + partner*gender + factor(occupation) + hhinc, 
+                model = &quot;within&quot;, 
+                data = p.health)</code></pre>
+<ul>
+<li>Summarize the estimates in a table (est tab)</li>
+</ul>
+<pre class="r"><code>summary(plogit2)</code></pre>
+<pre><code>## 
+## Call:
+## glm(formula = mcs01 ~ famstat_4 + partner * gender + factor(occupation) + 
+##     hhinc, family = binomial, data = health)
+## 
+## Deviance Residuals: 
+##    Min      1Q  Median      3Q     Max  
+## -0.934  -0.632  -0.529  -0.460   2.787  
+## 
+## Coefficients:
+##                      Estimate Std. Error z value Pr(&gt;|z|)    
+## (Intercept)         -1.37e+00   7.83e-02  -17.54  &lt; 2e-16 ***
+## famstat_4            1.23e-01   6.41e-02    1.93   0.0539 .  
+## partner             -4.04e-01   6.98e-02   -5.79  7.2e-09 ***
+## gender               1.79e-01   7.69e-02    2.33   0.0197 *  
+## factor(occupation)2  4.16e-02   5.84e-02    0.71   0.4761    
+## factor(occupation)3  1.94e-01   8.71e-02    2.22   0.0262 *  
+## factor(occupation)4 -1.29e-01   1.16e-01   -1.11   0.2673    
+## factor(occupation)5  3.37e-02   5.83e-02    0.58   0.5627    
+## factor(occupation)6  4.99e-01   7.83e-02    6.38  1.8e-10 ***
+## factor(occupation)7  2.73e-02   6.94e-02    0.39   0.6943    
+## hhinc               -1.19e-04   1.35e-05   -8.79  &lt; 2e-16 ***
+## partner:gender       3.41e-01   8.79e-02    3.88   0.0001 ***
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## (Dispersion parameter for binomial family taken to be 1)
+## 
+##     Null deviance: 21311  on 24640  degrees of freedom
+## Residual deviance: 20876  on 24629  degrees of freedom
+## AIC: 20900
+## 
+## Number of Fisher Scoring iterations: 4</code></pre>
+<pre class="r"><code>summary(felogit2)</code></pre>
+<pre><code>## 
+## Call:
+##    felm(formula = mcs01 ~ famstat_4 + partner + partner:gender +      factor(occupation) + hhinc | id, data = health) 
+## 
+## Residuals:
+##     Min      1Q  Median      3Q     Max 
+## -0.8214 -0.0130 -0.0002  0.0061  0.8387 
+## 
+## Coefficients:
+##                      Estimate Std. Error t value Pr(&gt;|t|)    
+## famstat_4           -5.47e-02   2.06e-02   -2.65   0.0080 ** 
+## partner             -8.34e-02   1.72e-02   -4.86  1.2e-06 ***
+## factor(occupation)2  1.96e-02   1.28e-02    1.53   0.1264    
+## factor(occupation)3  6.23e-02   2.01e-02    3.10   0.0019 ** 
+## factor(occupation)4  3.42e-02   3.15e-02    1.09   0.2768    
+## factor(occupation)5  2.18e-02   1.59e-02    1.37   0.1722    
+## factor(occupation)6  4.36e-02   1.45e-02    3.01   0.0026 ** 
+## factor(occupation)7  3.38e-02   1.42e-02    2.38   0.0171 *  
+## hhinc               -8.12e-06   2.75e-06   -2.96   0.0031 ** 
+## partner:gender       3.68e-02   2.32e-02    1.59   0.1121    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Residual standard error: 0.29 on 17463 degrees of freedom
+## Multiple R-squared(full model): 0.536   Adjusted R-squared: 0.345 
+## Multiple R-squared(proj model): 0.00369   Adjusted R-squared: -0.406 
+## F-statistic(full model):2.81 on 7177 and 17463 DF, p-value: &lt;2e-16 
+## F-statistic(proj model): 6.46 on 10 and 17463 DF, p-value: 5.05e-10</code></pre>
+<pre class="r"><code>summary(felogit2.2)</code></pre>
+<pre><code>## Oneway (individual) effect Within Model
+## 
+## Call:
+## plm(formula = mcs01 ~ famstat_4 + partner * gender + factor(occupation) + 
+##     hhinc, data = p.health, model = &quot;within&quot;)
+## 
+## Unbalanced Panel: n = 7168, T = 1-4, N = 24641
+## 
+## Residuals:
+##      Min.   1st Qu.    Median   3rd Qu.      Max. 
+## -0.821000 -0.013000 -0.000203  0.006120  0.839000 
+## 
+## Coefficients:
+##                      Estimate Std. Error t-value Pr(&gt;|t|)    
+## famstat_4           -5.47e-02   2.06e-02   -2.65   0.0080 ** 
+## partner             -8.34e-02   1.72e-02   -4.86  1.2e-06 ***
+## factor(occupation)2  1.96e-02   1.28e-02    1.53   0.1264    
+## factor(occupation)3  6.23e-02   2.01e-02    3.10   0.0019 ** 
+## factor(occupation)4  3.42e-02   3.15e-02    1.09   0.2768    
+## factor(occupation)5  2.18e-02   1.59e-02    1.37   0.1722    
+## factor(occupation)6  4.36e-02   1.45e-02    3.01   0.0026 ** 
+## factor(occupation)7  3.38e-02   1.42e-02    2.38   0.0171 *  
+## hhinc               -8.12e-06   2.75e-06   -2.96   0.0031 ** 
+## partner:gender       3.68e-02   2.32e-02    1.59   0.1121    
+## ---
+## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
+## 
+## Total Sum of Squares:    1510
+## Residual Sum of Squares: 1500
+## R-Squared:      0.00369
+## Adj. R-Squared: -0.406
+## F-statistic: 6.46071 on 10 and 17463 DF, p-value: 5.05e-10</code></pre>
+</div>
+<div id="plot" class="section level5">
+<h5>Plot</h5>
+</div>
+</div>
+</div>
+<div id="section-1" class="section level3 tabset">
+<h3>8.2</h3>
+<p>Interpret your findings and the differences between the models.</p>
+<hr />
+<div id="r-2" class="section level4 tabset active">
+<h4>R</h4>
+<div id="model" class="section level5">
+<h5>Model</h5>
+</div>
+<div id="plot-1" class="section level5">
+<h5>Plot</h5>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

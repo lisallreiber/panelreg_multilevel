@@ -1,0 +1,222 @@
+---
+title: ""
+author: Lisa Reiber
+output: 
+  html_notebook: 
+    code_folding: hide
+    toc: yes
+    toc_float: true
+---
+
+# Exercise 3
+
+# Load Packages and Data
+```{r}
+#options(scipen = 100)
+options(digits = 2)
+
+#### install missing packages and load needed packages ####
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(foreign, readstata13, ggplot2, lubridate, broom, effects, 
+               pastecs, interplot, ggeffects, dplyr)      
+
+#### load dataset ####
+load(file = "../../data/ex2.RData")
+```
+
+
+```{r}
+## drop unplausible cases, generate sample for analyses
+asample <- ex2 %>% 
+        filter(pgtatzeit > 5,
+               alter %>% dplyr::between(18, 64),
+               pgemplst %in% c(1,2,4)
+               ) %>% 
+      # Unplausible Einzelfälle
+      mutate(na = case_when(
+              pid %in% c(1380202, 1380202, 607602, 2555301) ~ 1,
+              pid == 8267202 & syear == 2007 ~ 1,
+              pid == 2633801 & syear == 2006 ~ 1,
+              pid == 2582901 & syear > 2006 ~ 1 )
+             ) %>% 
+        filter(is.na(na))
+
+## Sample For Analysis for 2015
+asample15 <- asample %>% filter(syear == 2015)
+
+#### save mydf from ex2 ####
+# saveRDS(ex3, file = "../../data/ex3.rds" )
+# no need to save because no new variables generated
+```
+
+## 3.1 
+You should start with an income equation with hourly gross wages (do not use the log-transfromation for now). Predictor variables are years of education, labor force experience, sex and region.
+```{r}
+(fit1  <- asample15 %>% 
+            lm(hwageb~ pgbilzeit + erf + ost + frau, data=., weights=phrf))
+      summary(fit1)
+```
+## 3.2 Specify an interaction effect for sex and years of education. Interpret the results. 
+```{r}
+# fit2 = add interaktion
+(fit2 <- asample15 %>% 
+      lm(hwageb ~ pgbilzeit*frau + erf + ost, data= ., weights = phrf))
+
+summary(fit2)
+```
+
+## 3.3 Present your results grafically using a marginal effects plot
+```{r}
+# m = the object of a regression result
+      # var1 = var whose coefficient is to be plotted 
+      # var2 = var on which the coefficient is conditional (var2)
+      
+      # if we intend to know how the year of education can affect the coefficient for gender on the hourly wage, var1 is gender, and var2 is years of education. 
+      
+      # parameters:   point = wether a line or points are shown
+      #               hist = it can be helpful to the evaluation of the substantive significance of the conditional effect to know the distribution of the conditioning variable (years of education)
+
+interplot(m = fit2 , var1 = "frau", var2= "pgbilzeit", point = F, hist = T) +
+            theme(axis.text.x  = element_text(angle=45)) +
+            xlab("Education (in years)") +
+            ylab("Estimated Coefficient for\nGender") +
+            ggtitle("Estimated Coefficient of Gender \n on Hourly Wage by Years of Education") +
+            theme(plot.title = element_text(face="bold")) +
+            # Add a horizontal line at y = 0
+            geom_hline(yintercept = 0, linetype = "dashed")
+
+ # -> negative slope, shows that with increasing years of education(along the x axis), the magnitude of the coefficient of gender on the mileage decreases (along the y axis).
+      
+# Similarly, to show how the gender affects the coefficient of years of education on hourly wage, one only needs to switch var1 and var2:
+      
+interplot(m = fit2 ,var1 = "pgbilzeit" , var2="frau")
+
+# margins paket, passt margins von Stata an
+```
+
+## 3.4 Specify another interaction effect between years of education and labor force experience. Interpret the results. Use a marginal effects plot to do that.
+
+```{r}
+ (fit4 <- sample15 %>% 
+                  lm(hwageb ~ pgbilzeit*erf + frau + ost, data = ., weights = phrf))
+      
+      summary(fit4)
+      
+  # Marginal Effects Plot
+      # Marginal Effects of Work Experience
+      interplot(m=fit4, var1 = "pgbilzeit", var2="erf", point = F, hist = T) +
+      theme(axis.text.x  = element_text(angle=45)) +
+      xlab("Education (in years)") +
+      ylab("Estimated Coefficient for\n Work Experience") +
+      ggtitle("Estimated Coefficient of Work Experience \n on Hourly Wage by Years of Education") +
+      theme(plot.title = element_text(face="bold")) +
+      # Add a horizontal line at y = 0
+      geom_hline(yintercept = 0, linetype = "dashed")
+      
+      # Marginal Effect of Years of Education
+      interplot(m = fit4 ,var1 = "erf", var2 = "pgbilzeit", hist = T)  +
+            xlab("Education (in years)") +
+            ylab("Estimated Coefficient for\n Years of Education") +
+            ggtitle("Estimated Coefficient of Years of Education \n on Hourly Wage by Labor Force Experience") +
+            theme(plot.title = element_text(face="bold")) +
+            geom_hline(yintercept = 0, linetype = "dashed")
+
+      # Three way Interaction erf, pgbilzeit, frau
+      
+      dat <- ggpredict(fit4, terms = c("erf", "pgbilzeit", "frau"))
+
+      ggplot(dat, aes(x, predicted)) +
+            geom_line() +
+            geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .1)
+      
+      ggplot(dat, aes(x, predicted, colour = group)) +
+            geom_line() +
+            labs(
+                  colour = get_legend_title(dat),
+                  x = get_x_title(dat),
+                  y = get_y_title(dat),
+                  title = get_title(dat)
+            )  +
+            scale_color_manual(
+                  values = c("red", "green", "blue"),
+                  labels = get_legend_labels(dat)
+            )
+```
+## 3.5 Include a nominal (e. g. company size: pgallbet) variable with more than two categories as predictors using a dummy set.
+```{r}
+(fit5 <- sample15 %>% 
+                  lm(hwageb ~ pgbilzeit*frau + 
+                              pgbilzeit*erf + 
+                              ost + 
+                              factor(pgallbet), 
+                     data=., weights=phrf))
+      
+summary(fit5)
+```
+
+## 3.6 Drop the interactions and the dummy set. Include duration of unemployment as additional predictor. What has the largest effect, years of education, labor force experience or duration of unemployment
+```{r}
+(fit6 <- sample15 %>% 
+            lm(hwageb ~ pgbilzeit + 
+                        erf + 
+                        frau + 
+                        ost + 
+                        pgexpue, 
+               data=., weights=phrf))
+      
+      summary(fit6)
+      
+      anova(fit6)
+      # years of education have larges partial effect size
+
+# lm.beta package
+# Doc: https://www.rdocumentation.org/packages/lm.beta/versions/1.5-1/topics/lm.beta
+     lm.fit6.beta <- lm.beta(fit6)
+     print(lm.fit6.beta)
+     summary(lm.fit6.beta)
+     coef(lm.fit6.beta)
+```
+
+## 3.7 Specify a quadratic effect for labor force participation. Interpret the result using a marginal effects plot.
+```{r}
+ # I(e17age^2)  
+    # mutate(erf2 = erf^2) %>% 
+           
+
+
+      (fit7 <- sample15 %>%
+                  lm(hwageb ~ pgbilzeit + 
+                           erf + I(erf^2) + 
+                           frau + 
+                           ost + 
+                           pgexpue, 
+                     data=., weights=phrf))
+      
+      summary(fit7)
+
+      # interplot(m = fit7 ,var1 = "erf", var2= "erf2", hist = T)  +
+      #       xlab("Education (in years)") +
+      #       ylab("Estimated Coefficient for\n Years of Education") +
+      #       ggtitle("Estimated Coefficient of Years of Education \n on Hourly Wage by Labor Force Experience") +
+      #       theme(plot.title = element_text(face="bold")) +
+      #       # Add a horizontal line at y = 0
+      #       geom_hline(yintercept = 0, linetype = "dashed")
+      # 
+      
+      # ggpredict(fit7, terms = c("erf", "erf2"))
+      
+      # library(ggplot2)
+      # ggplot(ggpredict(fit7, terms = c("erf")), aes(x, predicted, colour = group)) +
+      #       geom_line()
+      
+      # dat <- ggpredict(fit7, "erf")
+      
+      
+ # for polynomial data
+      dat <- ggpoly(fit7, "erf")
+
+      ggplot(dat, aes(x, predicted)) +
+            stat_smooth(se = FALSE) +
+            geom_ribbon(aes(ymin = conf.low, ymax = conf.high), alpha = .15) +
+            labs(x = get_x_title(dat), y = get_y_title(dat))
+```

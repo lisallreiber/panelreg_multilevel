@@ -1,0 +1,82 @@
+---
+title: "ex7_soep"
+author: "Lisa Reiber"
+date: "21 12 2017"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+```
+
+```{r, results=F}
+# packages that are needed can be added underneath
+p_needed <- c("tidyr",
+              "haven",
+              "dplyr",
+              "strucchange",
+              "plm",
+              "sandwich",
+              "lmtest",
+              "stargazer",
+              "broom"
+)
+
+
+packages <- rownames(installed.packages())
+p_to_install <- p_needed[!(p_needed %in% packages)]
+if (length(p_to_install) > 0) {
+      install.packages(p_to_install)
+}
+lapply(p_needed, require, character.only = TRUE)
+```
+
+```{r}
+# Paths
+inpath <- "/Volumes/gsoep32l/Gsoep32long/"     # home
+path <- "~/Git/clone/panelregression2017"     # home
+
+
+load(file = paste0(path,"/data/reg_sample.RData" ))
+```
+### Exercise 1: Specify a random and a fixed effects model. Compare the results.
+```{r}
+detach("package:plm", unload=TRUE)
+library(dplyr)
+
+ex7 <- asample %>% 
+      filter(pop < 3, 
+             pgstib !=10, pgstib!=11, pgstib!=12, hwageb>0,
+             phrf >0,
+             syear %>% between(2002, 2015)) %>% 
+      select(hwageb, pgbilzeit, pgisco88, pgnace, pgexpue,
+             sex, ost, erf, pgallbet, phrf, syear, pid) %>%
+      mutate(lnwage = log(hwageb),
+             frau = sex-1) %>% 
+      drop_na()
+
+library(plm)
+ex7pd <- pdata.frame(ex7, index = c("pid", "syear"))
+
+
+```
+
+###Execute the hausman test. Which model specification is more appropriate and why?
+
+```{r}
+# Hausman Test
+fixed <- plm(lnwage ~ pgbilzeit + erf + I(erf^2) + frau + 
+                   ost + as.factor(pgallbet) + as.factor(syear),
+             data = ex7pd, 
+             model = "within", weights = phrf)
+tidy(fixed)
+
+random <- plm(lnwage ~ pgbilzeit + erf + I(erf^2) + frau + 
+                    ost + as.factor(pgallbet) + as.factor(syear),
+          data = ex7pd, 
+          model = "random", weights = phrf)
+
+# Hausman Test
+(hausman <- phtest(fixed, random))
+```
+

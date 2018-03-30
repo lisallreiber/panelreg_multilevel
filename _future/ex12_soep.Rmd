@@ -1,0 +1,77 @@
+---
+title: ""
+author: Lisa Reiber
+output: 
+  html_notebook: 
+    code_folding: show
+    toc: yes
+    toc_float: true
+---
+
+# Exercise 12     
+- Open the psuinterview.dta file.
+- Estimate 3-level (linear) random intercept model (person, household, interviewer) using political interest as the outcome variable.
+- Calculate the intraclass-correlation for each higher level: What is the "contribution" of interviewer and household context for the individual reports on the level of political interest?
+- Does the interviewer-level improve model fit significantly?
+
+**Load Packages and Data**
+```{r}
+#options(scipen = 100)
+options(digits = 2)
+
+# install missing packages and load needed packages ####
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(readstata13, ggplot2, lubridate, broom, effects, 
+               pastecs, tidyverse)      
+
+#load dataset 
+psuint <- read.dta13("../../data/psuintviewnew.dta", convert.factors = F)
+```
+
+**3-Level random intercept model**
+brauche ich hier pid oder psuid? Muss die pid unique für die interviewer id sein?
+```{r}
+# lmer4
+# (formula for random terms | unit for which these terms apply)
+
+skimr::skim(psuint)
+sample <- psuint %>% 
+      mutate(intid = as.factor(intid),
+             hhid = as.factor(hhid))
+
+fit.multi3 <- lmer(polint ~ pid + (1 | intid/hhid), data=sample)
+tidy(fit.multi3)
+
+fit.multi3 <- lmer(polint ~ psuid + (1 | hhid/intid), data = sample)
+tidy(fit.multi3)
+
+
+## expands to
+# lmer(polint ~ pid * tx + 
+#                 (pid | intid:hhid) + 
+#                 (pid | intid),
+#         data=psuint)
+
+# Stata
+# xtmixed risk || _all:R.hhid || intid: || psuid: , mle
+```
+info: 
+- http://rpsychologist.com/r-guide-longitudinal-lme-lmer#conditional-growth-model-dropping-intercept-slope-covariance
+- https://stats.stackexchange.com/questions/12768/three-level-hierarchical-regression-using-lmer
+- http://lme4.r-forge.r-project.org/slides/2009-07-07-Rennes/3LongitudinalD.pdf
+- http://data.princeton.edu/pop510/emg.html
+- https://jonathantemplin.com/files/mlm/mlm13icpsr/mlm13icpsr_lecture10.pdf
+
+
+**Intraclass Correlation**
+```{r}
+library(sjstats)
+# icc(model)
+icc(fit.multi3)
+```
+info: https://github.com/strengejacke/sjstats/blob/master/vignettes/mixedmodels-statistics.Rmd
+
+**Improvement through Interviewer level?**
+
+???
+

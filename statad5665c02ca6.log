@@ -1,0 +1,44 @@
+
+. use "_data/ex_mydf.dta", clear
+(PGEN: Feb 12, 2017 13:00:53-1 DBV32L)
+
+. 
+. reg hwageb i.frau##c.pgbilzeit c.pgbilzeit##c.erf c.erf##c.erf ost ///
+> if asample==1 & syear==2015 [pw=phrf] 
+(sum of wgt is   3.3886e+07)
+note: pgbilzeit omitted because of collinearity
+note: erf omitted because of collinearity
+
+Linear regression                               Number of obs     =     14,218
+                                                F(7, 14210)       =     233.31
+                                                Prob > F          =     0.0000
+                                                R-squared         =     0.2453
+                                                Root MSE          =     9.9429
+
+------------------------------------------------------------------------------
+             |               Robust
+      hwageb |      Coef.   Std. Err.      t    P>|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        frau |
+   weiblich  |   .0055815   1.298299     0.00   0.997    -2.539254    2.550417
+   pgbilzeit |   1.169625   .1187281     9.85   0.000     .9369023    1.402347
+             |
+        frau#|
+ c.pgbilzeit |
+   weiblich  |  -.2250066   .1103051    -2.04   0.041    -.4412191   -.0087941
+             |
+   pgbilzeit |          0  (omitted)
+         erf |   .0870786   .0886205     0.98   0.326    -.0866293    .2607864
+             |
+ c.pgbilzeit#|
+       c.erf |   .0344396   .0058409     5.90   0.000     .0229905    .0458886
+             |
+         erf |          0  (omitted)
+             |
+ c.erf#c.erf |  -.0070558   .0009644    -7.32   0.000    -.0089462   -.0051654
+             |
+         ost |  -4.327699   .2675794   -16.17   0.000     -4.85219   -3.803209
+       _cons |  -2.211328   1.484298    -1.49   0.136    -5.120746    .6980911
+------------------------------------------------------------------------------
+
+. 

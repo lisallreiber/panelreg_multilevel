@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title></title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<script src="site_libs/navigation-1.1/codefolding.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+<link href="site_libs/pagedtable-1.1/css/pagedtable.css" rel="stylesheet" />
+<script src="site_libs/pagedtable-1.1/js/pagedtable.js"></script>
+<link href="site_libs/font-awesome-4.5.0/css/font-awesome.min.css" rel="stylesheet" />
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 64px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+
+.section h2 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h3 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h4 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h5 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+.section h6 {
+  padding-top: 69px;
+  margin-top: -69px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+</script>
+
+<!-- code folding -->
+<style type="text/css">
+.code-folding-btn { margin-bottom: 4px; }
+</style>
+<script>
+$(document).ready(function () {
+  window.initializeCodeFolding("hide" === "show");
+});
+</script>
+
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Panelregression and Multilevel Models</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Models
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li class="dropdown-header">Random Intercept</li>
+    <li>
+      <a href="1_rimodel.html">1. without independent variable</a>
+    </li>
+    <li>
+      <a href="2_rimodel.html">2. with independent variable</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="3_rcmodel.html">3. Random Coefficient</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="4_crosslevelint.html">4. Cross-Level Interaction</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="5_crossclass.html">5. Cross-Classified</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="6_3level.html">6. Three Level</a>
+    </li>
+    <li class="divider"></li>
+    <li>
+      <a href="7_lrtest.html">7. Likelihood Ratio test</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Exercises
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="ex1_soep.html">Ex1</a>
+    </li>
+    <li>
+      <a href="ex2_soep.html">Ex2</a>
+    </li>
+    <li>
+      <a href="ex3_soep.html">Ex3</a>
+    </li>
+    <li>
+      <a href="ex4_soep.html">Ex4</a>
+    </li>
+    <li>
+      <a href="ex5_soep.html">Ex5</a>
+    </li>
+    <li>
+      <a href="ex6_soep.html">Ex6</a>
+    </li>
+    <li>
+      <a href="ex7_soep.html">Ex7</a>
+    </li>
+    <li>
+      <a href="ex8_soep.html">Ex8</a>
+    </li>
+  </ul>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data Preparation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="ex0_create.html">Exercises</a>
+    </li>
+    <li>
+      <a href="0_create.html">Models</a>
+    </li>
+  </ul>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        <li>
+  <a href="https://github.com/TripLLL">
+    <span class="fa fa-github"></span>
+     
+    
+  </a>
+</li>
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+<div class="btn-group pull-right">
+<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><span>Code</span> <span class="caret"></span></button>
+<ul class="dropdown-menu" style="min-width: 50px;">
+<li><a id="rmd-show-all-code" href="#">Show All Code</a></li>
+<li><a id="rmd-hide-all-code" href="#">Hide All Code</a></li>
+</ul>
+</div>
+
+
+
+
+</div>
+
+
+<div id="exercise-6" class="section level1 tabset">
+<h1>Exercise 6</h1>
+<div id="questions" class="section level2">
+<h2>Questions</h2>
+<p>6.1 Using Soep Data: Specify the fixed effects model of the mincer equation and compare your results to the pooled OLS specification.</p>
+</div>
+<div id="data-prep" class="section level2 tabset">
+<h2>Data Prep</h2>
+<div id="stata" class="section level3">
+<h3>Stata</h3>
+<pre class="stata"><code>set more off
+capt clear
+version 14
+
+use &quot;_data/ex_mydf.dta&quot;, replace</code></pre>
+<pre><code>
+. set more off
+
+. capt clear
+
+. version 14
+
+. 
+. use &quot;_data/ex_mydf.dta&quot;, replace
+(PGEN: Feb 12, 2017 13:00:53-1 DBV32L)</code></pre>
+</div>
+<div id="r" class="section level3">
+<h3>R</h3>
+<div id="load-data" class="section level4">
+<h4>Load Data</h4>
+<pre class="r"><code>#### load dataset ####
+ex_mydf &lt;- readRDS(file = &quot;_data/ex_mydf.rds&quot;)
+
+asample &lt;- ex_mydf %&gt;% 
+      filter(
+            # Working Hours
+            pgtatzeit &gt;= 6,
+            # age
+            alter %&gt;% dplyr::between(18, 65),
+            # Employment Status
+            pgemplst %in% c(1,2,4),   # full-time(1), part-time(2), marg.-empl(4)
+            # population status
+            pop &lt; 3 # only private households
+            ) %&gt;%
+      # filter unplausible cases
+      mutate(na = case_when(
+              pid %in% c(1380202, 1380202, 607602, 2555301) ~ 1,
+              pid == 8267202 &amp; syear == 2007 ~ 1,
+              pid == 2633801 &amp; syear == 2006 ~ 1,
+              pid == 2582901 &amp; syear &gt; 2006 ~ 1 )
+             ) %&gt;% 
+      filter(is.na(na), 
+             syear &gt; 2002) %&gt;% 
+      select(pid, syear, lnwage, pgbilzeit, erf, ost, frau, pgexpue, pgallbet, phrf )
+
+## Sample For Analysis for 2015
+asample15 &lt;- asample %&gt;% filter(syear == 2015)
+
+# panel data frame
+p.asample &lt;- pdata.frame(asample, index = c(&quot;pid&quot;, &quot;syear&quot;))
+p.asample15 &lt;- pdata.frame(asample15, index = c(&quot;pid&quot;, &quot;syear&quot;))</code></pre>
+</div>
+</div>
+</div>
+<div id="answers" class="section level2 active">
+<h2>Answers</h2>
+<div id="section" class="section level3 tabset">
+<h3>6.1</h3>
+<p>Using Soep Data: Specify the fixed effects model of the mincer equation and compare your results to the pooled OLS specification.</p>
+<hr />
+<p>Note: Because the size of the dataset is so large and the computing for fixed effects models is takes long, for this exercise the sample is restricted to years 2002 and up.</p>
+<p>The coefficients fo the fixed effects regression are identical to the OLS dummy regression. fixed effects regression does not show any effects of an intercept or sex on Lebenszufriedenheit since constant variables drop out The coefficient on sex cannot be interpreted in a fixed effects regression.</p>
+<p>We could find out the effect of the two here reported sexes on the independent variables by regressing Lebenszufriedenheit on the other independent variables and conditional on each sex.</p>
+<p>The coefficients of the standard OLS/pooled regression with intercept are all strongly significant. The effects differ in intensity (gesund_org) and also direction (anz_kind, bildung) from the fixed effects regression. This is partially related to the consideration of of an intercept and sex. We now have a coeffcient for sex. In average being male has positive effect of 0.1 on Lebenszufriedenheit. By ignoring the clustering in persnr, we just calculate a pooled statistical relation. Instead the fixed panel regression exaluates changes with the persnr and therefore we can speak or (causal) effects induced by changes of our chosen covariates</p>
+<ol style="list-style-type: lower-roman">
+<li><p>gesund_org is strongly significant. An increase by 1 in gesund_org (with {1,2,3,4,5} in the dataset) leads to an average increase of 0.45 in lebensz_org</p></li>
+<li><p>anz_kind is significant at a significance level of 0.015 (P-value) An increase by one child (with {1,2,3} in this dataset) leads to an average increase of 0.13 in lebensz_org</p></li>
+</ol>
+<div id="stata-1" class="section level4">
+<h4>Stata</h4>
+<ul>
+<li>rho := Intraklassenkorrleation := sigma_u²/(sigma_u² + sigma_e²)</li>
+<li>Maß der Ähnlichkeit der Beobachtungen innerhalb eines Clusters</li>
+<li>wenn 1, dann ist gesamte Variation auf die Between-Ebene zurückzuführen;</li>
+<li>Beobachtungen innerhalb eines Clusters sind dann identisch.</li>
+<li>fe unterstützt keine zeitvariierenden Gewichte –&gt; workaround über areg , absorb</li>
+<li>FE schätzt ATET –&gt; mangelnde Generalisierbarkeit</li>
+<li>two-wayfixed effect
+<ul>
+<li>neben Individuenspezifischen unbeobachteten Effekten werden nun zusätzlich periodenspezifische Effekte kontrolliert</li>
+</ul></li>
+</ul>
+<pre class="stata"><code>use &quot;_data/ex_mydf.dta&quot;, clear
+
+* POLS-Model
+reg lnwage pgbilzeit c.erf##c.erf pgexpue ost frau i.pgallbet if asample==1 &amp; syear&gt;2002
+reg lnwage pgbilzeit c.erf##c.erf pgexpue ost frau i.pgallbet if asample==1 &amp; syear&gt;2002 [pw = phrf]
+
+* FE-Model
+xtset pid syear
+xtreg lnwage pgbilzeit c.erf##c.erf pgexpue ost frau i.pgallbet i.syear if asample==1 &amp; syear&gt;2002,  fe cluster(pid)
+
+areg  lnwage pgbilzeit c.erf##c.erf pgexpue ost frau i.pgallbet i.syear  if asample==1 &amp; syear&gt;2002,  absorb(pid) cluster(pid)
+
+* two-way-fixed-effect
+xtreg lnwage pgbilzeit c.erf##c.erf pgexpue ost frau i.pgallbet i.syear  if asample==1 &amp; syear&gt;2002 &amp; pgbilztch==0,  fe
+</code></pre>
+<pre><code>
+. use &quot;_data/ex_mydf.dta&quot;, clear
+(PGEN: Feb 12, 2017 13:00:53-1 DBV32L)
+
+. 
+. * POLS-Model
+. reg lnwage pgbilzeit c.erf##c.erf pgexpue ost frau i.pgallbet if asample==1 &amp;
+&gt;  syear&gt;2002
+
+      Source |       SS           df       MS      Number of obs   =   156,029
+-------------+----------------------------------   F(10, 156018)   =  10057.25
+       Model |  21926.0046        10  2192.60046   Prob &gt; F        =    0.0000
+    Residual |   34013.772   156,018  .218011845   R-squared       =    0.3920
+-------------+----------------------------------   Adj R-squared   =    0.3919
+       Total |  55939.7766   156,028  .358523961   Root MSE        =    .46692
+
+------------------------------------------------------------------------------
+      lnwage |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+   pgbilzeit |   .0802162   .0004426   181.26   0.000     .0793488    .0810836
+         erf |   .0385538   .0003902    98.82   0.000     .0377891    .0393185
+             |
+ c.erf#c.erf |  -.0006474   9.60e-06   -67.46   0.000    -.0006662   -.0006286
+             |
+     pgexpue |  -.0530502   .0007337   -72.30   0.000    -.0544883   -.0516121
+         ost |  -.2861231   .0029417   -97.26   0.000    -.2918888   -.2803574
+        frau |  -.1677748   .0024721   -67.87   0.000      -.17262   -.1629296
+             |
+    pgallbet |
+[2] GE 20..  |   .1263102   .0032532    38.83   0.000     .1199339    .1326864
+[3] GE 20..  |   .2368372   .0035369    66.96   0.000      .229905    .2437694
+[4] GE 2000  |   .2984117    .003429    87.03   0.000     .2916909    .3051325
+[5] Selbs..  |   -.124032   .0065447   -18.95   0.000    -.1368594   -.1112046
+             |
+       _cons |   1.264246   .0070926   178.25   0.000     1.250345    1.278148
+------------------------------------------------------------------------------
+
+. reg lnwage pgbilzeit c.erf##c.erf pgexpue ost frau i.pgallbet if asample==1 &amp;
+&gt;  syear&gt;2002 [pw = phrf]
+(sum of wgt is   4.0554e+08)
+
+Linear regression                               Number of obs     =    153,014
+                                                F(10, 153003)     =    3459.25
+                                                Prob &gt; F          =     0.0000
+                                                R-squared         =     0.3639
+                                                Root MSE          =     .46091
+
+------------------------------------------------------------------------------
+             |               Robust
+      lnwage |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+   pgbilzeit |   .0744084   .0007376   100.88   0.000     .0729628     .075854
+         erf |   .0389242   .0006379    61.02   0.000      .037674    .0401744
+             |
+ c.erf#c.erf |  -.0006587    .000015   -43.99   0.000     -.000688   -.0006293
+             |
+     pgexpue |  -.0538709   .0016444   -32.76   0.000    -.0570938   -.0506479
+         ost |  -.2862332   .0047512   -60.24   0.000    -.2955455    -.276921
+        frau |  -.1700573   .0037989   -44.76   0.000    -.1775032   -.1626115
+             |
+    pgallbet |
+[2] GE 20..  |   .1254696   .0052313    23.98   0.000     .1152164    .1357228
+[3] GE 20..  |   .2324542    .005442    42.71   0.000      .221788    .2431204
+[4] GE 2000  |   .2962349   .0052689    56.22   0.000     .2859081    .3065618
+[5] Selbs..  |  -.1131356   .0163553    -6.92   0.000    -.1451916   -.0810796
+             |
+       _cons |   1.322194   .0118697   111.39   0.000      1.29893    1.345459
+------------------------------------------------------------------------------
+
+. 
+. * FE-Model
+. xtset pid syear
+       panel variable:  pid (unbalanced)
+        time variable:  syear, 1984 to 2015, but with gaps
+                delta:  1 unit
+
+. xtreg lnwage pgbilzeit c.erf##c.erf pgexpue ost frau i.pgallbet i.syear if as
+&gt; ample==1 &amp; syear&gt;2002,  fe cluster(pid)
+note: frau omitted because of collinearity
+
+Fixed-effects (within) regression               Number of obs     =    156,029
+Group variable: pid                             Number of groups  =     33,894
+
+R-sq:                                           Obs per group:
+     within  = 0.0401                                         min =          1
+     between = 0.3541                                         avg =        4.6
+     overall = 0.3156                                         max =         13
+
+                                                F(21,33893)       =     123.40
+corr(u_i, Xb)  = 0.1227                         Prob &gt; F          =     0.0000
+
+                               (Std. Err. adjusted for 33,894 clusters in pid)
+------------------------------------------------------------------------------
+             |               Robust
+      lnwage |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+   pgbilzeit |   .0529867   .0046515    11.39   0.000     .0438696    .0621039
+         erf |    .045247    .002356    19.21   0.000     .0406292    .0498648
+             |
+ c.erf#c.erf |  -.0006661   .0000262   -25.43   0.000    -.0007174   -.0006147
+             |
+     pgexpue |  -.0332011   .0078562    -4.23   0.000    -.0485995   -.0178027
+         ost |  -.1209915   .0243707    -4.96   0.000    -.1687589   -.0732241
+        frau |          0  (omitted)
+             |
+    pgallbet |
+[2] GE 20..  |   .0495245   .0058391     8.48   0.000     .0380796    .0609693
+[3] GE 20..  |   .0771106   .0067836    11.37   0.000     .0638146    .0904067
+[4] GE 2000  |   .0896249    .007137    12.56   0.000     .0756362    .1036137
+[5] Selbs..  |  -.0717673   .0153061    -4.69   0.000    -.1017677   -.0417669
+             |
+       syear |
+       2004  |  -.0172732   .0042352    -4.08   0.000    -.0255744    -.008972
+       2005  |  -.0460263   .0053915    -8.54   0.000    -.0565939   -.0354587
+       2006  |  -.0833928   .0067448   -12.36   0.000    -.0966128   -.0701729
+       2007  |  -.1048617   .0080679   -13.00   0.000     -.120675   -.0890483
+       2008  |  -.1178463   .0095065   -12.40   0.000    -.1364794   -.0992132
+       2009  |   -.109741   .0111915    -9.81   0.000    -.1316767   -.0878053
+       2010  |  -.1125573   .0126257    -8.91   0.000    -.1373041   -.0878104
+       2011  |  -.1263725   .0142115    -8.89   0.000    -.1542276   -.0985174
+       2012  |  -.1278882    .015645    -8.17   0.000    -.1585529   -.0972234
+       2013  |  -.1120904    .016911    -6.63   0.000    -.1452365   -.0789443
+       2014  |  -.0969339   .0182056    -5.32   0.000    -.1326174   -.0612503
+       2015  |  -.0739467   .0197261    -3.75   0.000    -.1126105    -.035283
+             |
+       _cons |   1.564629   .0666481    23.48   0.000     1.433996    1.695261
+-------------+----------------------------------------------------------------
+     sigma_u |  .48874503
+     sigma_e |  .28535324
+         rho |  .74577917   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+
+. 
+. areg  lnwage pgbilzeit c.erf##c.erf pgexpue ost frau i.pgallbet i.syear  if a
+&gt; sample==1 &amp; syear&gt;2002,  absorb(pid) cluster(pid)
+note: frau omitted because of collinearity
+
+Linear regression, absorbing indicators         Number of obs     =    156,029
+                                                F(  21,  33893)   =      96.59
+                                                Prob &gt; F          =     0.0000
+                                                R-squared         =     0.8222
+                                                Adj R-squared     =     0.7729
+                                                Root MSE          =     0.2854
+
+                               (Std. Err. adjusted for 33,894 clusters in pid)
+------------------------------------------------------------------------------
+             |               Robust
+      lnwage |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+   pgbilzeit |   .0529867   .0052576    10.08   0.000     .0426817    .0632917
+         erf |    .045247   .0026629    16.99   0.000     .0400276    .0504664
+             |
+ c.erf#c.erf |  -.0006661   .0000296   -22.50   0.000    -.0007241    -.000608
+             |
+     pgexpue |  -.0332011   .0088798    -3.74   0.000    -.0506057   -.0157965
+         ost |  -.1209915   .0275459    -4.39   0.000    -.1749824   -.0670006
+        frau |          0  (omitted)
+             |
+    pgallbet |
+[2] GE 20..  |   .0495245   .0065999     7.50   0.000     .0365885    .0624605
+[3] GE 20..  |   .0771106   .0076674    10.06   0.000     .0620823     .092139
+[4] GE 2000  |   .0896249   .0080669    11.11   0.000     .0738136    .1054363
+[5] Selbs..  |  -.0717673   .0173003    -4.15   0.000    -.1056764   -.0378582
+             |
+       syear |
+       2004  |  -.0172732    .004787    -3.61   0.000    -.0266559   -.0078905
+       2005  |  -.0460263    .006094    -7.55   0.000    -.0579707   -.0340819
+       2006  |  -.0833928   .0076235   -10.94   0.000    -.0983352   -.0684505
+       2007  |  -.1048617    .009119   -11.50   0.000    -.1227353   -.0869881
+       2008  |  -.1178463   .0107451   -10.97   0.000    -.1389071   -.0967855
+       2009  |   -.109741   .0126496    -8.68   0.000    -.1345347   -.0849473
+       2010  |  -.1125573   .0142707    -7.89   0.000    -.1405284   -.0845862
+       2011  |  -.1263725   .0160631    -7.87   0.000    -.1578568   -.0948882
+       2012  |  -.1278882   .0176834    -7.23   0.000    -.1625482   -.0932282
+       2013  |  -.1120904   .0191143    -5.86   0.000     -.149555   -.0746258
+       2014  |  -.0969339   .0205776    -4.71   0.000    -.1372666   -.0566011
+       2015  |  -.0739467   .0222961    -3.32   0.001    -.1176479   -.0302455
+             |
+       _cons |   1.564629   .0753316    20.77   0.000     1.416976    1.712281
+-------------+----------------------------------------------------------------
+         pid |   absorbed                                   (33894 categories)
+
+. 
+. * two-way-fixed-effect
+. xtreg lnwage pgbilzeit c.erf##c.erf pgexpue ost frau i.pgallbet i.syear  if a
+&gt; sample==1 &amp; syear&gt;2002 &amp; pgbilztch==0,  fe
+note: frau omitted because of collinearity
+
+Fixed-effects (within) regression               Number of obs     =    137,206
+Group variable: pid                             Number of groups  =     29,468
+
+R-sq:                                           Obs per group:
+     within  = 0.0424                                         min =          1
+     between = 0.3784                                         avg =        4.7
+     overall = 0.3328                                         max =         13
+
+                                                F(21,107717)      =     227.32
+corr(u_i, Xb)  = 0.0057                         Prob &gt; F          =     0.0000
+
+------------------------------------------------------------------------------
+      lnwage |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+   pgbilzeit |   .0842833   .0031764    26.53   0.000     .0780576     .090509
+         erf |   .0450217   .0015773    28.54   0.000     .0419301    .0481132
+             |
+ c.erf#c.erf |  -.0006308   .0000188   -33.54   0.000    -.0006676   -.0005939
+             |
+     pgexpue |  -.0346334    .003403   -10.18   0.000    -.0413032   -.0279637
+         ost |  -.1282438   .0146121    -8.78   0.000    -.1568832   -.0996043
+        frau |          0  (omitted)
+             |
+    pgallbet |
+[2] GE 20..  |     .05027   .0040706    12.35   0.000     .0422917    .0582483
+[3] GE 20..  |   .0780984   .0047546    16.43   0.000     .0687794    .0874174
+[4] GE 2000  |   .0889808   .0049328    18.04   0.000     .0793126    .0986491
+[5] Selbs..  |  -.0771079   .0073701   -10.46   0.000    -.0915532   -.0626627
+             |
+       syear |
+       2004  |  -.0173967   .0042274    -4.12   0.000    -.0256823    -.009111
+       2005  |   -.048454   .0047254   -10.25   0.000    -.0577156   -.0391923
+       2006  |  -.0860305   .0053577   -16.06   0.000    -.0965315   -.0755294
+       2007  |  -.1113415   .0060158   -18.51   0.000    -.1231324   -.0995505
+       2008  |  -.1251727   .0068083   -18.39   0.000    -.1385167   -.1118286
+       2009  |  -.1195701   .0076648   -15.60   0.000    -.1345929   -.1045473
+       2010  |  -.1225387    .008599   -14.25   0.000    -.1393925   -.1056849
+       2011  |  -.1368962   .0093792   -14.60   0.000    -.1552793   -.1185132
+       2012  |  -.1426543   .0102839   -13.87   0.000    -.1628107   -.1224979
+       2013  |  -.1334428   .0110012   -12.13   0.000     -.155005   -.1118806
+       2014  |  -.1116799   .0118414    -9.43   0.000     -.134889   -.0884709
+       2015  |  -.0930661   .0128066    -7.27   0.000    -.1181668   -.0679654
+             |
+       _cons |   1.166358   .0445909    26.16   0.000     1.078961    1.253756
+-------------+----------------------------------------------------------------
+     sigma_u |  .47311258
+     sigma_e |  .28070512
+         rho |   .7396321   (fraction of variance due to u_i)
+------------------------------------------------------------------------------
+F test that all u_i=0: F(29467, 107717) = 9.19               Prob &gt; F = 0.0000
+
+. </code></pre>
+</div>
+<div id="r-1" class="section level4 tabset active">
+<h4>R</h4>
+<div id="model" class="section level5">
+<h5>Model</h5>
+<p>Note: Here is the problem, that the p-values seem not to be working</p>
+<pre class="r"><code># POLS- and FE-model ------------------------------------------------------
+pols &lt;- plm(lnwage ~ pgbilzeit + erf + I(erf^2) + pgexpue + ost + frau + pgallbet,
+                        data = p.asample, 
+                        weights = phrf,
+                        model = &quot;pooling&quot;) 
+
+# other way of writing
+# pols &lt;- lm(lnwage ~  pgbilzeit + erf + I(erf^2) + ost + frau, 
+#            weights = phrf,
+#            data = asample)
+
+fe  &lt;- plm(lnwage ~ pgbilzeit + erf + I(erf^2) + pgexpue + ost + frau + pgallbet, 
+            data = p.asample,
+            weights = phrf,
+            model = &quot;within&quot;)
+
+tidy(pols)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"1.12146","3":"7.5e-03","4":"150","5":"0"},{"1":"pgbilzeit","2":"0.07619","3":"4.7e-04","4":"161","5":"0"},{"1":"erf","2":"0.03728","3":"3.9e-04","4":"96","5":"0"},{"1":"I(erf^2)","2":"-0.00061","3":"9.6e-06","4":"-63","5":"0"},{"1":"pgexpue","2":"-0.05368","3":"7.6e-04","4":"-71","5":"0"},{"1":"ost","2":"-0.29586","3":"3.3e-03","4":"-91","5":"0"},{"1":"frau","2":"-0.16606","3":"2.5e-03","4":"-66","5":"0"},{"1":"pgallbet","2":"0.07049","3":"1.0e-03","4":"69","5":"0"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>fe</code></pre>
+<pre><code>## 
+## Model Formula: lnwage ~ pgbilzeit + erf + I(erf^2) + pgexpue + ost + frau + 
+##     pgallbet
+## 
+## Coefficients:
+## pgbilzeit       erf  I(erf^2)   pgexpue       ost  pgallbet 
+##  0.068041  0.073147 -0.000722 -0.010591 -0.139414  0.008868</code></pre>
+<pre class="r"><code># t.fe   &lt;- tidy(fe) # takes too long
+# display results
+      # smy_fe &lt;- summary(fe) # takes too long
+      # summary(fe, robust = T) # like the robust function in STATA
+
+# just show general coefficients and no dummies
+      # smy_fe$coef[1:5,] # takes too long</code></pre>
+<p>fixed effects like areg in STATA</p>
+<pre class="r"><code> # fixed effects like areg in STATA
+fe_areg &lt;- felm(lnwage ~ pgbilzeit + erf + I(erf^2) + ost 
+                         | pid | 0 | pid, data = asample, weights = asample$phrf)
+
+fe_areg      </code></pre>
+<pre><code>## pgbilzeit       erf  I(erf^2)       ost 
+##    0.0381    0.0856   -0.0007   -0.1949</code></pre>
+<pre class="r"><code># areg y x1 [w=x3], a(id1) cl(id1) 
+# felm(y ~ x1 | id1 | 0 | id1, df, weight = x3))</code></pre>
+</div>
+<div id="plot" class="section level5">
+<h5>Plot</h5>
+<p>output as nice table</p>
+<pre class="r"><code># stargazer(fe, pols, title=&quot;Results&quot;, align=TRUE) # takes too long</code></pre>
+</div>
+<div id="tests" class="section level5">
+<h5>Tests</h5>
+<pre class="r"><code># Pooled Model
+# LM test for random effects versus OLS
+plmtest(pols) </code></pre>
+<pre><code>## 
+##  Lagrange Multiplier Test - (Honda) for unbalanced panels
+## 
+## data:  lnwage ~ pgbilzeit + erf + I(erf^2) + ost + frau
+## normal = 500, p-value &lt;2e-16
+## alternative hypothesis: significant effects</code></pre>
+<pre class="r"><code># FE Model
+# coeftest(fe, vcov.=vcovHC(fe,type=&quot;HC1&quot;)) # takes too long</code></pre>
+<p>info on fixed effects / LSDV Reg <a href="https://stats.stackexchange.com/questions/41916/within-model-with-plm-package" class="uri">https://stats.stackexchange.com/questions/41916/within-model-with-plm-package</a></p>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

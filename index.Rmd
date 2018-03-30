@@ -1,0 +1,33 @@
+---
+pagetitle: Multilevel Models
+---
+
+# Multilevel Models in STATA and R
+
+### Purpose of this site
+This site contains .do files and .R scripts for multilevel modeling. It resulted from the exercises from a university course on that topic, where we discussed the basic statistical properties of the different models in a mostly non-technical way and used empirical data and Stata exercises to get familiar with their assumptions, features and interpretation. A couple of us then decided to "translate" the course excercises into R. We found that R has certain advantages, especially when it comes to visualizing the underlying data or models. 
+
+#### Models
+In this section you will find an overviw of the models and some comments, both for STATA and R.
+
+1. [Random Intercept Model without IV](1_rimodel.html).
+2. [Random Intercept Model with IV](2_rimodel.html).
+3. [Random Coefficients Model](3_rcmodel.html).
+4. [Cross-Level Interaction Model](4_crosslevelint.html).
+5. [Cross-Classified Model](5_crossclass.html).
+6. [3-Level Model](6_3level.html).
+7. [Likelihood-Ratio Test](7_lrtest.html).
+
+#### Data Preparation
+[Here](0_create.html) you will find the data preparation that led to the underlying dataset of the models used on this website
+
+#### Future
+More stuff might follow. 
+
+
+#### Authors
+Lisa Reiber, Florian Kaiser
+
+#### Acknowledgements 
+A big thank you to Ruben Arslan for development of reproducible visualization of research projects on the web (repro-web-stack) [click here for more Info](https://github.com/rubenarslan/repro_web_stack)
+

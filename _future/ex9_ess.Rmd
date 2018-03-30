@@ -1,0 +1,152 @@
+---
+author: "Lisa Reiber"
+date: "`r format(Sys.time(), '%d %B, %Y')`"
+output:
+  html_notebook:
+    code_folding: show
+    toc: yes
+    toc_float: yes
+  html_document:
+    df_print: paged
+    toc: yes
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+Load Packages and Data
+```{r, results=F, message=F, echo=FALSE}
+#### install missing packages and load needed packages ####
+if (!require("pacman")) install.packages("pacman")
+pacman::p_load(foreign, readstata13, ggplot2, gtable, lme4, broom, memisc, tidyverse)      
+
+#### load dataset ####
+ess50 <- read.dta13(file = "../../data/ess50.dta", convert.factor = F)
+```
+
+# Exercise II
+***
+- Estimate a random intercept model using satisfaction with democracy as the outcome variable (
+stfdem) and/or your previously selected outcomes.
+- Generate a categorical variable (new) distinguishing between old/new democracies (democratization before 1950: country 1 2 3 5 6 8 9 10 13 14 15 16 17 18 21, between 1950 and 1989: country 7 20 11, and since 1989: country 4 12 19 22).
+- Replicate the comparison of OLS versus random intercept models, regressing third variables on satisfaction with democracy (female and new).
+
+**Data Wrangling**
+```{r}
+sample <- ess50 %>% 
+      dplyr::select(cntry, stfdem, female, hinctnt, rlgdgr) %>% 
+      mutate(cntry.id = as.numeric(as.factor(cntry)),
+             new = ifelse(cntry.id %in% c(7,20,11),1,0),
+             new2 = ifelse(cntry.id %in% c(4,12,19,22), 1, 0),
+             old = ifelse(new == 0 & new2 == 1 , 1, 0)
+             )
+```
+
+
+**OLS**
+```{r}
+# Regressions -------------------------------------------------------------
+
+#OLS
+fit.ols <- lm(stfdem ~ new + new2 + female, data = sample)
+tidy(fit.ols)
+```
+**Random Intercept**
+```{r}
+# OLS with Random Intercept
+fit.multi <- lmer(stfdem ~ new + new2 + female + (1|cntry.id), data = sample)
+tidy(fit.multi)
+```
+
+
+# Exercise III
+***
+
+- Estimate a random intercept model using satisfaction with democracy as the outcome variable (stfdem). 
+- Use one predictor variable with little distributional variation across countries (such as gender) and one predictor variable with substantial distributional variation across countries.
+- Replicate the comparison of OLS versus random intercept models, regressing these predictor variables on satisfaction with democracy.
+- Inspect standard errors and residual standard deviations at level 1 and 2 in particular. What explains the patterns of results you observe?
+
+**Random Intercept: Little Variation across Countries**
+```{r}
+# Random Intercept
+# Little Variation across countries
+fit.multi.low <- lmer(stfdem ~ female + (1|cntry.id), data = sample)
+tidy(fit.multi.low)
+```
+**Random Intercept: Substantial Variation across countries**
+```{r}
+# Random Intercept
+# Substantial distrubutional variation across countries (income)
+fit.multi.high <- lmer(stfdem ~ hinctnt + (1|cntry.id), data = sample)
+tidy(fit.multi.high)
+
+```
+
+**OLS: Little Variation across countries**
+```{r}
+# OLS
+# Little Variation across countries
+fit.ols.low <- lm(stfdem ~ female, data = sample)
+tidy(fit.ols.low)
+```
+
+**OLS: Substantial Variation across countries**
+```{r}
+# OLS
+# Substantial distrubutional variation across countries (income)
+fit.ols.high <- lm(stfdem ~ hinctnt, data = sample)
+tidy(fit.ols.high)
+```
+
+**Standard Errors**
+```{r, comment=NA }
+## SE
+# sqrt(diag(vcov(fit.ols.low))) OR tidy(fit.ols.low)
+
+## RSD
+#sigma(fit.multi.high) OR glance(fit.ols.low)
+
+# (mtable_multi <- mtable("Low Var Model"=fit.multi.low,"High Var Model"=fit.multi.high,
+#      summary.stats=c("sigma","R-squared","F","p","N")))
+# 
+# (mtable_ols <- mtable("Low Var Model"=fit.ols.low,"Low Var Model"= fit.ols.high,
+#      summary.stats=c("sigma","R-squared","F","p","N")))
+
+
+mtable(fit.ols.low, fit.ols.high)
+mtable(fit.multi.low, fit.multi.high)
+
+# xtable(anova(fm2b, fm2))
+```
+**Residual Standard Deviations at Level 1 and 2**
+```{r}
+glance(fit.ols.high)
+glance(fit.ols.low)
+glance(fit.multi.high)
+glance(fit.multi.low)
+```
+
+
+# Extra: Visualization
+
+**Coefficients**
+```{r}
+
+td <- tidy(fit.ols.high, conf.int = TRUE)
+g1 <- ggplot(td, aes(estimate, term, color = term)) +
+    geom_point() +
+    geom_errorbarh(aes(xmin = conf.low, xmax = conf.high)) +
+      ggtitle("High Variation Model")
+
+td <- tidy(fit.ols.low, conf.int = TRUE)
+g2 <- ggplot(td, aes(estimate, term, color = term)) +
+    geom_point() +
+    geom_errorbarh(aes(xmin = conf.low, xmax = conf.high)) +
+            ggtitle("Low Variation Model")
+
+
+grid.arrange(g1,g2, nrow = 2) 
+```
+

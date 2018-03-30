@@ -1,0 +1,113 @@
+---
+title: "ex8_soep"
+author: "Lisa Reiber"
+date: "10 1 2018"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE, cache = TRUE)
+```
+
+```{r, results=F, message=F, echo=FALSE}
+# packages that are needed can be added underneath
+p_needed <- c("readstata13",
+              "tidyr",
+              "strucchange",
+              "plm",
+              "pglm",
+              "sandwich",
+              "stargazer",
+              "broom",
+              "lfe",
+              "lme4",
+              "dplyr"
+              )
+
+packages <- rownames(installed.packages())
+p_to_install <- p_needed[!(p_needed %in% packages)]
+if (length(p_to_install) > 0) {
+      install.packages(p_to_install)
+      }
+lapply(p_needed, require, character.only = TRUE)
+```
+
+```{r}
+# Paths
+inpath <- "/Volumes/gsoep32l/Gsoep32long/"     # home
+path <- "~/Git/clone/panelregression2017"     # home
+
+load(file = paste0(path,"/data/reg_sample.RData" ))
+```
+
+Open the healtl-file
+```{r}
+health_raw <- read.dta13("../../data/healthl.dta", convert.factors = F)
+```
+
+Does a divorce (famstat==4) causally affect mental health (mcs)?
+
+1. Construct binary variables for the categories of famstat and a binary indicator of low mental health (mcs01 = 1 if mcs<40, otherwise 0)
+```{r}
+
+# Generate Binary Variables
+health <- health_raw %>% 
+      # mutate mcs
+      mutate(mcs01 = ifelse(mcs<40, 1, 0)) %>% 
+      # generate multiple binary vars from categorical var
+      tibble::rownames_to_column() %>%
+      group_by_all() %>% 
+      summarise(count = n()) %>% 
+      spread(famstat, count, sep = "_", fill = 0) %>% 
+      ungroup() %>% 
+      select(-rowname) %>% 
+      drop_na()
+
+
+health %>% 
+      select(mcs, mcs01, starts_with("famstat")) %>% 
+      head()
+```
+
+2. Estimate the effect of a divorce (fam4) on mental health (mcs01) in two different model specifications: Pooled Logit (logit, cluster()) and FE-Logit (xtlogit, fe).
+```{r}
+# Pooled Logit Model
+plogit <- glm(mcs01 ~  famstat_4, family = binomial(), data = health)
+
+# Fixed Effects Logit Model
+felogit <- felm(mcs01 ~ famstat_4 | id , data = health)
+
+felogit2 <- glm(mcs01 ~ famstat_4 + factor(id)-1, data = p.health,
+                family= binomial)
+
+# pglm package is not supported for paneldata
+https://stats.stackexchange.com/questions/146434/why-pglm-fails-for-within-model
+
+tidy(plogit)
+tidy(felogit)
+
+summary(plogit)
+summary(felogit)
+
+```
+
+3. Add relevant third variables, if necessary.
+```{r}
+# OLS Model
+plogit3 <- glm(mcs01 ~  famstat_4 + partner*gender + factor(occupation)+ hhinc, family = binomial, data = health)
+
+# Fixed Effects Logit Model
+p.health <- pdata.frame(health, index = c("id", "year"))
+felogit3 <- plm(mcs01 ~  famstat_4 + partner*gender + factor(occupation) + hhinc, model = "within", data = p.health)
+
+```
+
+4. Summarize the estimates in a table (est tab)
+```{r}
+summary(plogit3)
+summary(felogit3)
+
+```
+
+5. Interpret your findings and the differences between the models.
+
