@@ -4,7 +4,6 @@ output:
     code_folding: hide
 ---
 
-
 ```{r setup, include=FALSE}
 source("0_packages.R")
 source(".statapath.R")
@@ -65,13 +64,12 @@ p.asample15 <- pdata.frame(asample15, index = c("pid", "syear"))
 ```
 ## Answers {.active}
 ### 6.1 {.tabset}
-Using Soep Data: Specify the fixed effects model of the mincer equation and compare your results to the pooled OLS specification.
+**Using Soep Data: Specify the fixed effects model of the mincer equation and compare your results to the pooled OLS specification.**
 
-***
-Note: Because the size of the dataset is so large and the computing for fixed effects models is takes long, for this exercise the sample is restricted to years 2002 and up.
+Note: *Because the size of the dataset is so large and the computing for fixed effects models is takes long, for this exercise the sample is restricted to years 2002 and up.*
 
 
-The coefficients fo the fixed effects regression are identical to the OLS dummy regression.
+The coefficients for the fixed effects regression are identical to the OLS dummy regression.
 - Fixed effects regression does not show any effects of an intercept or sex on Lebenszufriedenheit since constant variables drop out.
 - The coefficient on sex cannot be interpreted in a fixed effects regression.
 
@@ -118,7 +116,13 @@ xtreg lnwage pgbilzeit c.erf##c.erf pgexpue ost frau i.pgallbet i.syear  if asam
  
 #### R {.tabset .active}
 ##### Model
-Note: Here is the problem, that the p-values seem not to be working
+
+Note1: **Difficulty with FE-Models in R** *Computing fixed effects models with a lot of individuals has proven to be very time consuming in r and needs a lot of computing power. Most of the packages for fixed-effects models are written in a way that they can handle panel data regarding a few countries, but they are not well fit for panel data with some thousand individuals like the SOEP data. If you know of packages that are fit for population panel data please let me know on [github](https://github.com/TripLLL) or twitter [\@\_asilisa\_](https://twitter.com/_asilisa_) :).*
+
+Note2: *There is also the problem so far, that the p-values seem not to be calculated correctly in for fe models with the `plm`package.
+
+
+Pooled Model
 ```{r model 6.1}
 
 # POLS- and FE-model ------------------------------------------------------
@@ -132,12 +136,17 @@ pols <- plm(lnwage ~ pgbilzeit + erf + I(erf^2) + pgexpue + ost + frau + factor(
 #            weights = phrf,
 #            data = asample)
 
+tidy(pols)
+
+
+```
+
+Fixed effect model
+```{r}
 fe  <- plm(lnwage ~ pgbilzeit + erf + I(erf^2) + pgexpue + ost + frau + pgallbet, 
             data = p.asample,
             weights = phrf,
             model = "within")
-
-tidy(pols)
 
 fe
 # t.fe   <- tidy(fe) # takes too long
@@ -150,9 +159,9 @@ fe
 
 ```
 
-fixed effects like areg in STATA
+Fixed effects like areg in STATA with the `felm` package. You can find more information on different models in R and STATA at [this](http://www.matthieugomez.com/statar/regressions.html) awesome website
 ```{r areg}
- # fixed effects like areg in STATA
+# fixed effects like areg in STATA
 fe_areg <- felm(lnwage ~ pgbilzeit + erf + I(erf^2) + ost 
                          | pid | 0 | pid, data = asample, weights = asample$phrf)
 
@@ -161,8 +170,8 @@ fe_areg
 # felm(y ~ x1 | id1 | 0 | id1, df, weight = x3))
 ```
 
-##### Plot
-output as nice table
+##### Output
+output as nice table (takes too long to draw at the moment)
 ```{r stargazer}
 # stargazer(fe, pols, title="Results", align=TRUE) # takes too long
 ```

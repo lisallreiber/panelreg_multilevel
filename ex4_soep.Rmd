@@ -1,5 +1,7 @@
 ---
-output: html_document
+output:
+  html_document:
+    code_folding: hide
 ---
 
 ```{r setup, include=FALSE}
@@ -54,8 +56,8 @@ asample <- ex_mydf %>%
              ) %>% 
       filter(is.na(na)) %>% 
       # select relevant variables
-      dplyr::select(hwageb, lnwage, pgbilzeit, pgisco88, pgnace, pgexpue,
-             sex, ost, erf, frau, pgallbet, phrf, syear, pid, pid_syear) 
+      dplyr::select(hwageb, lnwage, pgbilzeit, cpgbilzeit, pgisco88, pgnace, pgexpue,
+             sex, ost, erf, erfq, cerf, frau, pgallbet, phrf, syear, pid, pid_syear) 
       # %>%
       # drop_na() 
 
@@ -63,7 +65,7 @@ asample <- ex_mydf %>%
 ## Answers {.active}
 
 ### 4.1 Mincer Equation {.tabset}
-Estimate the Mincer equation of last weeks exercise seperately for East and West Germany for all years since 1992 using loops (see foreach).
+**Estimate the Mincer equation of last weeks exercise seperately for East and West Germany for all years since 1992 using loops (see foreach).**
 
 #### Stata
 ```{r stata 4.1, results = T, engine = "stata", engine.path= statapath, comment = ""}
@@ -77,9 +79,9 @@ gen lower=.
 
 foreach year of numlist 1991/2015 {
       qui: reg lnwage pgbilzeit c.erf##c.erf pgexpue ost frau i.pgallbet if asample==1 & syear==`year' [pw=phrf], eform(b) cluster(hid)
-      replace educationrev = exp(_b[pgbilzeit]) if syear==`year'
-      replace upper = exp(_b[pgbilzeit]+ 1.96*_se[pgbilzeit]) if syear==`year'
-      replace lower = exp(_b[pgbilzeit]- 1.96*_se[pgbilzeit]) if syear==`year'
+      qui: replace educationrev = exp(_b[pgbilzeit]) if syear==`year'
+      qui: replace upper = exp(_b[pgbilzeit]+ 1.96*_se[pgbilzeit]) if syear==`year'
+      qui: replace lower = exp(_b[pgbilzeit]- 1.96*_se[pgbilzeit]) if syear==`year'
 }
 
 preserve
@@ -99,10 +101,10 @@ cap drop upper lower
 gen upper=.
 gen lower=.
 foreach year of numlist 1984/2015 {
-reg lnwage pgbilzeit c.erf##c.erf pgexpue ost frau i.pgallbet if asample==1 & syear==`year' & ost == 0 [pw=phrf], eform(b) cluster(hid)
-replace educationrev_west = exp(_b[pgbilzeit]) if syear==`year'
-replace upper = exp(_b[pgbilzeit]+ 1.96*_se[pgbilzeit]) if syear==`year'
-replace lower = exp(_b[pgbilzeit]- 1.96*_se[pgbilzeit]) if syear==`year'
+qui:  reg lnwage pgbilzeit c.erf##c.erf pgexpue ost frau i.pgallbet if asample==1 & syear==`year' & ost == 0 [pw=phrf], eform(b) cluster(hid)
+qui: replace educationrev_west = exp(_b[pgbilzeit]) if syear==`year'
+qui: replace upper = exp(_b[pgbilzeit]+ 1.96*_se[pgbilzeit]) if syear==`year'
+qui: replace lower = exp(_b[pgbilzeit]- 1.96*_se[pgbilzeit]) if syear==`year'
 }
 
 
@@ -123,10 +125,10 @@ cap drop upper lower
 gen upper=.
 gen lower=.
 foreach year of numlist 1991/2015 {
-reg lnwage pgbilzeit c.erf##c.erf pgexpue ost frau i.pgallbet   if asample==1 & syear==`year' & ost == 1 [pw=phrf], eform(b) cluster(hid)
-replace educationrev_ost = exp(_b[pgbilzeit]) if syear==`year'
-replace upper = exp(_b[pgbilzeit]+ 1.96*_se[pgbilzeit]) if syear==`year'
-replace lower = exp(_b[pgbilzeit]- 1.96*_se[pgbilzeit]) if syear==`year'
+qui: reg lnwage pgbilzeit c.erf##c.erf pgexpue ost frau i.pgallbet   if asample==1 & syear==`year' & ost == 1 [pw=phrf], eform(b) cluster(hid)
+qui: replace educationrev_ost = exp(_b[pgbilzeit]) if syear==`year'
+qui: replace upper = exp(_b[pgbilzeit]+ 1.96*_se[pgbilzeit]) if syear==`year'
+qui: replace lower = exp(_b[pgbilzeit]- 1.96*_se[pgbilzeit]) if syear==`year'
 }
 
 preserve
@@ -142,7 +144,7 @@ graph combine  ///
       "out/educationrev_west.gph"  ///
       "out/educationrev_ost.gph"  ///
       "out/educationrev_gesamt.gph" ///
-, ycommon xcommon note(GSOEP 32, size(vsmall) position(5)) title(Development of Education Revenues)
+, ycommon xcommon note(GSOEP 32, size(vsmall) position(5)) title(Development of Education Returns)
 
 graph save Graph "out/educationrev_all.gph", replace
 ```
@@ -175,8 +177,8 @@ fit4.1_region <- asample %>%
 ```
 
 ##### Plot {.active}
-Education Revenue Trend 1992 - 2015
-```{r 4.1 Education Revenue Trend}
+Education Return Trend 1992 - 2015
+```{r 4.1 Education Return Trend}
      # grab relevant info
       td_fit <- fit4.1 %>% tidy(model, conf.int = TRUE)
       td_plot <- td_fit %>% filter(term == "pgbilzeit",
@@ -189,16 +191,16 @@ Education Revenue Trend 1992 - 2015
             geom_errorbar(aes(ymin = conf.low, ymax = conf.high),
                           alpha=0.3, color = "black") +
             geom_line() +
-            ylab("Education Revenue") +
+            ylab("Education Return") +
             xlab("Survey Year") +
-            ggtitle("Education Revenue from 1991 to 2015") +
+            ggtitle("Education Return from 1991 to 2015") +
             scale_x_continuous(breaks = seq(1991, 2016, by= 5))+
             scale_y_continuous(labels = scales::percent)+
             theme_bw()
 ```
 
-Education Revenue Trend over Time and Region
-```{r 4.1 Education Revenue Trend by Region}
+Education Return Trend over Time and Region
+```{r 4.1 Education Return Trend by Region}
       # make tidy dataframe 
       td_fit <- fit4.1_region %>% tidy(model, conf.int = TRUE)
       # select relevant info (coefficient for gender)
@@ -212,9 +214,9 @@ Education Revenue Trend over Time and Region
             geom_ribbon(ggplot2::aes_string(ymin = "conf.low", ymax = "conf.high", 
                 fill = "as.factor(ost)", color = NULL), alpha = 0.2) +
             geom_line() +
-            ylab("Education Revenue") +
+            ylab("Education Return") +
             xlab("Survey Year") +
-            ggtitle("Education Revenue from 1984 to 2015 by Region") +
+            ggtitle("Education Return from 1984 to 2015 by Region") +
             scale_x_continuous(breaks = seq(1985, 2015, by= 5))+
             scale_y_continuous(labels = scales::percent)
      
@@ -227,18 +229,18 @@ Education Revenue Trend over Time and Region
                           alpha=0.3, color = "black") +
             geom_line() +
             facet_wrap(~ ost)+
-            ylab("Education Revenue") +
+            ylab("Education Return") +
             xlab("Survey Year") +
-            ggtitle("Education Revenue from 1984 to 2015 by Region") +
+            ggtitle("Education Return from 1984 to 2015 by Region") +
             scale_x_continuous(breaks = seq(1985, 2015, by= 5))+
             scale_y_continuous(labels = scales::percent)
 ```
 
-### 4.2 {.tabset }
-Present the effects of years of education and of sex (the gender pay gap) graphically showing the trend since 1992 (see collapse) Tip: Use the Stata commands foreach, collapse and graph combine. 
+### 4.2 Gender Returns over Time{.tabset }
+**Present the effects of years of education and of sex (the gender pay gap) graphically showing the trend since 1992 (see collapse) Tip: Use the Stata commands foreach, collapse and graph combine. **
 
 #### Stata
-```{r stata 4.2 Gender Revenue, results = T, engine = "stata", engine.path= statapath, comment = ""}
+```{r stata 4.2 Gender Return, results = T, engine = "stata", engine.path= statapath, comment = ""}
 use "_data/ex_mydf.dta", clear
 
 cap drop genderrev
@@ -248,10 +250,10 @@ gen upper=.
 gen lower=.
 
 foreach year of numlist 1991/2015 {
-      reg lnwage pgbilzeit c.erf##c.erf pgexpue ost frau i.pgallbet if asample==1 & syear==`year' [pw=phrf], eform(b) cluster(hid)
-      replace genderrev = exp(_b[frau]) if syear==`year'
-      replace upper = exp(_b[frau]+ 1.96*_se[frau]) if syear==`year'
-      replace lower = exp(_b[frau]- 1.96*_se[frau]) if syear==`year'
+      qui: reg lnwage pgbilzeit c.erf##c.erf pgexpue ost frau i.pgallbet if asample==1 & syear==`year' [pw=phrf], eform(b) cluster(hid)
+      qui: replace genderrev = exp(_b[frau]) if syear==`year'
+      qui: replace upper = exp(_b[frau]+ 1.96*_se[frau]) if syear==`year'
+      qui: replace lower = exp(_b[frau]- 1.96*_se[frau]) if syear==`year'
 }
 
 
@@ -270,10 +272,10 @@ cap drop upper lower
 gen upper=.
 gen lower=.
 foreach year of numlist 1984/2015 {
-reg lnwage frau c.erf##c.erf pgexpue ost frau i.pgallbet   if asample==1 & syear==`year' & ost==0 [pw=phrf], eform(b) cluster(hid)
-replace genderrev_west = exp(_b[frau]) if syear==`year'
-replace upper = exp(_b[frau]+ 1.96*_se[frau]) if syear==`year'
-replace lower = exp(_b[frau]- 1.96*_se[frau]) if syear==`year'
+qui: reg lnwage frau c.erf##c.erf pgexpue ost frau i.pgallbet   if asample==1 & syear==`year' & ost==0 [pw=phrf], eform(b) cluster(hid)
+qui: replace genderrev_west = exp(_b[frau]) if syear==`year'
+qui: replace upper = exp(_b[frau]+ 1.96*_se[frau]) if syear==`year'
+qui: replace lower = exp(_b[frau]- 1.96*_se[frau]) if syear==`year'
 }
 *twoway (connected genderrev_west syear, sort) (line upper lower syear, sort) 
 preserve
@@ -293,10 +295,10 @@ cap drop upper lower
 gen upper=.
 gen lower=.
 foreach year of numlist 1991/2015 {
-reg lnwage frau c.erf##c.erf pgexpue ost frau i.pgallbet   if asample==1 & syear==`year' & ost==1 [pw=phrf], eform(b) cluster(hid)
-replace genderrev_ost = exp(_b[frau]) if syear==`year'
-replace upper = exp(_b[frau]+ 1.96*_se[frau]) if syear==`year'
-replace lower = exp(_b[frau]- 1.96*_se[frau]) if syear==`year'
+qui: reg lnwage frau c.erf##c.erf pgexpue ost frau i.pgallbet   if asample==1 & syear==`year' & ost==1 [pw=phrf], eform(b) cluster(hid)
+qui: replace genderrev_ost = exp(_b[frau]) if syear==`year'
+qui: replace upper = exp(_b[frau]+ 1.96*_se[frau]) if syear==`year'
+qui: replace lower = exp(_b[frau]- 1.96*_se[frau]) if syear==`year'
 }
 *twoway (connected genderrev_ost syear, sort) (line upper lower syear, sort)
 preserve
@@ -312,7 +314,7 @@ graph combine  ///
 "out/genderrev_ost.gph"  ///
 "out/genderrev_west.gph"  ///
 "out/genderrev_gesamt.gph" ///
-, ycommon xcommon note(GSOEP 32, size(vsmall) position(5)) title(Development of Gender Revenues)
+, ycommon xcommon note(GSOEP 32, size(vsmall) position(5)) title(Development of Gender Returns)
 
 graph save Graph "out/genderrev_all.gph", replace
 
@@ -322,8 +324,8 @@ graph save Graph "out/genderrev_all.gph", replace
 The Plots are based on the same models as in 4.1.
 
 ##### Plot {.active}
-Gender Revenue Trend 1991 - 2015
-```{r 4.2 Education Revenue Trend}
+Gender Return Trend 1991 - 2015
+```{r 4.2 Education Return Trend}
      # grab relevant info
       td_fit <- fit4.1 %>% tidy(model, conf.int = TRUE)
       td_plot <- td_fit %>% filter(term == "frau",
@@ -336,7 +338,7 @@ Gender Revenue Trend 1991 - 2015
             geom_errorbar(aes(ymin = conf.low, ymax = conf.high),
                           alpha=0.3, color = "black") +
             geom_line() +
-            ylab("Gender Revenue") +
+            ylab("Gender Return") +
             xlab("Survey Year") +
             ggtitle("Gender Pay Gap from 1991 to 2015") +
             scale_x_continuous(breaks = seq(1991, 2016, by= 5))+
@@ -344,8 +346,8 @@ Gender Revenue Trend 1991 - 2015
             theme_bw()
 ```
 
-Gender Revenue Trend by Year and Gender
-```{r 4.2 Gender Revenue Trend by Region}
+Gender Return Trend by Year and Gender
+```{r 4.2 Gender Return Trend by Region}
       # make tidy dataframe 
       td_fit <- fit4.1_region %>% tidy(model, conf.int = TRUE)
       # select relevant info (coefficient for gender)
@@ -358,7 +360,7 @@ Gender Revenue Trend by Year and Gender
             geom_errorbar(aes(ymin = conf.low, ymax = conf.high),
                           alpha=0.3, color = "black") +
             geom_line() +
-            ylab("Gender Revenue") +
+            ylab("Gender Return") +
             xlab("Survey Year") +
             ggtitle("Gender Pay Gap by Region") +
             scale_x_continuous(breaks = seq(1985, 2015, by= 5))+
@@ -372,33 +374,30 @@ Gender Revenue Trend by Year and Gender
                           alpha=0.3, color = "black") +
             geom_line() +
             facet_wrap(~ost)+
-            ylab("Gender Revenue") +
+            ylab("Gender Return") +
             xlab("Survey Year") +
             ggtitle("Gender Pay Gap by Region") +
             scale_x_continuous(breaks = seq(1985, 2015, by= 5))
 ```
 
 ### 4.3 xtset {.tabset}
-Tell Stata your data is panel data using xtset. Describe the variables of your Mincer equation and differentiate within and between variation (xtsum).
+**Tell Stata your data is panel data using xtset. Describe the variables of your Mincer equation and differentiate within and between variation (xtsum).**
 
-***
-
-* within: bei Min und Max muss noch der Grand-Mean abgezogen werden, 
-* um die Abweichung von den personenspezifischen Mittelwerten zu erhalten
+Note: **STATA within min and max:** *in order to get the correct min and max of the person specific within standard deviations in STATA, you have to subtract / add the grand mean to the displayed values* 
 
 #### Stata
 ```{r stata 4.3 xtsum, results = T, engine = "stata", engine.path= statapath, comment = ""}
 use "_data/ex_mydf.dta", clear
 
-tab pop
-tab pgstib
+*tab pop
+*tab pgstib
 
 *Only private Households (pop > 3), not in wf (10), apprentice (11), unempl (12), retired (13)
 cap drop asample
 gen asample = 1 if pop < 3 & pgstib!=10 & pgstib!=11 & pgstib!=12 & pgstib != 13  
 	
 xtset pid syear
-xtdes
+*xtdes
 
 xtreg lnwage c.erf##c.erf pgexpue frau i.pgallbet if asample==1, fe
 
@@ -406,17 +405,12 @@ xtreg lnwage c.erf##c.erf pgexpue frau i.pgallbet if asample==1, fe
 xtsum lnwage pgbilzeit erf ost frau if asample==1
 
 *** Tabellen
-* xttab
-xtab erf
-xtab pgexpue
-xtab frau
-xtab pgallbet
-xtab pgbilzeit
+xttab
 
 ```
 
 #### R
-In R there is no package available that calculated the between and within variance of variablen in panel datasets. Therefore we need to write a function to achieve the desired goal. The function used in this case originates from [here](https://stackoverflow.com/questions/49282083/xtsum-command-for-r) and has been adapted a bit.
+In R there is no package available that calculates the between and within variance of variables in panel datasets. Therefore we need to write a function to achieve the desired goal. The function used in this case originates from [here](https://stackoverflow.com/questions/49282083/xtsum-command-for-r) and has been adapted a bit.
 
 In a first step the overall descriptive statistics are calculated and stored,
 then the between means are calculated for each individual and then the variation and other statistics are calculated. Lastly the stats for within variation are calculated and the stored results are returned. The function can now be used in the following way:
@@ -490,7 +484,7 @@ XTSUM(asample, varname = pgallbet , unit = pid)
 XTSUM(asample, varname = pgexpue , unit = pid)
 ```
 
-Links:
+further Links on this topic:
 - https://stackoverflow.com/questions/14165752/between-within-standard-deviations-in-r
 - https://www.r-bloggers.com/dplyr-do-some-tips-for-using-and-programming/
 - psdata: https://github.com/rOpenGov/psData/issues/5

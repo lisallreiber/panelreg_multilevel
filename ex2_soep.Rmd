@@ -20,7 +20,7 @@ knitr::opts_chunk$set(echo = TRUE, cache = T, warning = F)
 
 - 2.3    Is the relationship between work experience and wage linear?
 
-- 2.4    Specifiy the same regression model but use the natural logarithm as dependent variable instead. 
+- 2.4    Specifiy the same regression model but use the natural logarithm `lnwage` as dependent variable instead. 
 
 - 2.5    How large is the gender pay gap?
 
@@ -69,25 +69,27 @@ asample15 <- asample %>% filter(syear == 2015)
 
 #### Descriptive Pre - Analysis
 ##### unplausible Cases
-```{r unplausible cases ex2}
+```{r unplausible cases ex2, out.width= "300 px"}
 # to do: show id if wage above 600
 ex_mydf %>% 
       select(pgtatzeit, hwageb) %>% 
       drop_na() %>% 
   ggplot(aes(x=pgtatzeit, y=hwageb)) + 
-        geom_point(position = "jitter", size = 0.21)
+        geom_point(position = "jitter", size = 0.21, alpha = 0.1)
 
   # nochmal scatter
   ggplot(asample, aes(x=pgbilzeit, y=hwageb)) + 
-        geom_point(position = "jitter", size = 0.21,
+        geom_point(position = "jitter", size = 0.21, alpha = 0.1,
                    na.rm = T)
 ```
 
 ##### visualize Income {.tabset}
+Here you can see three different ways to plot histograms in R:
 ###### Histogram
-```{r viz income ex2}
+```{r viz income ex2,  out.width= "200 px"}
   summary(asample$hwageb)
   
+# qplot
   qplot(hwageb, geom="histogram",
         binwidth = 25,  
         main = "Histogram for Hourly Wage", 
@@ -99,8 +101,8 @@ ex_mydf %>%
         ylim= c(0,125000),
         data = asample)
   
-  # alternative
-  # without ..density it would be counts
+ # ggplot alternative
+ # without ..density it would be counts
   g_hist_wage <- asample %>% 
         ggplot(aes(x = hwageb, y = ..density..)) +
         geom_histogram(breaks = seq(0,767.4, by = 25)) + 
@@ -109,6 +111,7 @@ ex_mydf %>%
   
   g_hist_wage
   
+  # hist command
   hist(asample$hwageb, probability = T)
 ```
 
@@ -133,9 +136,9 @@ summary of hourly wage and yrs of schooling, work exp, etc.
 
 ***
 
-Note: STATA command if e(sample): *In STATA, there is a practical command if e(sample) that lets you restrict new calculations to the observations that were used in a model calculated before. In this exercise this can be used to calculate centralized coefficients for education and compare two models with each other, making sure that they are based on the same observations. In this exercise, the basic model is calculated first (2.1) and then another model is run with the same sample, but with centralized years of education and work experience (2.1c) in order to be able to interpret the intercept in a theoretically coherent way.*
+Note: **STATA command if e(sample):** *In STATA, there is a practical command if e(sample) that lets you restrict new calculations to the observations that were used in a model calculated before. In this exercise this can be used to calculate centralized coefficients for education and compare two models with each other, making sure that they are based on the same observations. In this exercise, the basic model is calculated first (2.1) and then another model is run with the same sample, but with centralized years of education and work experience (2.1c) in order to be able to interpret the intercept in a theoretically coherent way.*
 
-Note2: STATA - R Difference concerning weights in regression models. *STATA and R handle weights with the value of 0 differently. While STATA drops these observations by default, R does not. In theory, weights of 0 should not exist, because sampling weights are supposed to be the inverse of the probability of being sampled. In survey data, sampling weights of 0 can be included because the weights are adjusted in various ways. If you want to include cases with 0 weights in STATA regressions you need to use the svy option as described [here](https://www.stata.com/support/faqs/statistics/svy-and-zero-weights/). If, on the other hand you want to exclude them from the R model, you can use a filter before modeling (e.g. `filter(phrf > 0)`). For the basic model in this exercise both ways are shown here (First without 0-weight observations, then with).*
+Note2: **STATA - R Difference concerning weights in regression models.** *STATA and R handle weights with the value of 0 differently. While STATA drops these observations by default, R does not. In theory, weights of 0 should not exist, because sampling weights are supposed to be the inverse of the probability of being sampled. In survey data, sampling weights of 0 can be included because the weights are adjusted in various ways. If you want to include cases with 0 weights in STATA regressions you need to use the svy option as described [here](https://www.stata.com/support/faqs/statistics/svy-and-zero-weights/). If, on the other hand you want to exclude them from the R model, you can use a filter before modeling (e.g. `filter(phrf > 0)`). For the basic model in this exercise both ways are shown here (First without 0-weight observations, then with).*
 
 #### Stata {.tabset}
 ##### basic model 
@@ -160,7 +163,7 @@ without weights0 cases:
       ------------------------------------------------------------------------------
 
 
-Note: r markdown text with STATA output: *Here is an example where I copied the output of the STATA regression into the R markdown in order to make it easy to compare it to the R output in the next tab. Because the STATA implementation in R markdown is not perfect yet, you cannot print single things in specific places but only run the code and see all of the output afterwards --> see tab "full code". (This is partly due to the fact that R runs STATA from shell and certain features are not available there).*
+Note: **r markdown text with STATA output:** *Here is an example where I copied the output of the STATA regression into the R markdown in order to make it easy to compare it to the R output in the next tab. Because the STATA implementation in R markdown is not perfect yet, you cannot print single things in specific places but only run the code and see all of the output afterwards --> see tab "full code". (This is partly due to the fact that R runs STATA from shell and certain features are not available there).*
 
 ##### basic model II
 with weights0 cases:
@@ -184,7 +187,7 @@ with weights0 cases:
                ost |  -4.278906   .2717671   -15.74   0.000    -4.811605   -3.746207
              _cons |  -6.573576   .7698095    -8.54   0.000    -8.082503    -5.06465
       ------------------------------------------------------------------------------
-Note: r markdown text with STATA output: *Here is an example where I copied the output of the STATA regression into the R markdown in order to make it easy to compare it to the R output in the next tab. Because the STATA implementation in R markdown is not perfect yet, you cannot print single things in specific places but only run the code and see all of the output afterwards --> see tab "full code". (This is partly due to the fact that R runs STATA from shell and certain features are not available there).*
+Note: **r markdown text with STATA output:** *Here is an example where I copied the output of the STATA regression into the R markdown in order to make it easy to compare it to the R output in the next tab. Because the STATA implementation in R markdown is not perfect yet, you cannot print single things in specific places but only run the code and see all of the output afterwards --> see tab "full code". (This is partly due to the fact that R runs STATA from shell and certain features are not available there).*
 
 ##### centered model 
 without weights0 cases:
@@ -206,7 +209,7 @@ without weights0 cases:
              _cons |   18.51181   .2143393    86.37   0.000     18.09168    18.93194
       ------------------------------------------------------------------------------      
 
-Note: r markdown text with STATA output: *Here is an example where I copied the output of the STATA regression into the R markdown in order to make it easy to compare it to the R output in the next tab. Because the STATA implementation in R markdown is not perfect yet, you cannot print single things in specific places but only run the code and see all of the output afterwards --> see tab "full code". (This is partly due to the fact that R runs STATA from shell and certain features are not available there).*
+Note: **r markdown text with STATA output:** *Here is an example where I copied the output of the STATA regression into the R markdown in order to make it easy to compare it to the R output in the next tab. Because the STATA implementation in R markdown is not perfect yet, you cannot print single things in specific places but only run the code and see all of the output afterwards --> see tab "full code". (This is partly due to the fact that R runs STATA from shell and certain features are not available there).*
 
 ##### centered model II
 with weights0 cases:
@@ -233,7 +236,7 @@ with weights0 cases:
       
 
 
-Note: r markdown text with STATA output: *Here is an example where I copied the output of the STATA regression into the R markdown in order to make it easy to compare it to the R output in the next tab. Because the STATA implementation in R markdown is not perfect yet, you cannot print single things in specific places but only run the code and see all of the output afterwards --> see tab "full code". (This is partly due to the fact that R runs STATA from shell and certain features are not available there).*
+Note: **r markdown text with STATA output:** *Here is an example where I copied the output of the STATA regression into the R markdown in order to make it easy to compare it to the R output in the next tab. Because the STATA implementation in R markdown is not perfect yet, you cannot print single things in specific places but only run the code and see all of the output afterwards --> see tab "full code". (This is partly due to the fact that R runs STATA from shell and certain features are not available there).*
 
 ##### Full Code
 ```{r stata 2.1, results = T, engine = "stata", engine.path= statapath, comment = ""}
@@ -326,7 +329,7 @@ with weights0 cases
 
 - with centralized years of schooling and work experience. This can be helpful to interpret the intercept, because 0 years education are not a realistic interpretation
 
-Note: STATA command if e(sample) implementation in R. *In order to achieve the same effect of the if e(sample) addition in STATA, one can store the rownames of the observations in the fitted model and use these to filter the dataset that the next model is based on (or for whichever computation this restriction is needed).*
+Note: **STATA command if e(sample) implementation in R.** *In order to achieve the same effect of the if e(sample) addition in STATA, one can store the rownames of the observations in the fitted model and use these to filter the dataset that the next model is based on (or for whichever computation this restriction is needed).*
 
 ```{r fit 2.1c}
 esample <- rownames(as.matrix(resid((fit2.1_no0w))))
@@ -519,10 +522,9 @@ Model with squared experience
 
 ##### Plots {.active}
 Component + Residual Plot 
-Note: These plots are not available if there is an interaction term in the model formula. It does work, if the interaction term is stored in an extra variable
+Note: *These plots are not available if there is an interaction term in the model formula. It does work, if the interaction term is stored in an extra variable.*
 ```{r, out.width = "400px"}
-  crPlots(fit2.3, terms = .~ erf, layout = c(1,1))
-
+  crPlots(fit2.3, terms = .~ erf, layout = c(1,1)) # from car package
 ```
 
 Component + Residual Plot with squared work experience
@@ -533,7 +535,7 @@ fit2.3_exp <- asample %>%
        lm(hwageb ~ frau + pgbilzeit + erf + erfq + ost, 
           data= ., weights = phrf)
 
-  crPlots(fit2.3_exp, terms = .~ erf, layout = c(1,1))
+ crPlots(fit2.3_exp, terms = .~ erf, layout = c(1,1))
 
 ```
 
@@ -637,7 +639,6 @@ Compared to males, wages for females change by a factor of 0.8197, in other word
 exp(fit2.5$coefficients["frau"])
 
 1 - exp(fit2.5$coefficients["frau"])
-
 
 ```
  

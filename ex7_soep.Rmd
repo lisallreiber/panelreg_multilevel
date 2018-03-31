@@ -66,9 +66,8 @@ pdim(p.asample)
 ```
 ## Answers {.active}
 ### 7.1 {.tabset}
-Specify a random and a fixed effects model. Compare the results.
+**Specify a random and a fixed effects model. Compare the results.**
 
-***
 
 #### Stata
 ```{r, results = T, engine = "stata", engine.path= statapath, comment = ""}
@@ -76,29 +75,34 @@ use "_data/ex_mydf.dta", clear
 
 xtset pid syear
 * FE model
-
 xtreg lnwage pgbilzeit c.erf##c.erf pgexpue ost frau i.pgallbet i.syear if asample==1 & syear>2002 ,   fe
+est sto fixed
 
 * RE model 
 xtreg lnwage pgbilzeit c.erf##c.erf pgexpue ost frau i.pgallbet i.syear if asample==1 & syear>2002 ,  re 
+est sto random
 
+esttab fixed random
 ```
  
 #### R {.tabset .active}
 ##### Model
+Fixed Effects Model
 ```{r model 7.1}
 
 # FE Model
 fixed   <- p.asample %>% 
-      filter(syear > 2002) %>% 
       plm(lnwage ~  pgbilzeit + erf + I(erf^2) + pgexpue + ost + pgallbet + syear,
-             data = p.asample[], 
+             data = ., 
              model = "within" 
              # weights = phrf
              )
 
-tidy(fixed)
+tidy(fixed$coefficients[1:30])
+```
 
+Random Model
+```{r}
 # RE Model
 random  <- plm(lnwage ~  pgbilzeit + erf + I(erf^2) + pgexpue + ost + pgallbet + syear,
              data = p.asample, 
@@ -107,15 +111,13 @@ random  <- plm(lnwage ~  pgbilzeit + erf + I(erf^2) + pgexpue + ost + pgallbet +
              )
 
 tidy(random)
-
 ```
+
 
 ##### Plot
 
 ### 7.2 {.tabset}
-Execute the hausman test. Which model specification is more appropriate and why?
-
-***
+**Execute the hausman test. Which model specification is more appropriate and why?**
 
 #### Stata
 ```{r, results = T, engine = "stata", engine.path= statapath, comment = ""}
@@ -131,15 +133,15 @@ hausman fixed random
 ```
  
 #### R {.tabset .active}
-##### Model
+##### Test
 ```{r model 7.2}
 # Hausman Test
 hausman <- phtest(fixed, random)
+
 hausman
 ```
 
-##### Plot
-
+##### More Info
 other things
 ```{r}
 pvar(p.asample)

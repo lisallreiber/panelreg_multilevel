@@ -412,7 +412,7 @@ div.tocify {
 <li><p>2.1 Estimate a Linear Regression with SOEP Data using hourly wage <code>hwageb</code> as dependent variable for the year 2015. Include years of schooling <code>pgbilzeit</code> and work experience <code>erf</code> as predictor variables and gender <code>frau</code> and region <code>ost</code> as additional controls.</p></li>
 <li><p>2.2 Interpret the coefficients and the value of R²</p></li>
 <li><p>2.3 Is the relationship between work experience and wage linear?</p></li>
-<li><p>2.4 Specifiy the same regression model but use the natural logarithm as dependent variable instead.</p></li>
+<li><p>2.4 Specifiy the same regression model but use the natural logarithm <code>lnwage</code> as dependent variable instead.</p></li>
 <li><p>2.5 How large is the gender pay gap?</p></li>
 </ul>
 </div>
@@ -506,22 +506,22 @@ ex_mydf %&gt;%
       select(pgtatzeit, hwageb) %&gt;% 
       drop_na() %&gt;% 
   ggplot(aes(x=pgtatzeit, y=hwageb)) + 
-        geom_point(position = &quot;jitter&quot;, size = 0.21)</code></pre>
-<p><img src="ex2_soep_files/figure-html/unplausible%20cases%20ex2-1.png" width="672" /></p>
+        geom_point(position = &quot;jitter&quot;, size = 0.21, alpha = 0.1)</code></pre>
+<p><img src="ex2_soep_files/figure-html/unplausible%20cases%20ex2-1.png" width="300 px" /></p>
 <pre class="r"><code>  # nochmal scatter
   ggplot(asample, aes(x=pgbilzeit, y=hwageb)) + 
-        geom_point(position = &quot;jitter&quot;, size = 0.21,
+        geom_point(position = &quot;jitter&quot;, size = 0.21, alpha = 0.1,
                    na.rm = T)</code></pre>
-<p><img src="ex2_soep_files/figure-html/unplausible%20cases%20ex2-2.png" width="672" /></p>
+<p><img src="ex2_soep_files/figure-html/unplausible%20cases%20ex2-2.png" width="300 px" /></p>
 </div>
 <div id="visualize-income" class="section level5 tabset">
 <h5>visualize Income</h5>
-<div id="histogram" class="section level6">
-<h6>Histogram</h6>
+<p>Here you can see three different ways to plot histograms in R: ###### Histogram</p>
 <pre class="r"><code>  summary(asample$hwageb)</code></pre>
 <pre><code>##    Min. 1st Qu.  Median    Mean 3rd Qu.    Max.    NA&#39;s 
 ##       0       6      10      12      14     767      19</code></pre>
-<pre class="r"><code>  qplot(hwageb, geom=&quot;histogram&quot;,
+<pre class="r"><code># qplot
+  qplot(hwageb, geom=&quot;histogram&quot;,
         binwidth = 25,  
         main = &quot;Histogram for Hourly Wage&quot;, 
         xlab = &quot;Hourly Wage in Prices from 2015&quot;,  
@@ -531,9 +531,9 @@ ex_mydf %&gt;%
         xlim=c(0,500),
         ylim= c(0,125000),
         data = asample)</code></pre>
-<p><img src="ex2_soep_files/figure-html/viz%20income%20ex2-1.png" width="672" /></p>
-<pre class="r"><code>  # alternative
-  # without ..density it would be counts
+<p><img src="ex2_soep_files/figure-html/viz%20income%20ex2-1.png" width="200 px" /></p>
+<pre class="r"><code> # ggplot alternative
+ # without ..density it would be counts
   g_hist_wage &lt;- asample %&gt;% 
         ggplot(aes(x = hwageb, y = ..density..)) +
         geom_histogram(breaks = seq(0,767.4, by = 25)) + 
@@ -541,10 +541,10 @@ ex_mydf %&gt;%
              x=&quot;Hourly Wage&quot;)
   
   g_hist_wage</code></pre>
-<p><img src="ex2_soep_files/figure-html/viz%20income%20ex2-2.png" width="672" /></p>
-<pre class="r"><code>  hist(asample$hwageb, probability = T)</code></pre>
-<p><img src="ex2_soep_files/figure-html/viz%20income%20ex2-3.png" width="672" /></p>
-</div>
+<p><img src="ex2_soep_files/figure-html/viz%20income%20ex2-2.png" width="200 px" /></p>
+<pre class="r"><code>  # hist command
+  hist(asample$hwageb, probability = T)</code></pre>
+<p><img src="ex2_soep_files/figure-html/viz%20income%20ex2-3.png" width="200 px" /></p>
 </div>
 <div id="for-2015" class="section level5">
 <h5>for 2015</h5>
@@ -575,8 +575,8 @@ ex_mydf %&gt;%
 <h3>2.1 Basic Model</h3>
 <p><strong>Estimate a Linear Regression with SOEP Data using hourly wage <code>hwageb</code> as dependent variable for the year 2015. Include years of schooling <code>pgbilzeit</code> and work experience <code>erf</code> as predictor variables and gender <code>frau</code> and region <code>ost</code> as additional controls</strong>.</p>
 <hr />
-<p>Note: STATA command if e(sample): <em>In STATA, there is a practical command if e(sample) that lets you restrict new calculations to the observations that were used in a model calculated before. In this exercise this can be used to calculate centralized coefficients for education and compare two models with each other, making sure that they are based on the same observations. In this exercise, the basic model is calculated first (2.1) and then another model is run with the same sample, but with centralized years of education and work experience (2.1c) in order to be able to interpret the intercept in a theoretically coherent way.</em></p>
-<p>Note2: STATA - R Difference concerning weights in regression models. <em>STATA and R handle weights with the value of 0 differently. While STATA drops these observations by default, R does not. In theory, weights of 0 should not exist, because sampling weights are supposed to be the inverse of the probability of being sampled. In survey data, sampling weights of 0 can be included because the weights are adjusted in various ways. If you want to include cases with 0 weights in STATA regressions you need to use the svy option as described <a href="https://www.stata.com/support/faqs/statistics/svy-and-zero-weights/">here</a>. If, on the other hand you want to exclude them from the R model, you can use a filter before modeling (e.g. <code>filter(phrf &gt; 0)</code>). For the basic model in this exercise both ways are shown here (First without 0-weight observations, then with).</em></p>
+<p>Note: <strong>STATA command if e(sample):</strong> <em>In STATA, there is a practical command if e(sample) that lets you restrict new calculations to the observations that were used in a model calculated before. In this exercise this can be used to calculate centralized coefficients for education and compare two models with each other, making sure that they are based on the same observations. In this exercise, the basic model is calculated first (2.1) and then another model is run with the same sample, but with centralized years of education and work experience (2.1c) in order to be able to interpret the intercept in a theoretically coherent way.</em></p>
+<p>Note2: <strong>STATA - R Difference concerning weights in regression models.</strong> <em>STATA and R handle weights with the value of 0 differently. While STATA drops these observations by default, R does not. In theory, weights of 0 should not exist, because sampling weights are supposed to be the inverse of the probability of being sampled. In survey data, sampling weights of 0 can be included because the weights are adjusted in various ways. If you want to include cases with 0 weights in STATA regressions you need to use the svy option as described <a href="https://www.stata.com/support/faqs/statistics/svy-and-zero-weights/">here</a>. If, on the other hand you want to exclude them from the R model, you can use a filter before modeling (e.g. <code>filter(phrf &gt; 0)</code>). For the basic model in this exercise both ways are shown here (First without 0-weight observations, then with).</em></p>
 <div id="stata-1" class="section level4 tabset">
 <h4>Stata</h4>
 <div id="basic-model-1" class="section level5">
@@ -598,7 +598,7 @@ ex_mydf %&gt;%
            ost |  -4.278906   .2718054   -15.74   0.000     -4.81168   -3.746132
          _cons |  -6.573576   .7699179    -8.54   0.000    -8.082716   -5.064436
   ------------------------------------------------------------------------------</code></pre>
-<p>Note: r markdown text with STATA output: <em>Here is an example where I copied the output of the STATA regression into the R markdown in order to make it easy to compare it to the R output in the next tab. Because the STATA implementation in R markdown is not perfect yet, you cannot print single things in specific places but only run the code and see all of the output afterwards –&gt; see tab “full code”. (This is partly due to the fact that R runs STATA from shell and certain features are not available there).</em></p>
+<p>Note: <strong>r markdown text with STATA output:</strong> <em>Here is an example where I copied the output of the STATA regression into the R markdown in order to make it easy to compare it to the R output in the next tab. Because the STATA implementation in R markdown is not perfect yet, you cannot print single things in specific places but only run the code and see all of the output afterwards –&gt; see tab “full code”. (This is partly due to the fact that R runs STATA from shell and certain features are not available there).</em></p>
 </div>
 <div id="basic-model-ii" class="section level5">
 <h5>basic model II</h5>
@@ -622,7 +622,7 @@ ex_mydf %&gt;%
            ost |  -4.278906   .2717671   -15.74   0.000    -4.811605   -3.746207
          _cons |  -6.573576   .7698095    -8.54   0.000    -8.082503    -5.06465
   ------------------------------------------------------------------------------</code></pre>
-<p>Note: r markdown text with STATA output: <em>Here is an example where I copied the output of the STATA regression into the R markdown in order to make it easy to compare it to the R output in the next tab. Because the STATA implementation in R markdown is not perfect yet, you cannot print single things in specific places but only run the code and see all of the output afterwards –&gt; see tab “full code”. (This is partly due to the fact that R runs STATA from shell and certain features are not available there).</em></p>
+<p>Note: <strong>r markdown text with STATA output:</strong> <em>Here is an example where I copied the output of the STATA regression into the R markdown in order to make it easy to compare it to the R output in the next tab. Because the STATA implementation in R markdown is not perfect yet, you cannot print single things in specific places but only run the code and see all of the output afterwards –&gt; see tab “full code”. (This is partly due to the fact that R runs STATA from shell and certain features are not available there).</em></p>
 </div>
 <div id="centered-model" class="section level5">
 <h5>centered model</h5>
@@ -643,7 +643,7 @@ ex_mydf %&gt;%
            ost |  -4.278906   .2718054   -15.74   0.000     -4.81168   -3.746132
          _cons |   18.51181   .2143393    86.37   0.000     18.09168    18.93194
   ------------------------------------------------------------------------------      </code></pre>
-<p>Note: r markdown text with STATA output: <em>Here is an example where I copied the output of the STATA regression into the R markdown in order to make it easy to compare it to the R output in the next tab. Because the STATA implementation in R markdown is not perfect yet, you cannot print single things in specific places but only run the code and see all of the output afterwards –&gt; see tab “full code”. (This is partly due to the fact that R runs STATA from shell and certain features are not available there).</em></p>
+<p>Note: <strong>r markdown text with STATA output:</strong> <em>Here is an example where I copied the output of the STATA regression into the R markdown in order to make it easy to compare it to the R output in the next tab. Because the STATA implementation in R markdown is not perfect yet, you cannot print single things in specific places but only run the code and see all of the output afterwards –&gt; see tab “full code”. (This is partly due to the fact that R runs STATA from shell and certain features are not available there).</em></p>
 </div>
 <div id="centered-model-ii" class="section level5">
 <h5>centered model II</h5>
@@ -668,7 +668,7 @@ ex_mydf %&gt;%
          _cons |   18.51659   .2143495    86.39   0.000     18.09644    18.93674
   ------------------------------------------------------------------------------
   </code></pre>
-<p>Note: r markdown text with STATA output: <em>Here is an example where I copied the output of the STATA regression into the R markdown in order to make it easy to compare it to the R output in the next tab. Because the STATA implementation in R markdown is not perfect yet, you cannot print single things in specific places but only run the code and see all of the output afterwards –&gt; see tab “full code”. (This is partly due to the fact that R runs STATA from shell and certain features are not available there).</em></p>
+<p>Note: <strong>r markdown text with STATA output:</strong> <em>Here is an example where I copied the output of the STATA regression into the R markdown in order to make it easy to compare it to the R output in the next tab. Because the STATA implementation in R markdown is not perfect yet, you cannot print single things in specific places but only run the code and see all of the output afterwards –&gt; see tab “full code”. (This is partly due to the fact that R runs STATA from shell and certain features are not available there).</em></p>
 </div>
 <div id="full-code" class="section level5">
 <h5>Full Code</h5>
@@ -987,7 +987,7 @@ Number of PSUs     =    14,300                 Population size   =  33,885,938
 <li><p>without weights0 cases</p></li>
 <li><p>with centralized years of schooling and work experience. This can be helpful to interpret the intercept, because 0 years education are not a realistic interpretation</p></li>
 </ul>
-<p>Note: STATA command if e(sample) implementation in R. <em>In order to achieve the same effect of the if e(sample) addition in STATA, one can store the rownames of the observations in the fitted model and use these to filter the dataset that the next model is based on (or for whichever computation this restriction is needed).</em></p>
+<p>Note: <strong>STATA command if e(sample) implementation in R.</strong> <em>In order to achieve the same effect of the if e(sample) addition in STATA, one can store the rownames of the observations in the fitted model and use these to filter the dataset that the next model is based on (or for whichever computation this restriction is needed).</em></p>
 <pre class="r"><code>esample &lt;- rownames(as.matrix(resid((fit2.1_no0w))))
 
 # regress again with centered predictors
@@ -1297,8 +1297,8 @@ Linear regression                               Number of obs     =     14,218
 </div>
 <div id="plots-2" class="section level5 active">
 <h5>Plots</h5>
-<p>Component + Residual Plot Note: These plots are not available if there is an interaction term in the model formula. It does work, if the interaction term is stored in an extra variable</p>
-<pre class="r"><code>  crPlots(fit2.3, terms = .~ erf, layout = c(1,1))</code></pre>
+<p>Component + Residual Plot Note: <em>These plots are not available if there is an interaction term in the model formula. It does work, if the interaction term is stored in an extra variable.</em></p>
+<pre class="r"><code>  crPlots(fit2.3, terms = .~ erf, layout = c(1,1)) # from car package</code></pre>
 <p><img src="ex2_soep_files/figure-html/unnamed-chunk-6-1.png" width="400px" /></p>
 <p>Component + Residual Plot with squared work experience</p>
 <pre class="r"><code>fit2.3_exp &lt;- asample %&gt;%
@@ -1307,7 +1307,7 @@ Linear regression                               Number of obs     =     14,218
        lm(hwageb ~ frau + pgbilzeit + erf + erfq + ost, 
           data= ., weights = phrf)
 
-  crPlots(fit2.3_exp, terms = .~ erf, layout = c(1,1))</code></pre>
+ crPlots(fit2.3_exp, terms = .~ erf, layout = c(1,1))</code></pre>
 <p><img src="ex2_soep_files/figure-html/unnamed-chunk-7-1.png" width="400px" /></p>
 </div>
 </div>
@@ -1507,11 +1507,6 @@ tidy(fit2.5)</code></pre>
 <pre class="r"><code>1 - exp(fit2.5$coefficients[&quot;frau&quot;])</code></pre>
 <pre><code>## frau 
 ## 0.14</code></pre>
-</div>
-<div id="plots-3" class="section level5">
-<h5>Plots</h5>
-<pre class="r"><code># margins  , at(erf=(0(5)50) pgbilzeit=(8 13 18))
-    # marginsplot</code></pre>
 </div>
 </div>
 </div>

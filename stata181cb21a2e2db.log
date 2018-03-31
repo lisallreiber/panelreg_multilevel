@@ -1,0 +1,105 @@
+
+. use "_data/ex_mydf.dta", clear
+(PGEN: Feb 12, 2017 13:00:53-1 DBV32L)
+
+. 
+. cap drop genderrev
+
+. gen genderrev =.
+(594,828 missing values generated)
+
+. cap drop upper lower
+
+. gen upper=.
+(594,828 missing values generated)
+
+. gen lower=.
+(594,828 missing values generated)
+
+. 
+. foreach year of numlist 1991/2015 {
+  2.       qui: reg lnwage pgbilzeit c.erf##c.erf pgexpue ost frau i.pgallbet i
+> f asample==1 & syear==`year' [pw=phrf], eform(b) cluster(hid)
+  3.       qui: replace genderrev = exp(_b[frau]) if syear==`year'
+  4.       qui: replace upper = exp(_b[frau]+ 1.96*_se[frau]) if syear==`year'
+  5.       qui: replace lower = exp(_b[frau]- 1.96*_se[frau]) if syear==`year'
+  6. }
+
+. 
+. 
+. preserve
+
+. collapse genderrev upper lower, by(syear) 
+
+. twoway (connected genderrev syear, sort) ///
+> (line upper lower syear, sort lpattern(dash dash) lcolor(bluishgray8 bluishgr
+> ay8)) ///
+> , legend(off) subtitle(Gesamt)
+
+. graph save Graph "out/genderrev_gesamt.gph", replace
+(file out/genderrev_gesamt.gph saved)
+
+. restore
+
+. 
+. ** repeat for only west germany
+. cap drop genderrev_west
+
+. gen genderrev_west=.
+(594,828 missing values generated)
+
+. cap drop upper lower
+
+. gen upper=.
+(594,828 missing values generated)
+
+. gen lower=.
+(594,828 missing values generated)
+
+. foreach year of numlist 1984/2015 {
+  2. qui: reg lnwage frau c.erf##c.erf pgexpue ost frau i.pgallbet   if asample
+> ==1 & syear==`year' & ost==0 [pw=phrf], eform(b) cluster(hid)
+  3. qui: replace genderrev_west = exp(_b[frau]) if syear==`year'
+  4. qui: replace upper = exp(_b[frau]+ 1.96*_se[frau]) if syear==`year'
+  5. qui: replace lower = exp(_b[frau]- 1.96*_se[frau]) if syear==`year'
+  6. }
+
+. *twoway (connected genderrev_west syear, sort) (line upper lower syear, sort)
+>  
+. preserve
+
+. collapse genderrev_west upper lower, by(syear) 
+
+. twoway (connected genderrev_west syear, sort) ///
+> (line upper lower syear, sort lpattern(dash dash) lcolor(bluishgray8 bluishgr
+> ay8)) ///
+> , legend(off) subtitle(Ostdeutschland)
+
+. graph save Graph "out/genderrev_west.gph", replace
+(file out/genderrev_west.gph saved)
+
+. restore
+
+. 
+. 
+. ** repeat for only east germany
+. 
+. cap drop genderrev_ost
+
+. gen genderrev_ost=.
+(594,828 missing values generated)
+
+. cap drop upper lower
+
+. gen upper=.
+(594,828 missing values generated)
+
+. gen lower=.
+(594,828 missing values generated)
+
+. foreach year of numlist 1991/2015 {
+  2. qui: reg lnwage frau c.erf##c.erf pgexpue ost frau i.pgallbet   if asample
+> ==1 & syear==`year' & ost==1 [pw=phrf], eform(b) cluster(hid)
+  3. qui: replace genderrev_ost = exp(_b[frau]) if syear==`year'
+  4. qui: replace upper = exp(_b[frau]+ 1.96*_se[frau]) if syear==`year'
+  5. qui: replace lower = exp(_b[frau]- 1.96*_se[frau]) if syear==`year'

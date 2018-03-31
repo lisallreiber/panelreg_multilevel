@@ -15,7 +15,7 @@
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/spacelab.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -106,34 +106,34 @@ button.code-folding-btn:focus {
 <style type="text/css">
 /* padding for bootstrap navbar */
 body {
-  padding-top: 64px;
+  padding-top: 52px;
   padding-bottom: 40px;
 }
 /* offset scroll position for anchor links (for fixed navbar)  */
 .section h1 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 
 .section h2 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 .section h3 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 .section h4 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 .section h5 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 .section h6 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 </style>
 
@@ -283,12 +283,45 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Panelregression and Multilevel Models</a>
+      <a class="navbar-brand" href="index.html">Panel- and Multilevel Models</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
   <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Panel Exercises
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="ex1_soep.html">Ex1</a>
+    </li>
+    <li>
+      <a href="ex2_soep.html">Ex2</a>
+    </li>
+    <li>
+      <a href="ex3_soep.html">Ex3</a>
+    </li>
+    <li>
+      <a href="ex4_soep.html">Ex4</a>
+    </li>
+    <li>
+      <a href="ex5_soep.html">Ex5</a>
+    </li>
+    <li>
+      <a href="ex6_soep.html">Ex6</a>
+    </li>
+    <li>
+      <a href="ex7_soep.html">Ex7</a>
+    </li>
+    <li>
+      <a href="ex8_soep.html">Ex8</a>
+    </li>
+  </ul>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -323,39 +356,6 @@ div.tocify {
     <li class="divider"></li>
     <li>
       <a href="7_lrtest.html">7. Likelihood Ratio test</a>
-    </li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Exercises
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="ex1_soep.html">Ex1</a>
-    </li>
-    <li>
-      <a href="ex2_soep.html">Ex2</a>
-    </li>
-    <li>
-      <a href="ex3_soep.html">Ex3</a>
-    </li>
-    <li>
-      <a href="ex4_soep.html">Ex4</a>
-    </li>
-    <li>
-      <a href="ex5_soep.html">Ex5</a>
-    </li>
-    <li>
-      <a href="ex6_soep.html">Ex6</a>
-    </li>
-    <li>
-      <a href="ex7_soep.html">Ex7</a>
-    </li>
-    <li>
-      <a href="ex8_soep.html">Ex8</a>
     </li>
   </ul>
 </li>
@@ -418,7 +418,7 @@ div.tocify {
 capt clear
 version 14
 
-use &quot;_data/ex_mydf.dta&quot;, replace</code></pre>
+use &quot;_data/ex_mydf.dta&quot;, clear</code></pre>
 <pre><code>
 . set more off
 
@@ -427,7 +427,7 @@ use &quot;_data/ex_mydf.dta&quot;, replace</code></pre>
 . version 14
 
 . 
-. use &quot;_data/ex_mydf.dta&quot;, replace
+. use &quot;_data/ex_mydf.dta&quot;, clear
 (PGEN: Feb 12, 2017 13:00:53-1 DBV32L)</code></pre>
 </div>
 <div id="r" class="section level3">
@@ -472,12 +472,11 @@ p.asample15 &lt;- pdata.frame(asample15, index = c(&quot;pid&quot;, &quot;syear&
 <h2>Answers</h2>
 <div id="section" class="section level3 tabset">
 <h3>6.1</h3>
-<p>Using Soep Data: Specify the fixed effects model of the mincer equation and compare your results to the pooled OLS specification.</p>
-<hr />
-<p>Note: Because the size of the dataset is so large and the computing for fixed effects models is takes long, for this exercise the sample is restricted to years 2002 and up.</p>
-<p>The coefficients fo the fixed effects regression are identical to the OLS dummy regression. fixed effects regression does not show any effects of an intercept or sex on Lebenszufriedenheit since constant variables drop out The coefficient on sex cannot be interpreted in a fixed effects regression.</p>
-<p>We could find out the effect of the two here reported sexes on the independent variables by regressing Lebenszufriedenheit on the other independent variables and conditional on each sex.</p>
-<p>The coefficients of the standard OLS/pooled regression with intercept are all strongly significant. The effects differ in intensity (gesund_org) and also direction (anz_kind, bildung) from the fixed effects regression. This is partially related to the consideration of of an intercept and sex. We now have a coeffcient for sex. In average being male has positive effect of 0.1 on Lebenszufriedenheit. By ignoring the clustering in persnr, we just calculate a pooled statistical relation. Instead the fixed panel regression exaluates changes with the persnr and therefore we can speak or (causal) effects induced by changes of our chosen covariates</p>
+<p><strong>Using Soep Data: Specify the fixed effects model of the mincer equation and compare your results to the pooled OLS specification.</strong></p>
+<p>Note: <em>Because the size of the dataset is so large and the computing for fixed effects models is takes long, for this exercise the sample is restricted to years 2002 and up.</em></p>
+<p>The coefficients for the fixed effects regression are identical to the OLS dummy regression. - Fixed effects regression does not show any effects of an intercept or sex on Lebenszufriedenheit since constant variables drop out. - The coefficient on sex cannot be interpreted in a fixed effects regression.</p>
+<p>The coefficients of the standard OLS/pooled regression with intercept are all strongly significant. The effects differ in intensity (gesund_org) and also direction (anz_kind, bildung) from the fixed effects regression. This is partially related to the consideration of of an intercept and sex.</p>
+<p>By ignoring the clustering in persnr, we just calculate a pooled statistical relation. Instead the fixed panel regression exaluates changes with the persnr and therefore we can speak or (causal) effects induced by changes of our chosen covariates</p>
 <ol style="list-style-type: lower-roman">
 <li><p>gesund_org is strongly significant. An increase by 1 in gesund_org (with {1,2,3,4,5} in the dataset) leads to an average increase of 0.45 in lebensz_org</p></li>
 <li><p>anz_kind is significant at a significance level of 0.015 (P-value) An increase by one child (with {1,2,3} in this dataset) leads to an average increase of 0.13 in lebensz_org</p></li>
@@ -756,9 +755,11 @@ F test that all u_i=0: F(29467, 107717) = 9.19               Prob &gt; F = 0.000
 <h4>R</h4>
 <div id="model" class="section level5">
 <h5>Model</h5>
-<p>Note: Here is the problem, that the p-values seem not to be working</p>
+<p>Note1: <strong>Difficulty with FE-Models in R</strong> <em>Computing fixed effects models with a lot of individuals has proven to be very time consuming in r and needs a lot of computing power. Most of the packages for fixed-effects models are written in a way that they can handle panel data regarding a few countries, but they are not well fit for panel data with some thousand individuals like the SOEP data. If you know of packages that are fit for population panel data please let me know on <a href="https://github.com/TripLLL">github</a> or twitter <a href="https://twitter.com/_asilisa_">@_asilisa_</a> :).</em></p>
+<p>Note2: *There is also the problem so far, that the p-values seem not to be calculated correctly in for fe models with the <code>plm</code>package.</p>
+<p>Pooled Model</p>
 <pre class="r"><code># POLS- and FE-model ------------------------------------------------------
-pols &lt;- plm(lnwage ~ pgbilzeit + erf + I(erf^2) + pgexpue + ost + frau + pgallbet,
+pols &lt;- plm(lnwage ~ pgbilzeit + erf + I(erf^2) + pgexpue + ost + frau + factor(pgallbet),
                         data = p.asample, 
                         weights = phrf,
                         model = &quot;pooling&quot;) 
@@ -768,18 +769,19 @@ pols &lt;- plm(lnwage ~ pgbilzeit + erf + I(erf^2) + pgexpue + ost + frau + pgal
 #            weights = phrf,
 #            data = asample)
 
-fe  &lt;- plm(lnwage ~ pgbilzeit + erf + I(erf^2) + pgexpue + ost + frau + pgallbet, 
+tidy(pols)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"1.12468","3":"7.3e-03","4":"154","5":"0.0e+00"},{"1":"pgbilzeit","2":"0.07745","3":"4.6e-04","4":"167","5":"0.0e+00"},{"1":"erf","2":"0.03755","3":"3.8e-04","4":"98","5":"0.0e+00"},{"1":"I(erf^2)","2":"-0.00061","3":"9.4e-06","4":"-65","5":"0.0e+00"},{"1":"pgexpue","2":"-0.04986","3":"7.4e-04","4":"-67","5":"0.0e+00"},{"1":"ost","2":"-0.28596","3":"3.2e-03","4":"-90","5":"0.0e+00"},{"1":"frau","2":"-0.16283","3":"2.5e-03","4":"-66","5":"0.0e+00"},{"1":"factor(pgallbet)2","2":"0.12633","3":"3.3e-03","4":"38","5":"7.5e-321"},{"1":"factor(pgallbet)3","2":"0.23844","3":"3.6e-03","4":"67","5":"0.0e+00"},{"1":"factor(pgallbet)4","2":"0.31333","3":"3.5e-03","4":"90","5":"0.0e+00"},{"1":"factor(pgallbet)5","2":"-0.09528","3":"6.6e-03","4":"-14","5":"1.5e-47"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Fixed effect model</p>
+<pre class="r"><code>fe  &lt;- plm(lnwage ~ pgbilzeit + erf + I(erf^2) + pgexpue + ost + frau + pgallbet, 
             data = p.asample,
             weights = phrf,
             model = &quot;within&quot;)
 
-tidy(pols)</code></pre>
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"1.12146","3":"7.5e-03","4":"150","5":"0"},{"1":"pgbilzeit","2":"0.07619","3":"4.7e-04","4":"161","5":"0"},{"1":"erf","2":"0.03728","3":"3.9e-04","4":"96","5":"0"},{"1":"I(erf^2)","2":"-0.00061","3":"9.6e-06","4":"-63","5":"0"},{"1":"pgexpue","2":"-0.05368","3":"7.6e-04","4":"-71","5":"0"},{"1":"ost","2":"-0.29586","3":"3.3e-03","4":"-91","5":"0"},{"1":"frau","2":"-0.16606","3":"2.5e-03","4":"-66","5":"0"},{"1":"pgallbet","2":"0.07049","3":"1.0e-03","4":"69","5":"0"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
-<pre class="r"><code>fe</code></pre>
+fe</code></pre>
 <pre><code>## 
 ## Model Formula: lnwage ~ pgbilzeit + erf + I(erf^2) + pgexpue + ost + frau + 
 ##     pgallbet
@@ -794,20 +796,20 @@ tidy(pols)</code></pre>
 
 # just show general coefficients and no dummies
       # smy_fe$coef[1:5,] # takes too long</code></pre>
-<p>fixed effects like areg in STATA</p>
-<pre class="r"><code> # fixed effects like areg in STATA
+<p>Fixed effects like areg in STATA with the <code>felm</code> package. You can find more information on different models in R and STATA at <a href="http://www.matthieugomez.com/statar/regressions.html">this</a> awesome website</p>
+<pre class="r"><code># fixed effects like areg in STATA
 fe_areg &lt;- felm(lnwage ~ pgbilzeit + erf + I(erf^2) + ost 
                          | pid | 0 | pid, data = asample, weights = asample$phrf)
 
 fe_areg      </code></pre>
 <pre><code>## pgbilzeit       erf  I(erf^2)       ost 
-##    0.0381    0.0856   -0.0007   -0.1949</code></pre>
+##  0.066675  0.072787 -0.000713 -0.140869</code></pre>
 <pre class="r"><code># areg y x1 [w=x3], a(id1) cl(id1) 
 # felm(y ~ x1 | id1 | 0 | id1, df, weight = x3))</code></pre>
 </div>
-<div id="plot" class="section level5">
-<h5>Plot</h5>
-<p>output as nice table</p>
+<div id="output" class="section level5">
+<h5>Output</h5>
+<p>output as nice table (takes too long to draw at the moment)</p>
 <pre class="r"><code># stargazer(fe, pols, title=&quot;Results&quot;, align=TRUE) # takes too long</code></pre>
 </div>
 <div id="tests" class="section level5">

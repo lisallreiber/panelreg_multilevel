@@ -51,22 +51,17 @@ asample <- ex_mydf %>% filter(pop <3)
 
 ## Answers {.active}
 ### 1.1 Create Data
-Use the long-file pgen as master data und merge the variables sampreg, psample, pop, sex, gebjahr and phrf from the file ppfadl to it. You will find gross labor income in the variable pglabgro.
+**Use the long-file pgen as master data und merge the variables sampreg, psample, pop, sex, gebjahr and phrf from the file ppfadl to it. You will find gross labor income in the variable pglabgro.**
     
-***
-
 See [data creation](ex0_create.html)
 
 ### 1.2 Wrangle Data
-You will have to transform the income data using a consumer price index (see table A2 in SOEPmonitor).
+**You will have to transform the income data using a consumer price index (see table A2 in SOEPmonitor).**
 
-***
 Also see [data creation](ex0_create.html)
 
 ### 1.3 Replicate Table {.tabset}
-Replicate the tables concerning  current monthly individual gross labor income from SOEP-Monitor (p.73): https://www.diw.de/de/diw_02.c.222728.de/soepmonitor.htmlDescribe Data or download [here](info/diw_monitor_individuals_2013.pdf#page=73)
-
-***
+**Replicate the tables concerning  current monthly individual gross labor income from SOEP-Monitor (p.73): https://www.diw.de/de/diw_02.c.222728.de/soepmonitor.htmlDescribe Data or download [here](info/diw_monitor_individuals_2013.pdf#page=73)**
 
 #### Stata
 ```{r stata 1.3 describe, results = T, engine = "stata", engine.path= statapath, comment = ""}

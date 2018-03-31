@@ -15,7 +15,7 @@
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/spacelab.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -106,34 +106,34 @@ button.code-folding-btn:focus {
 <style type="text/css">
 /* padding for bootstrap navbar */
 body {
-  padding-top: 64px;
+  padding-top: 52px;
   padding-bottom: 40px;
 }
 /* offset scroll position for anchor links (for fixed navbar)  */
 .section h1 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 
 .section h2 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 .section h3 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 .section h4 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 .section h5 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 .section h6 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 </style>
 
@@ -283,12 +283,45 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Panelregression and Multilevel Models</a>
+      <a class="navbar-brand" href="index.html">Panel- and Multilevel Models</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
   <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Panel Exercises
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="ex1_soep.html">Ex1</a>
+    </li>
+    <li>
+      <a href="ex2_soep.html">Ex2</a>
+    </li>
+    <li>
+      <a href="ex3_soep.html">Ex3</a>
+    </li>
+    <li>
+      <a href="ex4_soep.html">Ex4</a>
+    </li>
+    <li>
+      <a href="ex5_soep.html">Ex5</a>
+    </li>
+    <li>
+      <a href="ex6_soep.html">Ex6</a>
+    </li>
+    <li>
+      <a href="ex7_soep.html">Ex7</a>
+    </li>
+    <li>
+      <a href="ex8_soep.html">Ex8</a>
+    </li>
+  </ul>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -323,39 +356,6 @@ div.tocify {
     <li class="divider"></li>
     <li>
       <a href="7_lrtest.html">7. Likelihood Ratio test</a>
-    </li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Exercises
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="ex1_soep.html">Ex1</a>
-    </li>
-    <li>
-      <a href="ex2_soep.html">Ex2</a>
-    </li>
-    <li>
-      <a href="ex3_soep.html">Ex3</a>
-    </li>
-    <li>
-      <a href="ex4_soep.html">Ex4</a>
-    </li>
-    <li>
-      <a href="ex5_soep.html">Ex5</a>
-    </li>
-    <li>
-      <a href="ex6_soep.html">Ex6</a>
-    </li>
-    <li>
-      <a href="ex7_soep.html">Ex7</a>
-    </li>
-    <li>
-      <a href="ex8_soep.html">Ex8</a>
     </li>
   </ul>
 </li>
@@ -432,7 +432,7 @@ and a binary indicator of low mental health (gen mcs01=mcs&lt;40 if mcs !=.) */
 
     gen mcs01 = mcs&lt;40 if !missing(mcs)
     
-</code></pre>
+save &quot;_data/health.dta&quot;, replace</code></pre>
 <pre><code>
 . set more off
 
@@ -482,7 +482,9 @@ Civil Service |      1,076        3.99       55.74
 .         gen mcs01 = mcs&lt;40 if !missing(mcs)
 
 .     
-. </code></pre>
+. save &quot;_data/health.dta&quot;, replace
+(note: file _data/health.dta not found)
+file _data/health.dta saved</code></pre>
 </div>
 <div id="r" class="section level3">
 <h3>R</h3>
@@ -535,41 +537,208 @@ p.health &lt;- pdata.frame(health, index = c(&quot;id&quot;, &quot;year&quot;))<
 <hr />
 <div id="stata-1" class="section level4">
 <h4>Stata</h4>
-<pre class="stata"><code>/* Estimate the effect of a divorce (fam4) on mental health (mcs01) in two different model specifications: Pooled Logit (logit, cluster()) and FE-Logit (xtlogit, fe).*/
+<pre class="stata"><code>use &quot;_data/health.dta&quot;, clear
+
+/* Estimate the effect of a divorce (fam4) on mental health (mcs01) in two different model specifications: Pooled Logit (logit, cluster()) and FE-Logit (xtlogit, fe).*/
     
 * Pooled Logit
 logit mcs01 fam4, cluster(id)
+est sto pool1
     
 * Fixed-Logit 
 xtset id year
 xtlogit mcs01 fam4, fe
+est sto fe1
     
 * Add relevant third variables, if necessary.
 
 * Pooled Logit
 logit mcs01 fam4, cluster(id)
+est sto pool2
 
 * Fixed-Logit 
 xtlogit mcs01 fam4 partner##i.gender i.occupation hhinc, fe
-
+est sto fe2
     
 * Summarize the estimates in a table (est tab)
 
-
-* Interpret your findings and the differences between the models.
-</code></pre>
+est tab pool1 pool2 fe1 fe2</code></pre>
 <pre><code>
+. use &quot;_data/health.dta&quot;, clear
+(HEALTH: 09/10/10 10:14:13-634 DB09)
+
+. 
 . /* Estimate the effect of a divorce (fam4) on mental health (mcs01) in two di
 &gt; fferent model specifications: Pooled Logit (logit, cluster()) and FE-Logit (x
 &gt; tlogit, fe).*/
 .     
 . * Pooled Logit
 . logit mcs01 fam4, cluster(id)
-no variables defined
-r(111);
 
-end of do-file
-r(111);</code></pre>
+Iteration 0:   log pseudolikelihood = -11798.301  
+Iteration 1:   log pseudolikelihood = -11780.267  
+Iteration 2:   log pseudolikelihood = -11780.028  
+Iteration 3:   log pseudolikelihood = -11780.028  
+
+Logistic regression                             Number of obs     =     26,935
+                                                Wald chi2(1)      =      22.28
+                                                Prob &gt; chi2       =     0.0000
+Log pseudolikelihood = -11780.028               Pseudo R2         =     0.0015
+
+                                 (Std. Err. adjusted for 8,122 clusters in id)
+------------------------------------------------------------------------------
+             |               Robust
+       mcs01 |      Coef.   Std. Err.      z    P&gt;|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        fam4 |   .3587721   .0760098     4.72   0.000     .2097957    .5077485
+       _cons |   -1.69553   .0237543   -71.38   0.000    -1.742088   -1.648972
+------------------------------------------------------------------------------
+
+. est sto pool1
+
+.         
+. * Fixed-Logit 
+. xtset id year
+       panel variable:  id (unbalanced)
+        time variable:  year, 2002 to 2008, but with gaps
+                delta:  1 unit
+
+. xtlogit mcs01 fam4, fe
+note: multiple positive outcomes within groups encountered.
+note: 5,937 groups (19,026 obs) dropped because of all positive or
+      all negative outcomes.
+
+Iteration 0:   log likelihood = -2924.6065  
+Iteration 1:   log likelihood = -2921.7723  
+Iteration 2:   log likelihood = -2921.7723  
+
+Conditional fixed-effects logistic regression   Number of obs     =      7,909
+Group variable: id                              Number of groups  =      2,185
+
+                                                Obs per group:
+                                                              min =          2
+                                                              avg =        3.6
+                                                              max =          4
+
+                                                LR chi2(1)        =       3.63
+Log likelihood  = -2921.7723                    Prob &gt; chi2       =     0.0569
+
+------------------------------------------------------------------------------
+       mcs01 |      Coef.   Std. Err.      z    P&gt;|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        fam4 |  -.3729736   .1967566    -1.90   0.058    -.7586095    .0126623
+------------------------------------------------------------------------------
+
+. est sto fe1
+
+.         
+. * Add relevant third variables, if necessary.
+. 
+. * Pooled Logit
+. logit mcs01 fam4, cluster(id)
+
+Iteration 0:   log pseudolikelihood = -11798.301  
+Iteration 1:   log pseudolikelihood = -11780.267  
+Iteration 2:   log pseudolikelihood = -11780.028  
+Iteration 3:   log pseudolikelihood = -11780.028  
+
+Logistic regression                             Number of obs     =     26,935
+                                                Wald chi2(1)      =      22.28
+                                                Prob &gt; chi2       =     0.0000
+Log pseudolikelihood = -11780.028               Pseudo R2         =     0.0015
+
+                                 (Std. Err. adjusted for 8,122 clusters in id)
+------------------------------------------------------------------------------
+             |               Robust
+       mcs01 |      Coef.   Std. Err.      z    P&gt;|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        fam4 |   .3587721   .0760098     4.72   0.000     .2097957    .5077485
+       _cons |   -1.69553   .0237543   -71.38   0.000    -1.742088   -1.648972
+------------------------------------------------------------------------------
+
+. est sto pool2
+
+. 
+. * Fixed-Logit 
+. xtlogit mcs01 fam4 partner##i.gender i.occupation hhinc, fe
+note: multiple positive outcomes within groups encountered.
+note: 5,937 groups (19,026 obs) dropped because of all positive or
+      all negative outcomes.
+note: 1.gender omitted because of no within-group variance.
+
+Iteration 0:   log likelihood = -2907.5045  
+Iteration 1:   log likelihood = -2892.8111  
+Iteration 2:   log likelihood = -2892.7887  
+Iteration 3:   log likelihood = -2892.7887  
+
+Conditional fixed-effects logistic regression   Number of obs     =      7,909
+Group variable: id                              Number of groups  =      2,185
+
+                                                Obs per group:
+                                                              min =          2
+                                                              avg =        3.6
+                                                              max =          4
+
+                                                LR chi2(10)       =      61.59
+Log likelihood  = -2892.7887                    Prob &gt; chi2       =     0.0000
+
+------------------------------------------------------------------------------
+       mcs01 |      Coef.   Std. Err.      z    P&gt;|z|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        fam4 |  -.4471369   .2027485    -2.21   0.027    -.8445167   -.0497571
+   1.partner |  -.8675788   .1879527    -4.62   0.000    -1.235959   -.4991983
+             |
+      gender |
+     female  |          0  (omitted)
+             |
+     partner#|
+      gender |
+   1#female  |   .4970283   .2373957     2.09   0.036     .0317413    .9623153
+             |
+  occupation |
+White-Col~r  |   .1982613   .1417361     1.40   0.162    -.0795363     .476059
+Self-Empl~d  |   .6475259   .2176755     2.97   0.003     .2208897    1.074162
+Civil Ser..  |   .4108767   .3842811     1.07   0.285    -.3423004    1.164054
+  Pensioner  |    .204351   .1835927     1.11   0.266     -.155484    .5641861
+ Unemployed  |   .4446522   .1495026     2.97   0.003     .1516325    .7376719
+Not working  |   .2796007   .1545024     1.81   0.070    -.0232184    .5824198
+             |
+       hhinc |  -.0001125   .0000338    -3.33   0.001    -.0001789   -.0000462
+------------------------------------------------------------------------------
+
+. est sto fe2
+
+.         
+. * Summarize the estimates in a table (est tab)
+. 
+. est tab pool1 pool2 fe1 fe2
+
+------------------------------------------------------------------
+    Variable |   pool1        pool2         fe1          fe2      
+-------------+----------------------------------------------------
+        fam4 |  .35877208    .35877208   -.37297361   -.44713692  
+             |
+     partner |
+          1  |                                         -.8675788  
+             |
+      gender |
+     female  |                                         (omitted)  
+             |
+     partner#|
+      gender |
+   1#female  |                                         .49702833  
+             |
+  occupation |
+White-Col~r  |                                         .19826133  
+Self-Empl~d  |                                         .64752592  
+Civil Ser..  |                                         .41087672  
+  Pensioner  |                                         .20435103  
+ Unemployed  |                                         .44465219  
+Not working  |                                          .2796007  
+             |
+       hhinc |                                        -.00011253  
+       _cons | -1.6955301   -1.6955301                            
+------------------------------------------------------------------</code></pre>
 </div>
 <div id="r-1" class="section level4 tabset active">
 <h4>R</h4>
@@ -640,9 +809,7 @@ tidy(felogit)</code></pre>
 ## Multiple R-squared(proj model): 0.000343   Adjusted R-squared: -0.41 
 ## F-statistic(full model):2.79 on 7168 and 17472 DF, p-value: &lt;2e-16 
 ## F-statistic(proj model): 5.99 on 1 and 17472 DF, p-value: 0.0144</code></pre>
-<ul>
-<li>Add relevant third variables, if necessary.</li>
-</ul>
+<p>Pooled Logit Model II</p>
 <pre class="r"><code># Pooled OLS Model
 plogit2 &lt;- glm(mcs01 ~  famstat_4 + partner*gender + factor(occupation)+ hhinc, 
                family = binomial, 
@@ -655,124 +822,31 @@ felogit2 &lt;- felm(mcs01 ~ famstat_4 + partner + partner:gender + factor(occupa
 felogit2.2 &lt;- plm(mcs01 ~  famstat_4 + partner*gender + factor(occupation) + hhinc, 
                 model = &quot;within&quot;, 
                 data = p.health)</code></pre>
-<ul>
-<li>Summarize the estimates in a table (est tab)</li>
-</ul>
-<pre class="r"><code>summary(plogit2)</code></pre>
-<pre><code>## 
-## Call:
-## glm(formula = mcs01 ~ famstat_4 + partner * gender + factor(occupation) + 
-##     hhinc, family = binomial, data = health)
-## 
-## Deviance Residuals: 
-##    Min      1Q  Median      3Q     Max  
-## -0.934  -0.632  -0.529  -0.460   2.787  
-## 
-## Coefficients:
-##                      Estimate Std. Error z value Pr(&gt;|z|)    
-## (Intercept)         -1.37e+00   7.83e-02  -17.54  &lt; 2e-16 ***
-## famstat_4            1.23e-01   6.41e-02    1.93   0.0539 .  
-## partner             -4.04e-01   6.98e-02   -5.79  7.2e-09 ***
-## gender               1.79e-01   7.69e-02    2.33   0.0197 *  
-## factor(occupation)2  4.16e-02   5.84e-02    0.71   0.4761    
-## factor(occupation)3  1.94e-01   8.71e-02    2.22   0.0262 *  
-## factor(occupation)4 -1.29e-01   1.16e-01   -1.11   0.2673    
-## factor(occupation)5  3.37e-02   5.83e-02    0.58   0.5627    
-## factor(occupation)6  4.99e-01   7.83e-02    6.38  1.8e-10 ***
-## factor(occupation)7  2.73e-02   6.94e-02    0.39   0.6943    
-## hhinc               -1.19e-04   1.35e-05   -8.79  &lt; 2e-16 ***
-## partner:gender       3.41e-01   8.79e-02    3.88   0.0001 ***
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## (Dispersion parameter for binomial family taken to be 1)
-## 
-##     Null deviance: 21311  on 24640  degrees of freedom
-## Residual deviance: 20876  on 24629  degrees of freedom
-## AIC: 20900
-## 
-## Number of Fisher Scoring iterations: 4</code></pre>
-<pre class="r"><code>summary(felogit2)</code></pre>
-<pre><code>## 
-## Call:
-##    felm(formula = mcs01 ~ famstat_4 + partner + partner:gender +      factor(occupation) + hhinc | id, data = health) 
-## 
-## Residuals:
-##     Min      1Q  Median      3Q     Max 
-## -0.8214 -0.0130 -0.0002  0.0061  0.8387 
-## 
-## Coefficients:
-##                      Estimate Std. Error t value Pr(&gt;|t|)    
-## famstat_4           -5.47e-02   2.06e-02   -2.65   0.0080 ** 
-## partner             -8.34e-02   1.72e-02   -4.86  1.2e-06 ***
-## factor(occupation)2  1.96e-02   1.28e-02    1.53   0.1264    
-## factor(occupation)3  6.23e-02   2.01e-02    3.10   0.0019 ** 
-## factor(occupation)4  3.42e-02   3.15e-02    1.09   0.2768    
-## factor(occupation)5  2.18e-02   1.59e-02    1.37   0.1722    
-## factor(occupation)6  4.36e-02   1.45e-02    3.01   0.0026 ** 
-## factor(occupation)7  3.38e-02   1.42e-02    2.38   0.0171 *  
-## hhinc               -8.12e-06   2.75e-06   -2.96   0.0031 ** 
-## partner:gender       3.68e-02   2.32e-02    1.59   0.1121    
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Residual standard error: 0.29 on 17463 degrees of freedom
-## Multiple R-squared(full model): 0.536   Adjusted R-squared: 0.345 
-## Multiple R-squared(proj model): 0.00369   Adjusted R-squared: -0.406 
-## F-statistic(full model):2.81 on 7177 and 17463 DF, p-value: &lt;2e-16 
-## F-statistic(proj model): 6.46 on 10 and 17463 DF, p-value: 5.05e-10</code></pre>
-<pre class="r"><code>summary(felogit2.2)</code></pre>
-<pre><code>## Oneway (individual) effect Within Model
-## 
-## Call:
-## plm(formula = mcs01 ~ famstat_4 + partner * gender + factor(occupation) + 
-##     hhinc, data = p.health, model = &quot;within&quot;)
-## 
-## Unbalanced Panel: n = 7168, T = 1-4, N = 24641
-## 
-## Residuals:
-##      Min.   1st Qu.    Median   3rd Qu.      Max. 
-## -0.821000 -0.013000 -0.000203  0.006120  0.839000 
-## 
-## Coefficients:
-##                      Estimate Std. Error t-value Pr(&gt;|t|)    
-## famstat_4           -5.47e-02   2.06e-02   -2.65   0.0080 ** 
-## partner             -8.34e-02   1.72e-02   -4.86  1.2e-06 ***
-## factor(occupation)2  1.96e-02   1.28e-02    1.53   0.1264    
-## factor(occupation)3  6.23e-02   2.01e-02    3.10   0.0019 ** 
-## factor(occupation)4  3.42e-02   3.15e-02    1.09   0.2768    
-## factor(occupation)5  2.18e-02   1.59e-02    1.37   0.1722    
-## factor(occupation)6  4.36e-02   1.45e-02    3.01   0.0026 ** 
-## factor(occupation)7  3.38e-02   1.42e-02    2.38   0.0171 *  
-## hhinc               -8.12e-06   2.75e-06   -2.96   0.0031 ** 
-## partner:gender       3.68e-02   2.32e-02    1.59   0.1121    
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Total Sum of Squares:    1510
-## Residual Sum of Squares: 1500
-## R-Squared:      0.00369
-## Adj. R-Squared: -0.406
-## F-statistic: 6.46071 on 10 and 17463 DF, p-value: 5.05e-10</code></pre>
+<p>Overview of estimates in a table</p>
+<pre class="r"><code>tidy(plogit2$coef)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["names"],"name":[1],"type":["chr"],"align":["left"]},{"label":["x"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"-1.37348"},{"1":"famstat_4","2":"0.12347"},{"1":"partner","2":"-0.40406"},{"1":"gender","2":"0.17927"},{"1":"factor(occupation)2","2":"0.04159"},{"1":"factor(occupation)3","2":"0.19363"},{"1":"factor(occupation)4","2":"-0.12873"},{"1":"factor(occupation)5","2":"0.03373"},{"1":"factor(occupation)6","2":"0.49919"},{"1":"factor(occupation)7","2":"0.02726"},{"1":"hhinc","2":"-0.00012"},{"1":"partner:gender","2":"0.34104"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
 </div>
-<div id="plot" class="section level5">
-<h5>Plot</h5>
+<pre class="r"><code>tidy(felogit2$coef)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":[".rownames"],"name":[1],"type":["chr"],"align":["left"]},{"label":["mcs01"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"famstat_4","2":"-5.5e-02"},{"1":"partner","2":"-8.3e-02"},{"1":"factor(occupation)2","2":"2.0e-02"},{"1":"factor(occupation)3","2":"6.2e-02"},{"1":"factor(occupation)4","2":"3.4e-02"},{"1":"factor(occupation)5","2":"2.2e-02"},{"1":"factor(occupation)6","2":"4.4e-02"},{"1":"factor(occupation)7","2":"3.4e-02"},{"1":"hhinc","2":"-8.1e-06"},{"1":"partner:gender","2":"3.7e-02"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>tidy(felogit2.2$coef)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["names"],"name":[1],"type":["chr"],"align":["left"]},{"label":["x"],"name":[2],"type":["dbl"],"align":["right"]}],"data":[{"1":"famstat_4","2":"-5.5e-02"},{"1":"partner","2":"-8.3e-02"},{"1":"factor(occupation)2","2":"2.0e-02"},{"1":"factor(occupation)3","2":"6.2e-02"},{"1":"factor(occupation)4","2":"3.4e-02"},{"1":"factor(occupation)5","2":"2.2e-02"},{"1":"factor(occupation)6","2":"4.4e-02"},{"1":"factor(occupation)7","2":"3.4e-02"},{"1":"hhinc","2":"-8.1e-06"},{"1":"partner:gender","2":"3.7e-02"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
 </div>
 </div>
 </div>
 <div id="section-1" class="section level3 tabset">
 <h3>8.2</h3>
-<p>Interpret your findings and the differences between the models.</p>
-<hr />
-<div id="r-2" class="section level4 tabset active">
-<h4>R</h4>
-<div id="model" class="section level5">
-<h5>Model</h5>
-</div>
-<div id="plot-1" class="section level5">
-<h5>Plot</h5>
-</div>
-</div>
+<p><strong>Interpret your findings and the differences between the models.</strong></p>
 </div>
 </div>
 </div>

@@ -307,6 +307,7 @@ ex_mydf <- mydf_raw %>%
              lnwage = ifelse(hwageb > 0, log(hwageb), NA),
              # job experience
              erf = pgexpft + 0.4*pgexppt,
+             erfq = I(erf^2),
              # Arbeitsmarktsegmente I
              qualstand = case_when(
                    between(pgausb, 1,4) ~ 0,

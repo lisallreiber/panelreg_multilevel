@@ -430,13 +430,13 @@ merge 1:1 pid syear using &quot;_data/ppfadl.dta&quot; , ///
 ** demographics
     cap drop ost
     recode sampreg 1 = 0 2 = 1, gen(ost)
-    lab def ost 0 &quot;West&quot; 1 &quot;Ost&quot; , replace
+    lab def ost 0 &quot;west&quot; 1 &quot;east&quot; , replace
     lab val ost ost
     tab1 ost sampreg
 
     cap drop frau
     recode sex 1 = 0 2 = 1, gen(frau)
-    lab def frau 0 &quot;männlich&quot; 1 &quot;weiblich&quot; , replace
+    lab def frau 0 &quot;male&quot; 1 &quot;femal&quot; , replace
     lab val frau frau
     tab1 frau sex
     
@@ -446,7 +446,7 @@ merge 1:1 pid syear using &quot;_data/ppfadl.dta&quot; , ///
 ** Job Status
     cap drop erwstatus
     recode pgemplst 1 = 1  2 4 = 2 * = ., gen(erwstatus)
-    lab def erwstatus 1 &quot;Vollzeit&quot; 2 &quot;Teilzeit&quot;, replace
+    lab def erwstatus 1 &quot;fulltime&quot; 2 &quot;part-time&quot;, replace
     lab val erwstatus erwstatus
 
 *** Consumer Price Index Jahr 2010 (also Exercise 1.2)
@@ -657,7 +657,7 @@ merge 1:1 pid syear using &quot;_data/ppfadl.dta&quot; , ///
 .         recode sampreg 1 = 0 2 = 1, gen(ost)
 (594828 differences between sampreg and ost)
 
-.         lab def ost 0 &quot;West&quot; 1 &quot;Ost&quot; , replace
+.         lab def ost 0 &quot;west&quot; 1 &quot;east&quot; , replace
 
 .         lab val ost ost
 
@@ -673,8 +673,8 @@ Stichproben |
     (Berlin |
  West-Ost)) |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-       West |    466,335       78.40       78.40
-        Ost |    128,493       21.60      100.00
+       west |    466,335       78.40       78.40
+       east |    128,493       21.60      100.00
 ------------+-----------------------------------
       Total |    594,828      100.00
 
@@ -694,7 +694,7 @@ Stichproben |
 .         recode sex 1 = 0 2 = 1, gen(frau)
 (594828 differences between sex and frau)
 
-.         lab def frau 0 &quot;männlich&quot; 1 &quot;weiblich&quot; , replace
+.         lab def frau 0 &quot;male&quot; 1 &quot;femal&quot; , replace
 
 .         lab val frau frau
 
@@ -707,8 +707,8 @@ Stichproben |
 (Geschlecht |
           ) |      Freq.     Percent        Cum.
 ------------+-----------------------------------
-   männlich |    282,865       47.55       47.55
-   weiblich |    311,963       52.45      100.00
+       male |    282,865       47.55       47.55
+      femal |    311,963       52.45      100.00
 ------------+-----------------------------------
       Total |    594,828      100.00
 
@@ -734,7 +734,7 @@ Stichproben |
 .         recode pgemplst 1 = 1  2 4 = 2 * = ., gen(erwstatus)
 (288308 differences between pgemplst and erwstatus)
 
-.         lab def erwstatus 1 &quot;Vollzeit&quot; 2 &quot;Teilzeit&quot;, replace
+.         lab def erwstatus 1 &quot;fulltime&quot; 2 &quot;part-time&quot;, replace
 
 .         lab val erwstatus erwstatus
 
@@ -1078,7 +1078,7 @@ mydf_raw &lt;- ppfadl %&gt;%
 </div>
 <div id="generate-variables" class="section level5">
 <h5>2.2 Generate Variables</h5>
-<p>Notes:</p>
+<p>Note:</p>
 <p><strong>Logarithm of wage differences in STATA and R</strong>.</p>
 <p>example: - R <code>mutate(data, lnwage = log(wage))</code> - STATA <code>gen lnwage = ln(wage)</code> - In R the function log() calculates the natural logarithm of wage as described <a href="https://stackoverflow.com/questions/24304936/r-using-equation-with-natural-logarithm-in-nls">here</a>, returns -Inf if wage = 0. - In STATA ln() returns missings for lnwage if wage is 0. - If you want the same results, you can code <code>mutate(data, lnwage = ifelse(wage &lt;0, log(wage), NA)</code>.</p>
 <pre class="r"><code># 2.2 Generate Variables
@@ -1111,6 +1111,7 @@ ex_mydf &lt;- mydf_raw %&gt;%
              lnwage = ifelse(hwageb &gt; 0, log(hwageb), NA),
              # job experience
              erf = pgexpft + 0.4*pgexppt,
+             erfq = I(erf^2),
              # Arbeitsmarktsegmente I
              qualstand = case_when(
                    between(pgausb, 1,4) ~ 0,

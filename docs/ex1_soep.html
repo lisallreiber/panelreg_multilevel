@@ -431,28 +431,24 @@ div.tocify {
 <h3>R</h3>
 <pre class="r"><code>ex_mydf &lt;- readRDS(file = &quot;_data/ex_mydf.rds&quot;)
 
-asample &lt;- ex_mydf %&gt;% 
-      filter(pop &lt;3)</code></pre>
+asample &lt;- ex_mydf %&gt;% filter(pop &lt;3)</code></pre>
 </div>
 </div>
 <div id="answers" class="section level2 active">
 <h2>Answers</h2>
 <div id="create-data" class="section level3">
 <h3>1.1 Create Data</h3>
-<p>Use the long-file pgen as master data und merge the variables sampreg, psample, pop, sex, gebjahr and phrf from the file ppfadl to it. You will find gross labor income in the variable pglabgro.</p>
-<hr />
+<p><strong>Use the long-file pgen as master data und merge the variables sampreg, psample, pop, sex, gebjahr and phrf from the file ppfadl to it. You will find gross labor income in the variable pglabgro.</strong></p>
 <p>See <a href="ex0_create.html">data creation</a></p>
 </div>
 <div id="wrangle-data" class="section level3">
 <h3>1.2 Wrangle Data</h3>
-<p>You will have to transform the income data using a consumer price index (see table A2 in SOEPmonitor).</p>
-<hr />
+<p><strong>You will have to transform the income data using a consumer price index (see table A2 in SOEPmonitor).</strong></p>
 <p>Also see <a href="ex0_create.html">data creation</a></p>
 </div>
 <div id="replicate-table" class="section level3 tabset">
 <h3>1.3 Replicate Table</h3>
-<p>Replicate the tables concerning current monthly individual gross labor income from SOEP-Monitor (p.73): <a href="https://www.diw.de/de/diw_02.c.222728.de/soepmonitor.htmlDescribe" class="uri">https://www.diw.de/de/diw_02.c.222728.de/soepmonitor.htmlDescribe</a> Data or download <a href="info/diw_monitor_individuals_2013.pdf#page=73">here</a></p>
-<hr />
+<p><strong>Replicate the tables concerning current monthly individual gross labor income from SOEP-Monitor (p.73): <a href="https://www.diw.de/de/diw_02.c.222728.de/soepmonitor.htmlDescribe" class="uri">https://www.diw.de/de/diw_02.c.222728.de/soepmonitor.htmlDescribe</a> Data or download <a href="info/diw_monitor_individuals_2013.pdf#page=73">here</a></strong></p>
 <div id="stata-1" class="section level4">
 <h4>Stata</h4>
 <pre class="stata"><code>use &quot;_data/ex_mydf.dta&quot;, clear

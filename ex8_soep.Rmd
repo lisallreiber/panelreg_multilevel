@@ -93,25 +93,26 @@ use "_data/health.dta", clear
     
 * Pooled Logit
 logit mcs01 fam4, cluster(id)
+est sto pool1
 	
 * Fixed-Logit 
 xtset id year
 xtlogit mcs01 fam4, fe
+est sto fe1
 	
 * Add relevant third variables, if necessary.
 
 * Pooled Logit
 logit mcs01 fam4, cluster(id)
+est sto pool2
 
 * Fixed-Logit 
 xtlogit mcs01 fam4 partner##i.gender i.occupation hhinc, fe
-
+est sto fe2
 	
 * Summarize the estimates in a table (est tab)
 
-
-* Interpret your findings and the differences between the models.
-
+est tab pool1 pool2 fe1 fe2
 ```
  
 #### R {.tabset .active}
@@ -139,7 +140,7 @@ summary(felogit)
 
 ```
 
-- Add relevant third variables, if necessary.
+Pooled Logit Model II
 ```{r}
 # Pooled OLS Model
 plogit2 <- glm(mcs01 ~  famstat_4 + partner*gender + factor(occupation)+ hhinc, 
@@ -156,25 +157,13 @@ felogit2.2 <- plm(mcs01 ~  famstat_4 + partner*gender + factor(occupation) + hhi
 
 ```
 
-- Summarize the estimates in a table (est tab)
+Overview of estimates in a table 
 ```{r}
-summary(plogit2)
-summary(felogit2)
-summary(felogit2.2)
-
+tidy(plogit2$coef)
+tidy(felogit2$coef)
+tidy(felogit2.2$coef)
 ```
-
-##### Plot
 
 ### 8.2 {.tabset}
-Interpret your findings and the differences between the models.
+**Interpret your findings and the differences between the models.**
 
-***
- 
-#### R {.tabset .active}
-##### Model
-```{r model 8.2}
-
-```
-
-##### Plot
