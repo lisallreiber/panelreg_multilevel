@@ -1,31 +1,26 @@
 ---
-output:
-  html_document:
-    code_folding: "show"
-    df_print: paged
-    toc: true
-    toc_float: true
-editor_options: 
-  chunk_output_type: console
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, cache = T)
 
+source(".statapath.R")
 source("0_packages.R")
 
-load("../data/ess50prep.Rds")
+load("_data/ess50prep.Rds")
 ```
 
-# 7. EDV Regression {.tabset}
+# 7. EDV Regression 
 
-### Code
-#### Stata
-```{r, engine='stata-mp'}
-* not available anymore
-```
+***
 
-#### R
+## Code {.tabset}
+### Stata
+
+not available anymore
+
+### R
 ```{r}
 ### EDV-Reg
 ess %>% 
@@ -111,8 +106,6 @@ ess %>%
   group_by(cntry.nr) %>% 
   mutate_all(. , funs(mean = mean(.))) %>% 
   print()
-
-
 
 map %>% as.data.frame()
 unlist(map)

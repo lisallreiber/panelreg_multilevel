@@ -15,7 +15,7 @@
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/spacelab.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -106,34 +106,34 @@ button.code-folding-btn:focus {
 <style type="text/css">
 /* padding for bootstrap navbar */
 body {
-  padding-top: 64px;
+  padding-top: 52px;
   padding-bottom: 40px;
 }
 /* offset scroll position for anchor links (for fixed navbar)  */
 .section h1 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 
 .section h2 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 .section h3 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 .section h4 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 .section h5 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 .section h6 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 </style>
 
@@ -188,7 +188,7 @@ $(document).ready(function ()  {
 
     // establish options
     var options = {
-      selectors: "h1,h2,h3",
+      selectors: "h1,h2",
       theme: "bootstrap3",
       context: '.toc-content',
       hashGenerator: function (text) {
@@ -283,12 +283,45 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Panelregression and Multilevel Models</a>
+      <a class="navbar-brand" href="index.html">Panel- and Multilevel Models</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
   <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Panel Exercises
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="ex1_soep.html">Ex1</a>
+    </li>
+    <li>
+      <a href="ex2_soep.html">Ex2</a>
+    </li>
+    <li>
+      <a href="ex3_soep.html">Ex3</a>
+    </li>
+    <li>
+      <a href="ex4_soep.html">Ex4</a>
+    </li>
+    <li>
+      <a href="ex5_soep.html">Ex5</a>
+    </li>
+    <li>
+      <a href="ex6_soep.html">Ex6</a>
+    </li>
+    <li>
+      <a href="ex7_soep.html">Ex7</a>
+    </li>
+    <li>
+      <a href="ex8_soep.html">Ex8</a>
+    </li>
+  </ul>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -326,8 +359,20 @@ div.tocify {
     </li>
   </ul>
 </li>
-<li>
-  <a href="0_create.html">Data Preparation</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data Preparation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="ex0_create.html">Exercises</a>
+    </li>
+    <li>
+      <a href="0_create.html">Models</a>
+    </li>
+  </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -359,20 +404,19 @@ div.tocify {
 </div>
 
 
-<div id="random-intercept-model-with-independent-variables" class="section level1 tabset">
+<div id="random-intercept-model-with-independent-variables" class="section level1">
 <h1>2. Random intercept model with independent variables</h1>
+<hr />
 <div id="random-intercept-model" class="section level2 tabset">
 <h2>2.1 Random Intercept Model</h2>
-<div id="models" class="section level3">
-<h3>Models</h3>
-<div id="stata" class="section level4">
-<h4>Stata</h4>
-<pre class="stata"><code>use &quot;../data/ess50.dta&quot;, clear
+<div id="stata" class="section level3">
+<h3>Stata</h3>
+<pre class="stata"><code>use &quot;_data/ess50.dta&quot;, clear
 
 xtmixed stfdem polintr nwsptot gndr || cntry:
 estat icc</code></pre>
 <pre><code>
-. use &quot;../data/ess50.dta&quot;, clear
+. use &quot;_data/ess50.dta&quot;, clear
 
 . 
 . xtmixed stfdem polintr nwsptot gndr || cntry:
@@ -426,84 +470,88 @@ Residual intraclass correlation
                        cntry |    .101745   .0284276      .0579964     .172453
 ------------------------------------------------------------------------------</code></pre>
 </div>
-<div id="r" class="section level4">
-<h4>R</h4>
-<div id="first-save-model-like-statas-est-store" class="section level5">
-<h5>First: Save Model (like Stata’s <code>est store</code>)</h5>
+<div id="r" class="section level3">
+<h3>R</h3>
+<div id="first-save-model-like-statas-est-store" class="section level4">
+<h4>First: Save Model (like Stata’s <code>est store</code>)</h4>
 <pre class="r"><code>multi2 &lt;- lmer(stfdem ~ polintr + nwsptot + gndr + (1|cntry), data = ess, REML = FALSE)</code></pre>
 </div>
-<div id="then-inspect-model" class="section level5">
-<h5>Then: Inspect model</h5>
+<div id="then-inspect-model" class="section level4">
+<h4>Then: Inspect model</h4>
 <pre class="r"><code>tidy(multi2)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["group"],"name":[5],"type":["chr"],"align":["left"]}],"data":[{"1":"(Intercept)","2":"6.25306603","3":"0.18727111","4":"33.3904463","5":"fixed"},{"1":"polintr","2":"-0.23960146","3":"0.02595737","4":"-9.2305755","5":"fixed"},{"1":"nwsptot","2":"0.00634105","3":"0.01770986","4":"0.3580519","5":"fixed"},{"1":"gndr","2":"-0.12485684","3":"0.04301472","4":"-2.9026536","5":"fixed"},{"1":"sd_(Intercept).cntry","2":"0.74534241","3":"NA","4":"NA","5":"cntry"},{"1":"sd_Observation.Residual","2":"2.21462117","3":"NA","4":"NA","5":"Residual"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["group"],"name":[5],"type":["chr"],"align":["left"]}],"data":[{"1":"(Intercept)","2":"5.631","3":"0.178","4":"31.63","5":"fixed"},{"1":"f.polintrquite interested","2":"-0.012","3":"0.074","4":"-0.17","5":"fixed"},{"1":"f.polintrhardly interested","2":"-0.259","3":"0.076","4":"-3.39","5":"fixed"},{"1":"f.polintrnot at all interested","2":"-0.632","3":"0.088","4":"-7.16","5":"fixed"},{"1":"f.nwsptotless than 0,5 hour","2":"0.111","3":"0.060","4":"1.87","5":"fixed"},{"1":"f.nwsptot0,5 hour to 1 hour","2":"0.143","3":"0.062","4":"2.30","5":"fixed"},{"1":"f.nwsptotmore than 1 hour, up to 1,5 hours","2":"0.227","3":"0.091","4":"2.51","5":"fixed"},{"1":"f.nwsptotmore than 1,5 hours, up to 2 hours","2":"0.033","3":"0.130","4":"0.25","5":"fixed"},{"1":"f.nwsptotmore than 2 hours, up to 2,5 hours","2":"0.285","3":"0.184","4":"1.55","5":"fixed"},{"1":"f.nwsptotmore than 2,5 hours, up to 3 hours","2":"-0.345","3":"0.279","4":"-1.24","5":"fixed"},{"1":"f.nwsptotmore than 3 hours","2":"-0.586","3":"0.239","4":"-2.45","5":"fixed"},{"1":"f.gndrfemale","2":"-0.130","3":"0.043","4":"-3.03","5":"fixed"},{"1":"sd_(Intercept).cntry","2":"0.739","3":"NA","4":"NA","5":"cntry"},{"1":"sd_Observation.Residual","2":"2.211","3":"NA","4":"NA","5":"Residual"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <pre class="r"><code>glance(multi2)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["sigma"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["logLik"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["AIC"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["deviance"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df.residual"],"name":[6],"type":["int"],"align":["right"]}],"data":[{"1":"2.214621","2":"-24314.83","3":"48641.66","4":"48685.48","5":"48629.66","6":"10957"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["sigma"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["logLik"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["AIC"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["deviance"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df.residual"],"name":[6],"type":["int"],"align":["right"]}],"data":[{"1":"2.2","2":"-24296","3":"48621","4":"48723","5":"48593","6":"10949"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
 <pre class="r"><code>icc(multi2)</code></pre>
 <pre><code>## 
 ## Linear mixed model
 ##  Family: gaussian (identity)
-## Formula: stfdem ~ polintr + nwsptot + gndr + (1 | cntry)
+## Formula: stfdem ~ f.polintr + f.nwsptot + f.gndr + (1 | cntry)
 ## 
-##   ICC (cntry): 0.101745</code></pre>
+##   ICC (cntry): 0.100449</code></pre>
 </div>
-<div id="r-squared-works-for-random-intercept-models-only" class="section level5">
-<h5>R-Squared, works for random intercept models only</h5>
+<div id="r-squared-works-for-random-intercept-models-only" class="section level4">
+<h4>R-Squared, works for random intercept models only</h4>
 <pre class="r"><code>r2(multi2)</code></pre>
-<pre><code>##     R-squared: 0.1175
-## Omega-squared: 0.1174</code></pre>
+<pre><code>##     R-squared: 0.1204
+## Omega-squared: 0.1204</code></pre>
 </div>
-<div id="predictions-for-individual-cluster" class="section level5">
-<h5>Predictions for individual cluster</h5>
+<div id="predictions-for-individual-cluster" class="section level4">
+<h4>Predictions for individual cluster</h4>
 <pre class="r"><code>ranef(multi2) </code></pre>
 <pre><code>## $cntry
 ##    (Intercept)
-## AT   0.1635368
-## BE   0.3136621
-## CH   0.8789614
-## CZ  -0.6175311
-## DE  -0.4261792
-## DK   1.6336525
-## ES   0.4966113
-## FI   0.8092791
-## FR  -0.6517009
-## GB  -0.4155793
-## GR   0.6071494
-## HU  -0.4246196
-## IE  -0.5108199
-## IL  -0.4626261
-## IT  -0.4152057
-## LU   0.8799768
-## NL   0.3091499
-## NO   0.5490057
-## PL  -1.3092687
-## PT  -1.0028224
-## SE   0.5332864
-## SI  -0.9379187</code></pre>
+## AT        0.17
+## BE        0.33
+## CH        0.84
+## CZ       -0.64
+## DE       -0.43
+## DK        1.62
+## ES        0.53
+## FI        0.76
+## FR       -0.62
+## GB       -0.40
+## GR        0.68
+## HU       -0.43
+## IE       -0.51
+## IL       -0.44
+## IT       -0.41
+## LU        0.91
+## NL        0.29
+## NO        0.50
+## PL       -1.31
+## PT       -0.95
+## SE        0.49
+## SI       -0.95</code></pre>
 </div>
 </div>
 </div>
-</div>
-<div id="fixed-effects-plots" class="section level2">
+<div id="fixed-effects-plots" class="section level2 tabset">
 <h2>2.2 Fixed Effects Plots</h2>
-<div id="r-1" class="section level4">
-<h4>R</h4>
-<div id="fixed-effects-slopes-for-each-random-intercept" class="section level5">
-<h5>Fixed effects slopes for each random intercept</h5>
-<pre class="r"><code>sjp.lmer(multi2, type = &quot;ri.slope&quot;)</code></pre>
-<p><img src="2_rimodel_files/figure-html/unnamed-chunk-6-1.png" width="672" /><img src="2_rimodel_files/figure-html/unnamed-chunk-6-2.png" width="672" /><img src="2_rimodel_files/figure-html/unnamed-chunk-6-3.png" width="672" /></p>
+<div id="stata-1" class="section level3">
+<h3>Stata</h3>
+<pre><code>  not (yet) available
+  </code></pre>
 </div>
-<div id="fixed-effects-slopes-for-each-random-intercept-highlighting-portugal-and-denmark" class="section level5">
-<h5>Fixed effects slopes for each random intercept highlighting <strong>Portugal</strong> and <strong>Denmark</strong></h5>
+<div id="r-1" class="section level3 active">
+<h3>R</h3>
+<div id="fixed-effects-slopes-for-each-random-intercept" class="section level4">
+<h4>Fixed effects slopes for each random intercept</h4>
+<pre class="r"><code>sjp.lmer(multi2, type = &quot;ri.slope&quot;)</code></pre>
+<p><img src="2_rimodel_files/figure-html/unnamed-chunk-6-1.png" width="672" /><img src="2_rimodel_files/figure-html/unnamed-chunk-6-2.png" width="672" /><img src="2_rimodel_files/figure-html/unnamed-chunk-6-3.png" width="672" /><img src="2_rimodel_files/figure-html/unnamed-chunk-6-4.png" width="672" /><img src="2_rimodel_files/figure-html/unnamed-chunk-6-5.png" width="672" /><img src="2_rimodel_files/figure-html/unnamed-chunk-6-6.png" width="672" /><img src="2_rimodel_files/figure-html/unnamed-chunk-6-7.png" width="672" /><img src="2_rimodel_files/figure-html/unnamed-chunk-6-8.png" width="672" /><img src="2_rimodel_files/figure-html/unnamed-chunk-6-9.png" width="672" /><img src="2_rimodel_files/figure-html/unnamed-chunk-6-10.png" width="672" /><img src="2_rimodel_files/figure-html/unnamed-chunk-6-11.png" width="672" /></p>
+</div>
+<div id="fixed-effects-slopes-for-each-random-intercept-highlighting-portugal-and-denmark" class="section level4">
+<h4>Fixed effects slopes for each random intercept highlighting <strong>Portugal</strong> and <strong>Denmark</strong></h4>
 <pre class="r"><code>sjp.lmer(multi2, type = &quot;ri.slope&quot;, emph.grp = c(&quot;PT&quot;, &quot;DK&quot;), facet.grid = FALSE)</code></pre>
-<p><img src="2_rimodel_files/figure-html/unnamed-chunk-7-1.png" width="672" /><img src="2_rimodel_files/figure-html/unnamed-chunk-7-2.png" width="672" /><img src="2_rimodel_files/figure-html/unnamed-chunk-7-3.png" width="672" /></p>
+<p><img src="2_rimodel_files/figure-html/unnamed-chunk-7-1.png" width="672" /><img src="2_rimodel_files/figure-html/unnamed-chunk-7-2.png" width="672" /><img src="2_rimodel_files/figure-html/unnamed-chunk-7-3.png" width="672" /><img src="2_rimodel_files/figure-html/unnamed-chunk-7-4.png" width="672" /><img src="2_rimodel_files/figure-html/unnamed-chunk-7-5.png" width="672" /><img src="2_rimodel_files/figure-html/unnamed-chunk-7-6.png" width="672" /><img src="2_rimodel_files/figure-html/unnamed-chunk-7-7.png" width="672" /><img src="2_rimodel_files/figure-html/unnamed-chunk-7-8.png" width="672" /><img src="2_rimodel_files/figure-html/unnamed-chunk-7-9.png" width="672" /><img src="2_rimodel_files/figure-html/unnamed-chunk-7-10.png" width="672" /><img src="2_rimodel_files/figure-html/unnamed-chunk-7-11.png" width="672" /></p>
 </div>
 </div>
 </div>

@@ -15,7 +15,7 @@
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/spacelab.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -106,34 +106,34 @@ button.code-folding-btn:focus {
 <style type="text/css">
 /* padding for bootstrap navbar */
 body {
-  padding-top: 64px;
+  padding-top: 52px;
   padding-bottom: 40px;
 }
 /* offset scroll position for anchor links (for fixed navbar)  */
 .section h1 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 
 .section h2 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 .section h3 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 .section h4 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 .section h5 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 .section h6 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 </style>
 
@@ -283,12 +283,45 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Panelregression and Multilevel Models</a>
+      <a class="navbar-brand" href="index.html">Panel- and Multilevel Models</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
   <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Panel Exercises
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="ex1_soep.html">Ex1</a>
+    </li>
+    <li>
+      <a href="ex2_soep.html">Ex2</a>
+    </li>
+    <li>
+      <a href="ex3_soep.html">Ex3</a>
+    </li>
+    <li>
+      <a href="ex4_soep.html">Ex4</a>
+    </li>
+    <li>
+      <a href="ex5_soep.html">Ex5</a>
+    </li>
+    <li>
+      <a href="ex6_soep.html">Ex6</a>
+    </li>
+    <li>
+      <a href="ex7_soep.html">Ex7</a>
+    </li>
+    <li>
+      <a href="ex8_soep.html">Ex8</a>
+    </li>
+  </ul>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -323,39 +356,6 @@ div.tocify {
     <li class="divider"></li>
     <li>
       <a href="7_lrtest.html">7. Likelihood Ratio test</a>
-    </li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Exercises
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="ex1_soep.html">Ex1</a>
-    </li>
-    <li>
-      <a href="ex2_soep.html">Ex2</a>
-    </li>
-    <li>
-      <a href="ex3_soep.html">Ex3</a>
-    </li>
-    <li>
-      <a href="ex4_soep.html">Ex4</a>
-    </li>
-    <li>
-      <a href="ex5_soep.html">Ex5</a>
-    </li>
-    <li>
-      <a href="ex6_soep.html">Ex6</a>
-    </li>
-    <li>
-      <a href="ex7_soep.html">Ex7</a>
-    </li>
-    <li>
-      <a href="ex8_soep.html">Ex8</a>
     </li>
   </ul>
 </li>
@@ -418,9 +418,7 @@ div.tocify {
 <h2>Data Prep</h2>
 <div id="stata" class="section level3">
 <h3>Stata</h3>
-<pre class="stata"><code>* Replikation SOEP-Monitor
-**********************************************
-use &quot;_data/ex_mydf.dta&quot;, clear
+<pre class="stata"><code>use &quot;_data/ex_mydf.dta&quot;, clear
     
 * Sample for Analysis
 **********************************************
@@ -439,27 +437,25 @@ asample &lt;- ex_mydf %&gt;%
 </div>
 <div id="answers" class="section level2 active">
 <h2>Answers</h2>
-<div id="section" class="section level3">
-<h3>1.1</h3>
+<div id="create-data" class="section level3">
+<h3>1.1 Create Data</h3>
 <p>Use the long-file pgen as master data und merge the variables sampreg, psample, pop, sex, gebjahr and phrf from the file ppfadl to it. You will find gross labor income in the variable pglabgro.</p>
 <hr />
 <p>See <a href="ex0_create.html">data creation</a></p>
 </div>
-<div id="section-1" class="section level3">
-<h3>1.2</h3>
+<div id="wrangle-data" class="section level3">
+<h3>1.2 Wrangle Data</h3>
 <p>You will have to transform the income data using a consumer price index (see table A2 in SOEPmonitor).</p>
 <hr />
 <p>Also see <a href="ex0_create.html">data creation</a></p>
 </div>
-<div id="section-2" class="section level3 tabset">
-<h3>1.3</h3>
+<div id="replicate-table" class="section level3 tabset">
+<h3>1.3 Replicate Table</h3>
 <p>Replicate the tables concerning current monthly individual gross labor income from SOEP-Monitor (p.73): <a href="https://www.diw.de/de/diw_02.c.222728.de/soepmonitor.htmlDescribe" class="uri">https://www.diw.de/de/diw_02.c.222728.de/soepmonitor.htmlDescribe</a> Data or download <a href="info/diw_monitor_individuals_2013.pdf#page=73">here</a></p>
 <hr />
 <div id="stata-1" class="section level4">
 <h4>Stata</h4>
-<pre class="stata"><code>Replikation von SOEP-Monitor
-***************************************************************************
-use &quot;_data/ex_mydf.dta&quot;, clear
+<pre class="stata"><code>use &quot;_data/ex_mydf.dta&quot;, clear
     
 * Sample for Analysis
 **********************************************
@@ -468,17 +464,159 @@ use &quot;_data/ex_mydf.dta&quot;, clear
     cap drop asample
     gen asample=1 if pop&lt;3              // Anstaltsbevölkerung rausnehmen
     
-* 3. Replikation von SOEP-Monitor (Aufgabe 1)
+* 3. Replication of SOEP-Monitor (Exercise 1)
 ***************************************************************************
     table syear sampreg   [pw=phrf], c(mean breink10) center col
     table syear erwstatus [pw=phrf], c(mean breink10) center col by(sampreg) format(%9.2fc)</code></pre>
 <pre><code>
-. Replikation von SOEP-Monitor
-command Replikation is unrecognized
-r(199);
+. use &quot;_data/ex_mydf.dta&quot;, clear
+(PGEN: Feb 12, 2017 13:00:53-1 DBV32L)
 
-end of do-file
-r(199);</code></pre>
+.         
+. * Sample for Analysis
+. **********************************************
+.         tab pop
+
+     Aktuelle Populationszugehoerigkeit |      Freq.     Percent        Cum.
+----------------------------------------+-----------------------------------
+         [1] Privathaush., deutscher HV |    519,155       87.28       87.28
+         [2] Privathaush., auslaend. HV |     72,022       12.11       99.39
+         [3] Anstaltshh.,  deutscher HV |      2,568        0.43       99.82
+         [4] Anstaltshh,   auslaend. HV |        653        0.11       99.93
+       [5] n.real. Privathaush., dt. HV |        396        0.07       99.99
+     [6] n.real. Privathaush., ausl. HV |         30        0.01      100.00
+       [7] n.real. Anstaltshh.,  dt. HV |          4        0.00      100.00
+----------------------------------------+-----------------------------------
+                                  Total |    594,828      100.00
+
+. 
+.         cap drop asample
+
+.         gen asample=1 if pop&lt;3                          // Anstaltsbevölkerun
+&gt; g rausnehmen
+(3,651 missing values generated)
+
+.         
+. * 3. Replication of SOEP-Monitor (Exercise 1)
+. ***************************************************************************
+.         table syear sampreg   [pw=phrf], c(mean breink10) center col
+
+----------------------------------------------------------------------------
+Erhebungs |
+jahr      |
+(Survey-Y |           Aktuelle Stichprobenregion (Berlin West-Ost)          
+ear)      | [1] Westdeutschland,  [2] Ostdeutschland,           Total       
+----------+-----------------------------------------------------------------
+     1984 |       2150.266                                    2150.266      
+     1985 |       2114.438                                    2114.438      
+     1986 |       2210.113                                    2210.113      
+     1987 |       2240.134                                    2240.134      
+     1988 |       2313.789                                    2313.789      
+     1989 |       2347.261                                    2347.261      
+     1990 |       2355.683                                    2355.683      
+     1991 |         2363.4              1298.328               2133.14      
+     1992 |       2458.036              1536.907              2277.377      
+     1993 |       2525.121              1690.638              2368.518      
+     1994 |        2528.86              1812.548              2393.563      
+     1995 |       2541.935              1887.492              2418.383      
+     1996 |       2640.174               1917.95              2509.297      
+     1997 |       2585.446              1936.169              2468.956      
+     1998 |       2610.403              1901.663               2483.35      
+     1999 |       2635.446              1926.642              2511.707      
+     2000 |       2602.331               1944.52               2488.17      
+     2001 |       2574.108               1951.02              2467.288      
+     2002 |        2644.25              1973.334              2531.548      
+     2003 |       2683.347              2049.873              2579.703      
+     2004 |        2660.85              1976.247              2547.776      
+     2005 |       2588.603              1962.568              2487.351      
+     2006 |        2591.64              1930.182              2481.239      
+     2007 |       2553.655              1862.697              2435.244      
+     2008 |       2507.967              1865.118               2399.36      
+     2009 |         2539.8              1954.229               2438.52      
+     2010 |       2504.635              1955.423              2409.267      
+     2011 |        2526.58              1917.365              2419.531      
+     2012 |       2490.234              1967.234              2402.278      
+     2013 |       2487.072              1936.126              2390.287      
+     2014 |       2498.136              1988.372              2410.679      
+     2015 |       2562.444               2044.89              2473.146      
+----------------------------------------------------------------------------
+
+.         table syear erwstatus [pw=phrf], c(mean breink10) center col by(sampr
+&gt; eg) format(%9.2fc)
+
+-----------------------------------------------------------------------
+Aktuelle Stichprobenregion (Berlin       |      RECODE of pgemplst     
+West-Ost) and Erhebungsjahr              |     (Employment Status)     
+(Survey-Year)                            | Vollzeit  Teilzeit    Total 
+-----------------------------------------+-----------------------------
+[1] Westdeutschland, alte Bundeslaender  |
+                                    1984 | 2,524.24    933.91  2,252.48
+                                    1985 | 2,468.76    880.50  2,186.75
+                                    1986 | 2,568.27  1,029.22  2,307.93
+                                    1987 | 2,636.95    949.78  2,347.15
+                                    1988 | 2,716.84  1,020.73  2,422.29
+                                    1989 | 2,753.86    989.33  2,449.56
+                                    1990 | 2,770.59  1,021.27  2,453.24
+                                    1991 | 2,805.45  1,038.36  2,463.05
+                                    1992 | 2,887.26  1,127.26  2,552.92
+                                    1993 | 2,984.69  1,090.48  2,619.89
+                                    1994 | 2,973.13  1,107.11  2,609.82
+                                    1995 | 3,018.67  1,097.27  2,626.09
+                                    1996 | 3,147.05  1,197.99  2,722.11
+                                    1997 | 3,080.75  1,136.08  2,666.22
+                                    1998 | 3,128.58  1,159.52  2,702.82
+                                    1999 | 3,208.76  1,143.09  2,731.11
+                                    2000 | 3,195.41  1,134.32  2,683.36
+                                    2001 | 3,195.14  1,105.96  2,668.04
+                                    2002 | 3,323.16  1,106.64  2,746.24
+                                    2003 | 3,396.16  1,163.09  2,796.68
+                                    2004 | 3,346.17  1,158.97  2,761.15
+                                    2005 | 3,303.90  1,126.71  2,690.02
+                                    2006 | 3,306.01  1,082.16  2,676.91
+                                    2007 | 3,277.37  1,102.98  2,639.73
+                                    2008 | 3,242.78  1,034.07  2,588.77
+                                    2009 | 3,251.35  1,127.42  2,626.37
+                                    2010 | 3,251.80  1,054.28  2,587.15
+                                    2011 | 3,224.20  1,077.21  2,602.36
+                                    2012 | 3,197.46  1,073.62  2,566.41
+                                    2013 | 3,241.60  1,091.38  2,573.60
+                                    2014 | 3,280.71  1,107.76  2,576.22
+                                    2015 | 3,364.24  1,180.52  2,650.76
+-----------------------------------------+-----------------------------
+[2] Ostdeutschland, neue Bundeslaender ( |
+                                    1984 |                             
+                                    1985 |                             
+                                    1986 |                             
+                                    1987 |                             
+                                    1988 |                             
+                                    1989 |                             
+                                    1990 |                             
+                                    1991 | 1,386.07    729.64  1,325.86
+                                    1992 | 1,641.03    986.63  1,591.71
+                                    1993 | 1,830.22  1,063.01  1,766.58
+                                    1994 | 1,983.73  1,107.00  1,900.95
+                                    1995 | 2,082.88  1,112.50  1,970.43
+                                    1996 | 2,123.27  1,159.78  2,005.26
+                                    1997 | 2,135.56  1,217.68  2,019.18
+                                    1998 | 2,128.20  1,129.91  1,996.40
+                                    1999 | 2,151.43  1,249.14  2,018.00
+                                    2000 | 2,228.21  1,123.32  2,040.05
+                                    2001 | 2,248.54  1,144.69  2,053.01
+                                    2002 | 2,295.54  1,184.70  2,092.15
+                                    2003 | 2,404.22  1,180.51  2,148.72
+                                    2004 | 2,390.41  1,149.77  2,090.16
+                                    2005 | 2,316.41  1,176.05  2,063.21
+                                    2006 | 2,294.99  1,148.18  2,016.19
+                                    2007 | 2,229.73  1,068.30  1,948.06
+                                    2008 | 2,196.47  1,032.96  1,928.59
+                                    2009 | 2,371.43  1,004.52  2,031.32
+                                    2010 | 2,352.29  1,056.86  2,024.60
+                                    2011 | 2,286.47  1,001.40  1,982.48
+                                    2012 | 2,373.58    997.28  2,027.58
+                                    2013 | 2,331.49  1,059.28  1,987.80
+                                    2014 | 2,423.47  1,057.17  2,059.64
+                                    2015 | 2,488.00  1,144.59  2,111.84
+-----------------------------------------------------------------------</code></pre>
 </div>
 <div id="r-1" class="section level4 active">
 <h4>R</h4>

@@ -11,11 +11,11 @@
 
 
 
-<title>Multilevel Models</title>
+<title>Panel- and Multilevel Models</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/spacelab.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -100,34 +100,34 @@ button.code-folding-btn:focus {
 <style type="text/css">
 /* padding for bootstrap navbar */
 body {
-  padding-top: 64px;
+  padding-top: 52px;
   padding-bottom: 40px;
 }
 /* offset scroll position for anchor links (for fixed navbar)  */
 .section h1 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 
 .section h2 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 .section h3 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 .section h4 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 .section h5 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 .section h6 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 </style>
 
@@ -174,12 +174,45 @@ $(document).ready(function () {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Panelregression and Multilevel Models</a>
+      <a class="navbar-brand" href="index.html">Panel- and Multilevel Models</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
   <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Panel Exercises
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="ex1_soep.html">Ex1</a>
+    </li>
+    <li>
+      <a href="ex2_soep.html">Ex2</a>
+    </li>
+    <li>
+      <a href="ex3_soep.html">Ex3</a>
+    </li>
+    <li>
+      <a href="ex4_soep.html">Ex4</a>
+    </li>
+    <li>
+      <a href="ex5_soep.html">Ex5</a>
+    </li>
+    <li>
+      <a href="ex6_soep.html">Ex6</a>
+    </li>
+    <li>
+      <a href="ex7_soep.html">Ex7</a>
+    </li>
+    <li>
+      <a href="ex8_soep.html">Ex8</a>
+    </li>
+  </ul>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -214,18 +247,6 @@ $(document).ready(function () {
     <li class="divider"></li>
     <li>
       <a href="7_lrtest.html">7. Likelihood Ratio test</a>
-    </li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Exercises
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="ex1_soep.html">Ex1</a>
     </li>
   </ul>
 </li>
@@ -266,14 +287,61 @@ $(document).ready(function () {
 </div>
 
 
-<div id="multilevel-models-in-stata-and-r" class="section level1">
-<h1>Multilevel Models in STATA and R</h1>
-<div id="purpose-of-this-site" class="section level3">
-<h3>Purpose of this site</h3>
-<p>This site contains .do files and .R scripts for multilevel modeling. It resulted from the exercises from a university course on that topic, where we discussed the basic statistical properties of the different models in a mostly non-technical way and used empirical data and Stata exercises to get familiar with their assumptions, features and interpretation. A couple of us then decided to “translate” the course excercises into R. We found that R has certain advantages, especially when it comes to visualizing the underlying data or models.</p>
-<div id="models" class="section level4">
-<h4>Models</h4>
-<p>In this section you will find an overviw of the models and some comments, both for STATA and R.</p>
+<div id="panel--and-multilevel-models-in-stata-and-r" class="section level1 tabset">
+<h1>Panel- and Multilevel Models in STATA and R</h1>
+<div id="purpose-of-this-site" class="section level2">
+<h2>Purpose of this site</h2>
+<div id="purpose-of-this-site-1" class="section level4">
+<h4><strong>Purpose of this site</strong></h4>
+<p>This site contains STATA and R code for panel- and multilevel modeling and visualization. It is based on the exercises of the course “Introduction to Panel and Multilevel Modeling” at the Social Science Institute of the Humboldt- University Berlin, where we discussed the basic statistical properties of the different models in a mostly non-technical way and used empirical data and STATA exercises to get familiar with their assumptions, features and interpretation. A couple of us then decided to “translate” the course excercises into R. We found that R has advantages, when it comes to visualizing or looping over the underlying data or models and that STATA works a lot faster for fixed effects regressions with panel data that has a lot of individuals.</p>
+</div>
+</div>
+<div id="structure-of-this-site" class="section level2">
+<h2>Structure of this site</h2>
+<div id="structure-of-this-site-1" class="section level4">
+<h4><strong>Structure of this site</strong></h4>
+<p>General:</p>
+<ul>
+<li>this site is build from <a href="https://rmarkdown.rstudio.com/lesson-1.html">R Markdowns</a> from RStudio, which are accessible on <a href="https://github.com/TripLLL/panelreg_multilevel">github</a></li>
+<li>you can download them and run them on your maschine if you
+<ul>
+<li>clone the repository<br />
+</li>
+<li>copy the necessary SOEP datasets into the _data folder</li>
+<li>(or create fake datasets with the same name and variables)</li>
+<li>set the <code>statapath</code> by creating a “.statapath.R” file where you define the location of your STATA program on your maschine (e.g. content of .statapath.R: <code>statapath &lt;- &quot;/Applications/Stata/StataMP.app/Contents/MacOS/Stata-MP&quot;</code> (for macs) more info <a href="https://www.ssc.wisc.edu/~hemken/Stataworkshops/Stata%20and%20R%20Markdown/StataMarkdown.html">here</a> and <a href="https://www.stata.com/support/faqs/mac/advanced-topics/#startup">here</a>.</li>
+</ul></li>
+<li>for the R code, you can find a little button <code>Code</code> on the upper right corner of the page that lets you control whether the R code on this page is hidden or shown. You can also select this for each code chunk separately.</li>
+</ul>
+<p>Panel Exercises:</p>
+<ul>
+<li>there is one page for each exercise and if you scroll down you will find the table of contents to unwrap and give you an overview of the undersections.</li>
+<li>within those sections there are tabs. You can click on them to compare the STATA and R code and outputs. Sometimes there are two rows of tabs (e.g. for models and plots in each R and STATA tab). The page remembers the second row tabs you opened when you switch between R-tabs and STATA tabs. This was you can easily compare plots and models (pretty sweet ;).</li>
+</ul>
+</div>
+</div>
+</div>
+<div id="section" class="section level1">
+<h1></h1>
+<div id="content" class="section level4 tabset">
+<h4><strong>Content</strong></h4>
+<div id="panel-models-exercises" class="section level5">
+<h5>Panel Models Exercises</h5>
+<p>In this section you will find some exercises on regressions with panel structure, both for STATA and R</p>
+<ol style="list-style-type: decimal">
+<li><a href="ex1_soep.html">Data Wrangling</a> (keywords: create data, replicate table)</li>
+<li><a href="ex2_soep.html">Basic Model I</a> (interpretation, coefficients relations, log transformation, gender pay gap)</li>
+<li><a href="ex3_soep.html">Basic Model II</a> (interaction, marginal effects, nominal IV, partial effect size, regresstion output)</li>
+<li><a href="ex4_soep.html">Mincer Model</a> (loops, education and gender returns, xtum, within and between variation)</li>
+<li><a href="ex5_soep.html">Chow Test</a> (Chow Test for structural change)</li>
+<li><a href="ex6_soep.html">Fixed Effects Model</a> (pooled vs. fixed effects model)</li>
+<li><a href="ex7_soep.html">Random Effects Model</a> (random vs. fixed effects model)</li>
+<li><a href="ex8_soep.html">Logit Model</a> (pooled logit vs. fixed effects logit model)</li>
+</ol>
+</div>
+<div id="multilevel-models" class="section level5">
+<h5>Multilevel Models</h5>
+<p>In this section you will find an overview of the models and some comments, both for STATA and R.</p>
 <ol style="list-style-type: decimal">
 <li><a href="1_rimodel.html">Random Intercept Model without IV</a>.</li>
 <li><a href="2_rimodel.html">Random Intercept Model with IV</a>.</li>
@@ -284,21 +352,37 @@ $(document).ready(function () {
 <li><a href="7_lrtest.html">Likelihood-Ratio Test</a>.</li>
 </ol>
 </div>
-<div id="data-preparation" class="section level4">
-<h4>Data Preparation</h4>
+</div>
+</div>
+<div id="section-1" class="section level1">
+<h1></h1>
+<div id="more-info" class="section level4 tabset">
+<h4><strong>More Info</strong></h4>
+<div id="data-preparation" class="section level5">
+<h5>Data Preparation</h5>
 <p><a href="0_create.html">Here</a> you will find the data preparation that led to the underlying dataset of the models used on this website</p>
 </div>
-<div id="future" class="section level4">
-<h4>Future</h4>
-<p>More stuff might follow.</p>
+<div id="future" class="section level5">
+<h5>Future</h5>
+<ul>
+<li>add codebook for used data</li>
+<li>add proper function for xtsum in R</li>
+<li>search for interactive element for feedback</li>
+<li>add explanation of implementing STATA code in R Markdowns</li>
+<li>add fake datasets</li>
+</ul>
 </div>
-<div id="authors" class="section level4">
-<h4>Authors</h4>
+<div id="authors" class="section level5">
+<h5>Authors</h5>
 <p>Lisa Reiber, Florian Kaiser</p>
 </div>
-<div id="acknowledgements" class="section level4">
-<h4>Acknowledgements</h4>
+<div id="acknowledgements" class="section level5">
+<h5>Acknowledgements</h5>
 <p>A big thank you to Ruben Arslan for development of reproducible visualization of research projects on the web (repro-web-stack) <a href="https://github.com/rubenarslan/repro_web_stack">click here for more Info</a></p>
+</div>
+<div id="questions-feedback" class="section level5 active">
+<h5>Questions &amp; Feedback</h5>
+<p>For questions and feedback find me on <a href="https://github.com/TripLLL">github</a> or twitter <a href="https://twitter.com/_asilisa_">@_asilisa_</a></p>
 </div>
 </div>
 </div>

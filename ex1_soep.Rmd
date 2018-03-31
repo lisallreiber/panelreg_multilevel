@@ -11,9 +11,8 @@ editor_options:
 
 ```{r setup, include=FALSE}
 source("0_packages.R")
-
+source(".statapath.R")
 knitr::opts_chunk$set(echo = TRUE, cache = T)
-statapath = "/Applications/Stata/StataMP.app/Contents/MacOS/Stata-MP"
 
 ```
 
@@ -33,8 +32,6 @@ statapath = "/Applications/Stata/StataMP.app/Contents/MacOS/Stata-MP"
 
 ### Stata
 ```{r stata create and clean, results = F, engine = "stata", engine.path= statapath, comment = ""}
-* Replikation SOEP-Monitor
-**********************************************
 use "_data/ex_mydf.dta", clear
 	
 * Sample for Analysis
@@ -49,33 +46,30 @@ use "_data/ex_mydf.dta", clear
 ```{r load data }
 ex_mydf <- readRDS(file = "_data/ex_mydf.rds")
 
-asample <- ex_mydf %>% 
-      filter(pop <3)
+asample <- ex_mydf %>% filter(pop <3)
 ```
 
 ## Answers {.active}
-### 1.1  
+### 1.1 Create Data
 Use the long-file pgen as master data und merge the variables sampreg, psample, pop, sex, gebjahr and phrf from the file ppfadl to it. You will find gross labor income in the variable pglabgro.
     
 ***
 
 See [data creation](ex0_create.html)
 
-### 1.2 
+### 1.2 Wrangle Data
 You will have to transform the income data using a consumer price index (see table A2 in SOEPmonitor).
 
 ***
 Also see [data creation](ex0_create.html)
 
-### 1.3 {.tabset}
+### 1.3 Replicate Table {.tabset}
 Replicate the tables concerning  current monthly individual gross labor income from SOEP-Monitor (p.73): https://www.diw.de/de/diw_02.c.222728.de/soepmonitor.htmlDescribe Data or download [here](info/diw_monitor_individuals_2013.pdf#page=73)
 
 ***
 
 #### Stata
 ```{r stata 1.3 describe, results = T, engine = "stata", engine.path= statapath, comment = ""}
-Replikation von SOEP-Monitor
-***************************************************************************
 use "_data/ex_mydf.dta", clear
 	
 * Sample for Analysis
@@ -85,7 +79,7 @@ use "_data/ex_mydf.dta", clear
 	cap drop asample
 	gen asample=1 if pop<3 				// Anstaltsbevölkerung rausnehmen
 	
-* 3. Replikation von SOEP-Monitor (Aufgabe 1)
+* 3. Replication of SOEP-Monitor (Exercise 1)
 ***************************************************************************
 	table syear sampreg   [pw=phrf], c(mean breink10) center col
 	table syear erwstatus [pw=phrf], c(mean breink10) center col by(sampreg) format(%9.2fc)

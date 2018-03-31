@@ -19,9 +19,6 @@
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
-<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
-<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
-<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
 <script src="site_libs/navigation-1.1/tabsets.js"></script>
 <script src="site_libs/navigation-1.1/codefolding.js"></script>
 <link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
@@ -178,101 +175,6 @@ $(document).ready(function () {
 
 
 
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
-
-<style type="text/css">
-
-#TOC {
-  margin: 25px 0px 20px 0px;
-}
-@media (max-width: 768px) {
-#TOC {
-  position: relative;
-  width: 100%;
-}
-}
-
-
-.toc-content {
-  padding-left: 30px;
-  padding-right: 40px;
-}
-
-div.main-container {
-  max-width: 1200px;
-}
-
-div.tocify {
-  width: 20%;
-  max-width: 260px;
-  max-height: 85%;
-}
-
-@media (min-width: 768px) and (max-width: 991px) {
-  div.tocify {
-    width: 25%;
-  }
-}
-
-@media (max-width: 767px) {
-  div.tocify {
-    width: 100%;
-    max-width: none;
-  }
-}
-
-.tocify ul, .tocify li {
-  line-height: 20px;
-}
-
-.tocify-subheader .tocify-item {
-  font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
-}
-
-.tocify .list-group-item {
-  border-radius: 0px;
-}
-
-
-</style>
-
-<!-- setup 3col/9col grid for toc_float and main content  -->
-<div class="row-fluid">
-<div class="col-xs-12 col-sm-4 col-md-3">
-<div id="TOC" class="tocify">
-</div>
-</div>
-
-<div class="toc-content col-xs-12 col-sm-8 col-md-9">
-
-
 
 
 <div class="navbar navbar-default  navbar-fixed-top" role="navigation">
@@ -283,12 +185,45 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Panelregression and Multilevel Models</a>
+      <a class="navbar-brand" href="index.html">Panel- and Multilevel Models</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
   <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Panel Exercises
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="ex1_soep.html">Ex1</a>
+    </li>
+    <li>
+      <a href="ex2_soep.html">Ex2</a>
+    </li>
+    <li>
+      <a href="ex3_soep.html">Ex3</a>
+    </li>
+    <li>
+      <a href="ex4_soep.html">Ex4</a>
+    </li>
+    <li>
+      <a href="ex5_soep.html">Ex5</a>
+    </li>
+    <li>
+      <a href="ex6_soep.html">Ex6</a>
+    </li>
+    <li>
+      <a href="ex7_soep.html">Ex7</a>
+    </li>
+    <li>
+      <a href="ex8_soep.html">Ex8</a>
+    </li>
+  </ul>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -323,39 +258,6 @@ div.tocify {
     <li class="divider"></li>
     <li>
       <a href="7_lrtest.html">7. Likelihood Ratio test</a>
-    </li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Exercises
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="ex1_soep.html">Ex1</a>
-    </li>
-    <li>
-      <a href="ex2_soep.html">Ex2</a>
-    </li>
-    <li>
-      <a href="ex3_soep.html">Ex3</a>
-    </li>
-    <li>
-      <a href="ex4_soep.html">Ex4</a>
-    </li>
-    <li>
-      <a href="ex5_soep.html">Ex5</a>
-    </li>
-    <li>
-      <a href="ex6_soep.html">Ex6</a>
-    </li>
-    <li>
-      <a href="ex7_soep.html">Ex7</a>
-    </li>
-    <li>
-      <a href="ex8_soep.html">Ex8</a>
     </li>
   </ul>
 </li>
@@ -409,7 +311,7 @@ div.tocify {
 <hr />
 <div id="stata" class="section level2">
 <h2>Stata</h2>
-<pre class="stata"><code>use &quot;../data/ess50.dta&quot;, clear
+<pre class="stata"><code>use &quot;_data/ess50.dta&quot;, clear
 
 *** Preparing Data
 * country-string to country-integer
@@ -426,9 +328,9 @@ gen newest = (id == 4 | id == 12 | id == 19 | id == 22)
 cap drop old
 gen old = (new == 0 &amp; newest == 0)
 
-save &quot;../data/ess50prep.dta&quot;, replace</code></pre>
+save &quot;_data/ess50prep.dta&quot;, replace</code></pre>
 <pre><code>
-. use &quot;../data/ess50.dta&quot;, clear
+. use &quot;_data/ess50.dta&quot;, clear
 
 . 
 . *** Preparing Data
@@ -454,12 +356,13 @@ save &quot;../data/ess50prep.dta&quot;, replace</code></pre>
 . gen old = (new == 0 &amp; newest == 0)
 
 . 
-. save &quot;../data/ess50prep.dta&quot;, replace
-file ../data/ess50prep.dta saved</code></pre>
+. save &quot;_data/ess50prep.dta&quot;, replace
+(note: file _data/ess50prep.dta not found)
+file _data/ess50prep.dta saved</code></pre>
 </div>
 <div id="r" class="section level2">
 <h2>R</h2>
-<pre class="r"><code>ess          &lt;- read_dta(&quot;../data/ess50.dta&quot;)
+<pre class="r"><code>ess          &lt;- read_dta(&quot;_data/ess50.dta&quot;)
 # ess          &lt;- select(ess, cntry, stfdem, female, hinctnt, polintr, nwsptot)
 ess$cntry.nr &lt;- as.numeric(as.factor(ess$cntry))
 
@@ -473,16 +376,21 @@ ess$new    &lt;- ifelse(ess$cntry.nr %in% new.nr, 1, 0)
 ess$newest &lt;- ifelse(ess$cntry.nr %in% newest.nr, 1, 0)
 ess$old    &lt;- ifelse(ess$cntry.nr %in% old.nr, 1, 0)
 
+# transform factors
+ess &lt;- ess %&gt;% 
+      mutate(f.polintr = as_factor(polintr),
+             f.nwsptot = as_factor(nwsptot),
+             f.gndr = as_factor(gndr)
+      )
+             
 # Save and load data
-save(ess, file = &quot;../data/ess50prep.Rds&quot;)
-load(&quot;../data/ess50prep.Rds&quot;)</code></pre>
+save(ess, file = &quot;_data/ess50prep.Rds&quot;)
+load(&quot;_data/ess50prep.Rds&quot;)</code></pre>
 </div>
 </div>
 
 
 
-</div>
-</div>
 
 </div>
 

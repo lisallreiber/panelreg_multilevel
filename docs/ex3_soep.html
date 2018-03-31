@@ -283,12 +283,45 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Panelregression and Multilevel Models</a>
+      <a class="navbar-brand" href="index.html">Panel- and Multilevel Models</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
   <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Panel Exercises
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="ex1_soep.html">Ex1</a>
+    </li>
+    <li>
+      <a href="ex2_soep.html">Ex2</a>
+    </li>
+    <li>
+      <a href="ex3_soep.html">Ex3</a>
+    </li>
+    <li>
+      <a href="ex4_soep.html">Ex4</a>
+    </li>
+    <li>
+      <a href="ex5_soep.html">Ex5</a>
+    </li>
+    <li>
+      <a href="ex6_soep.html">Ex6</a>
+    </li>
+    <li>
+      <a href="ex7_soep.html">Ex7</a>
+    </li>
+    <li>
+      <a href="ex8_soep.html">Ex8</a>
+    </li>
+  </ul>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -323,39 +356,6 @@ div.tocify {
     <li class="divider"></li>
     <li>
       <a href="7_lrtest.html">7. Likelihood Ratio test</a>
-    </li>
-  </ul>
-</li>
-<li class="dropdown">
-  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
-    Exercises
-     
-    <span class="caret"></span>
-  </a>
-  <ul class="dropdown-menu" role="menu">
-    <li>
-      <a href="ex1_soep.html">Ex1</a>
-    </li>
-    <li>
-      <a href="ex2_soep.html">Ex2</a>
-    </li>
-    <li>
-      <a href="ex3_soep.html">Ex3</a>
-    </li>
-    <li>
-      <a href="ex4_soep.html">Ex4</a>
-    </li>
-    <li>
-      <a href="ex5_soep.html">Ex5</a>
-    </li>
-    <li>
-      <a href="ex6_soep.html">Ex6</a>
-    </li>
-    <li>
-      <a href="ex7_soep.html">Ex7</a>
-    </li>
-    <li>
-      <a href="ex8_soep.html">Ex8</a>
     </li>
   </ul>
 </li>
@@ -956,8 +956,6 @@ Linear regression                               Number of obs     =     14,099
 </div>
 <div id="r-5" class="section level4 tabset active">
 <h4>R</h4>
-<div id="models" class="section level5">
-<h5>Models</h5>
 <pre class="r"><code>if(!file.exists(&quot;out/fit3.5.rds&quot;)) {
       fit3.5 &lt;- asample15 %&gt;%
             lm(hwageb ~ pgbilzeit*frau + pgbilzeit*erf + ost + factor(pgallbet), 
@@ -966,36 +964,18 @@ Linear regression                               Number of obs     =     14,099
 } else {
       fit3.5 &lt;- readRDS(&quot;out/fit3.5.rds&quot;)
 }
-summary(fit3.5)</code></pre>
-<pre><code>## 
-## Call:
-## lm(formula = hwageb ~ pgbilzeit * frau + pgbilzeit * erf + ost + 
-##     factor(pgallbet), data = ., weights = phrf)
-## 
-## Weighted Residuals:
-##    Min     1Q Median     3Q    Max 
-##  -2561   -141    -16    106  19992 
-## 
-## Coefficients:
-##                   Estimate Std. Error t value Pr(&gt;|t|)    
-## (Intercept)       -0.27704    0.87784   -0.32  0.75232    
-## pgbilzeit          1.00300    0.06548   15.32  &lt; 2e-16 ***
-## frau               0.29417    0.81659    0.36  0.71867    
-## erf               -0.28403    0.03605   -7.88  3.5e-15 ***
-## ost               -4.13244    0.21901  -18.87  &lt; 2e-16 ***
-## factor(pgallbet)2  0.90370    0.24068    3.75  0.00017 ***
-## factor(pgallbet)3  2.32186    0.25225    9.20  &lt; 2e-16 ***
-## factor(pgallbet)4  4.39168    0.23780   18.47  &lt; 2e-16 ***
-## factor(pgallbet)5 -0.24066    0.43179   -0.56  0.57730    
-## pgbilzeit:frau    -0.22511    0.06186   -3.64  0.00027 ***
-## pgbilzeit:erf      0.04179    0.00281   14.86  &lt; 2e-16 ***
-## ---
-## Signif. codes:  0 &#39;***&#39; 0.001 &#39;**&#39; 0.01 &#39;*&#39; 0.05 &#39;.&#39; 0.1 &#39; &#39; 1
-## 
-## Residual standard error: 480 on 14057 degrees of freedom
-##   (697 observations deleted due to missingness)
-## Multiple R-squared:  0.262,  Adjusted R-squared:  0.261 
-## F-statistic:  498 on 10 and 14057 DF,  p-value: &lt;2e-16</code></pre>
+
+tidy(fit3.5, conf.int = T)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[7],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"-0.277","3":"0.8778","4":"-0.32","5":"7.5e-01","6":"-1.998","7":"1.444"},{"1":"pgbilzeit","2":"1.003","3":"0.0655","4":"15.32","5":"1.5e-52","6":"0.875","7":"1.131"},{"1":"frau","2":"0.294","3":"0.8166","4":"0.36","5":"7.2e-01","6":"-1.306","7":"1.895"},{"1":"erf","2":"-0.284","3":"0.0360","4":"-7.88","5":"3.5e-15","6":"-0.355","7":"-0.213"},{"1":"ost","2":"-4.132","3":"0.2190","4":"-18.87","5":"1.9e-78","6":"-4.562","7":"-3.703"},{"1":"factor(pgallbet)2","2":"0.904","3":"0.2407","4":"3.75","5":"1.7e-04","6":"0.432","7":"1.375"},{"1":"factor(pgallbet)3","2":"2.322","3":"0.2523","4":"9.20","5":"3.9e-20","6":"1.827","7":"2.816"},{"1":"factor(pgallbet)4","2":"4.392","3":"0.2378","4":"18.47","5":"2.9e-75","6":"3.926","7":"4.858"},{"1":"factor(pgallbet)5","2":"-0.241","3":"0.4318","4":"-0.56","5":"5.8e-01","6":"-1.087","7":"0.606"},{"1":"pgbilzeit:frau","2":"-0.225","3":"0.0619","4":"-3.64","5":"2.7e-04","6":"-0.346","7":"-0.104"},{"1":"pgbilzeit:erf","2":"0.042","3":"0.0028","4":"14.86","5":"1.4e-49","6":"0.036","7":"0.047"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<pre class="r"><code>glance(fit3.5)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["r.squared"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["adj.r.squared"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sigma"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["int"],"align":["right"]},{"label":["logLik"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["AIC"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["deviance"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["df.residual"],"name":[11],"type":["int"],"align":["right"]}],"data":[{"1":"0.26","2":"0.26","3":"480","4":"498","5":"0","6":"11","7":"-56706","8":"113436","9":"113526","10":"3.2e+09","11":"14057"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
 </div>
 </div>
 </div>
@@ -1106,25 +1086,23 @@ tidy(fit3.6)</code></pre>
 <h3>3.7 Quadratic Effect</h3>
 <p>Specify a quadratic effect for labor force participation. Interpret the result using a marginal effects plot.</p>
 <hr />
-<div id="stata-7" class="section level4">
+<div id="stata-7" class="section level4 tabset">
 <h4>Stata</h4>
+<div id="model-2" class="section level5">
+<h5>Model</h5>
 <pre class="stata"><code>use &quot;_data/ex_mydf.dta&quot;, clear
 
 reg hwageb pgbilzeit c.erf##c.erf frau ost if asample==1 &amp; syear==2015 [pw=phrf]
 
 qui: margins, at(erf=(0(10)65))
-marginsplot, name( margins_3_7, replace)
-
-graph use margins_3_7
-graph export &quot;out/margins_3_7.png&quot;
+marginsplot
+graph export &quot;out/margins_3_7.eps&quot;, replace
 
 reg hwageb pgbilzeit c.erf##c.erf frau ost if asample==1 &amp; syear==2015 [pw=phrf]
 
 qui: margins, at(erf=(0(10)50) pgbilzeit=(7, 10.5, 14, 18) frau=(1 0))
-marginsplot, name(margins_3_7_2, replace)
-
-graph display margins_3_7_2
-graph export &quot;/Users/LR/Git/multilevel_models_statar/out/margins_3_7_2.png&quot;
+marginsplot
+graph export &quot;out/margins_3_7_2.eps&quot;, replace
 </code></pre>
 <pre><code>
 . use &quot;_data/ex_mydf.dta&quot;, clear
@@ -1158,17 +1136,52 @@ Linear regression                               Number of obs     =     14,218
 . 
 . qui: margins, at(erf=(0(10)65))
 
-. marginsplot, name( margins_3_7, replace)
+. marginsplot
 
   Variables that uniquely identify margins: erf
 
-. 
-. graph use margins_3_7
-file margins_3_7.gph not found
-r(601);
+. graph export &quot;out/margins_3_7.eps&quot;, replace
+(note: file out/margins_3_7.eps not found)
+(file out/margins_3_7.eps written in EPS format)
 
-end of do-file
-r(601);</code></pre>
+. 
+. reg hwageb pgbilzeit c.erf##c.erf frau ost if asample==1 &amp; syear==2015 [pw=ph
+&gt; rf]
+(sum of wgt is   3.3886e+07)
+
+Linear regression                               Number of obs     =     14,218
+                                                F(5, 14212)       =     223.24
+                                                Prob &gt; F          =     0.0000
+                                                R-squared         =     0.2354
+                                                Root MSE          =     10.007
+
+------------------------------------------------------------------------------
+             |               Robust
+      hwageb |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+   pgbilzeit |   1.616197    .061299    26.37   0.000     1.496043    1.736351
+         erf |    .585291   .0352085    16.62   0.000     .5162778    .6543042
+             |
+ c.erf#c.erf |  -.0088073    .000908    -9.70   0.000    -.0105872   -.0070275
+             |
+        frau |  -2.914366   .2435542   -11.97   0.000    -3.391764   -2.436968
+         ost |  -4.191624   .2685655   -15.61   0.000    -4.718047     -3.6652
+       _cons |  -8.353138   .7982404   -10.46   0.000    -9.917793   -6.788482
+------------------------------------------------------------------------------
+
+. 
+. qui: margins, at(erf=(0(10)50) pgbilzeit=(7, 10.5, 14, 18) frau=(1 0))
+
+. marginsplot
+
+  Variables that uniquely identify margins: erf pgbilzeit frau
+
+. graph export &quot;out/margins_3_7_2.eps&quot;, replace
+(note: file out/margins_3_7_2.eps not found)
+(file out/margins_3_7_2.eps written in EPS format)
+
+. </code></pre>
+</div>
 <div id="plot-1" class="section level5">
 <h5>Plot</h5>
 <p>Marginsplot Work Experience Squared</p>
@@ -1181,10 +1194,9 @@ r(601);</code></pre>
 </div>
 <div id="r-7" class="section level4 tabset active">
 <h4>R</h4>
-<div id="models-1" class="section level5">
+<div id="models" class="section level5">
 <h5>Models</h5>
-<div id="fit-3.7" class="section level6">
-<h6>Fit 3.7</h6>
+<p>Fit 3.7</p>
 <pre class="r"><code>fit3.7 &lt;- asample15 %&gt;%
                   lm(hwageb ~ pgbilzeit + erf + I(erf^2) + frau + ost, 
                      data=., weights=phrf)
@@ -1202,11 +1214,8 @@ tidy(fit3.7)</code></pre>
   </script>
 </div>
 </div>
-</div>
 <div id="plots-2" class="section level5">
 <h5>Plots</h5>
-<div id="marginal-effects-1" class="section level6">
-<h6>Marginal Effects</h6>
 <p>Margins Plot Work Experience</p>
 <pre class="r"><code> # for polynomial data
  dat &lt;- ggpredict(fit3.7, terms = c(&quot;erf [0,10, 20, 30, 40, 50]&quot;))
@@ -1240,7 +1249,6 @@ ggplot(dat, aes(x, predicted, color = group, fill = group, linetype = facet)) +
               linetype = guide_legend(title = &quot;Gender&quot;),
               color = F)</code></pre>
 <p><img src="ex3_soep_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
-</div>
 </div>
 </div>
 </div>

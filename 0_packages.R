@@ -7,6 +7,7 @@
 if (!require("pacman")) install.packages("pacman")
 pacman::p_load(
       broom,
+      car,
       effects,
       foreign,
       ggeffects,

@@ -1,35 +1,32 @@
 ---
-output:
-  html_document:
-    code_folding: "show"
-    df_print: paged
-    toc: true
-    toc_float: true
-editor_options: 
-  chunk_output_type: console
+output: html_document
+ 
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, cache = T)
-statapath = "/Applications/Stata/StataMP.app/Contents/MacOS/Stata-MP"
 
+source(".statapath.R")
 source("0_packages.R")
 
-load("../data/ess50prep.Rds")
+load("_data/ess50prep.Rds")
 ```
 
-# 6. Three-Level Model {.tabset}
+# 6. Three-Level Model 
 
-### Models
-#### Stata
+***
+
+## Model Data {.tabset}
+
+### Stata
 ```{r, results = T, engine = "stata", engine.path= statapath, comment = ""}
-use "../data/ess50prep.dta", clear
+use "_data/ess50prep.dta", clear
 
 xtmixed stfdem || cntry: || region: 
 estat icc
 ```
 
-#### R
+### R
 ```{r}
 multi6 <- lmer(stfdem ~ (1|cntry/region), data = ess, REML = FALSE)
 ```
@@ -40,7 +37,7 @@ glance(multi6)
 icc(multi6)
 ```
 
-##### ICC values need to be summed to equal stata's
+#### ICC values need to be summed to equal stata's
 ```{r}
 0.022357 + 0.103499 
 ```

@@ -1,14 +1,50 @@
 ---
-pagetitle: Multilevel Models
+pagetitle: Panel- and Multilevel Models
 ---
 
-# Multilevel Models in STATA and R
+# Panel- and Multilevel Models in STATA and R {.tabset}
 
-### Purpose of this site
-This site contains .do files and .R scripts for multilevel modeling. It resulted from the exercises from a university course on that topic, where we discussed the basic statistical properties of the different models in a mostly non-technical way and used empirical data and Stata exercises to get familiar with their assumptions, features and interpretation. A couple of us then decided to "translate" the course excercises into R. We found that R has certain advantages, especially when it comes to visualizing the underlying data or models. 
+## Purpose of this site
+#### **Purpose of this site**
+This site contains STATA and R code for panel- and multilevel modeling and visualization. It is based on the exercises of the course "Introduction to Panel and Multilevel Modeling" at the Social Science Institute of the Humboldt- University Berlin, where we discussed the basic statistical properties of the different models in a mostly non-technical way and used empirical data and STATA exercises to get familiar with their assumptions, features and interpretation. A couple of us then decided to "translate" the course excercises into R. We found that R has advantages, when it comes to visualizing or looping over the underlying data or models and that STATA works a lot faster for fixed effects regressions with panel data that has a lot of individuals.
 
-#### Models
-In this section you will find an overviw of the models and some comments, both for STATA and R.
+
+## Structure of this site
+#### **Structure of this site**
+General:
+
+- this site is build from [R Markdowns](https://rmarkdown.rstudio.com/lesson-1.html) from RStudio, which are accessible on [github](https://github.com/TripLLL/panelreg_multilevel)
+- you can download them and run them on your maschine if you 
+      - clone the repository  
+      - copy the necessary SOEP datasets into the _data folder
+      - (or create fake datasets with the same name and variables)
+      - set the `statapath` by creating a ".statapath.R" file where you define the location of your STATA program on your maschine (e.g. content of .statapath.R: `statapath <- "/Applications/Stata/StataMP.app/Contents/MacOS/Stata-MP"` (for macs) more info  [here](https://www.ssc.wisc.edu/~hemken/Stataworkshops/Stata%20and%20R%20Markdown/StataMarkdown.html) and [here](https://www.stata.com/support/faqs/mac/advanced-topics/#startup).
+- for the R code, you can find a little button `Code` on the upper right corner of the page that lets you control whether the R code on this page is hidden or shown. You can also select this for each code chunk separately.
+      
+Panel Exercises:
+
+- there is one page for each exercise and if you scroll down you will find the table of contents to unwrap and give you an overview of the undersections. 
+- within those sections there are tabs. You can click on them to compare the STATA and R code and outputs. Sometimes there are two rows of tabs (e.g. for models and plots in each R and STATA tab). The page remembers the second row tabs you opened when you switch between R-tabs and STATA tabs. This was you can easily compare plots and models (pretty sweet ;).
+      
+# 
+
+#### **Content** {.tabset}
+
+##### Panel Models Exercises
+In this section you will find some exercises on regressions with panel structure, both for STATA and R
+
+1. [Data Wrangling](ex1_soep.html) (keywords: create data, replicate table)
+2. [Basic Model I](ex2_soep.html) (interpretation, coefficients relations, log transformation, gender pay gap)
+3. [Basic Model II ](ex3_soep.html) (interaction, marginal effects, nominal IV, partial effect size, regresstion output)
+4. [Mincer Model](ex4_soep.html) (loops, education and gender returns, xtum, within and between variation)
+5. [Chow Test](ex5_soep.html) (Chow Test for structural change)
+6. [Fixed Effects Model](ex6_soep.html) (pooled vs. fixed effects model)
+7. [Random Effects Model](ex7_soep.html) (random vs. fixed effects model)
+8. [Logit Model](ex8_soep.html) (pooled logit vs. fixed effects logit model)
+
+ 
+##### Multilevel Models
+In this section you will find an overview of the models and some comments, both for STATA and R.
 
 1. [Random Intercept Model without IV](1_rimodel.html).
 2. [Random Intercept Model with IV](2_rimodel.html).
@@ -18,16 +54,27 @@ In this section you will find an overviw of the models and some comments, both f
 6. [3-Level Model](6_3level.html).
 7. [Likelihood-Ratio Test](7_lrtest.html).
 
-#### Data Preparation
+
+#
+
+#### **More Info** {.tabset}
+##### Data Preparation
 [Here](0_create.html) you will find the data preparation that led to the underlying dataset of the models used on this website
 
-#### Future
-More stuff might follow. 
+##### Future
+- add codebook for used data
+- add proper function for xtsum in R
+- search for interactive element for feedback
+- add explanation of implementing STATA code in R Markdowns
+- add fake datasets
 
-
-#### Authors
+##### Authors
 Lisa Reiber, Florian Kaiser
 
-#### Acknowledgements 
+##### Acknowledgements 
 A big thank you to Ruben Arslan for development of reproducible visualization of research projects on the web (repro-web-stack) [click here for more Info](https://github.com/rubenarslan/repro_web_stack)
+
+##### Questions & Feedback {.active}
+
+For questions and feedback find me on [github](https://github.com/TripLLL) or twitter [\@\_asilisa\_](https://twitter.com/_asilisa_)
 

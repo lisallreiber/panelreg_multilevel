@@ -1,10 +1,28 @@
-name: Panelregression and Multilevel Models
+name: Panel- and Multilevel Models
 output_dir: docs
 navbar:
-  title: Panelregression and Multilevel Models
+  title: Panel- and Multilevel Models
   left:
   - text: Home
     href: index.html
+  - text: Panel Exercises
+    menu:
+    - text: Ex1
+      href: ex1_soep.html
+    - text: Ex2
+      href: ex2_soep.html
+    - text: Ex3
+      href: ex3_soep.html
+    - text: Ex4
+      href: ex4_soep.html
+    - text: Ex5
+      href: ex5_soep.html
+    - text: Ex6
+      href: ex6_soep.html
+    - text: Ex7
+      href: ex7_soep.html
+    - text: Ex8
+      href: ex8_soep.html
   - text: Models
     menu:
     - text: Random Intercept
@@ -27,24 +45,6 @@ navbar:
     - text: '---------'
     - text: 7. Likelihood Ratio test
       href: 7_lrtest.html
-  - text: Exercises
-    menu:
-    - text: Ex1
-      href: ex1_soep.html
-    - text: Ex2
-      href: ex2_soep.html
-    - text: Ex3
-      href: ex3_soep.html
-    - text: Ex4
-      href: ex4_soep.html
-    - text: Ex5
-      href: ex5_soep.html
-    - text: Ex6
-      href: ex6_soep.html
-    - text: Ex7
-      href: ex7_soep.html
-    - text: Ex8
-      href: ex8_soep.html
   - text: Data Preparation
     menu:
     - text: Exercises
@@ -58,6 +58,11 @@ navbar:
 output:
   html_document:
     theme: spacelab
+    df_print: paged
+    toc: yes
+    toc_float: yes
+    toc_depth: 3
+    code_folding: show
     lib_dir: site_libs
     self_contained: no
 exclude:

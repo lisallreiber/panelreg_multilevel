@@ -1,19 +1,14 @@
 ---
 output:
   html_document:
-    code_folding: "show"
-    df_print: paged
-    toc: true
-    toc_depth: 2
-    toc_float: true
-editor_options: 
-  chunk_output_type: console
+        toc: false
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, cache = T)
-statapath = "/Applications/Stata/StataMP.app/Contents/MacOS/Stata-MP"
 source("0_packages.R")
+source(".statapath.R")
+
 ```
 
 # Prepare Data for Models {.tabset}
@@ -21,7 +16,7 @@ source("0_packages.R")
 
 ## Stata
 ```{r, results = T, engine = "stata", engine.path= statapath, comment = ""}
-use "../data/ess50.dta", clear
+use "_data/ess50.dta", clear
 
 *** Preparing Data
 * country-string to country-integer
@@ -38,12 +33,12 @@ gen newest = (id == 4 | id == 12 | id == 19 | id == 22)
 cap drop old
 gen old = (new == 0 & newest == 0)
 
-save "../data/ess50prep.dta", replace
+save "_data/ess50prep.dta", replace
 ```
 
 ## R
 ```{r}
-ess          <- read_dta("../data/ess50.dta")
+ess          <- read_dta("_data/ess50.dta")
 # ess          <- select(ess, cntry, stfdem, female, hinctnt, polintr, nwsptot)
 ess$cntry.nr <- as.numeric(as.factor(ess$cntry))
 
@@ -57,8 +52,15 @@ ess$new    <- ifelse(ess$cntry.nr %in% new.nr, 1, 0)
 ess$newest <- ifelse(ess$cntry.nr %in% newest.nr, 1, 0)
 ess$old    <- ifelse(ess$cntry.nr %in% old.nr, 1, 0)
 
+# transform factors
+ess <- ess %>% 
+      mutate(f.polintr = as_factor(polintr),
+             f.nwsptot = as_factor(nwsptot),
+             f.gndr = as_factor(gndr)
+      )
+             
 # Save and load data
-save(ess, file = "../data/ess50prep.Rds")
-load("../data/ess50prep.Rds")
+save(ess, file = "_data/ess50prep.Rds")
+load("_data/ess50prep.Rds")
 ```
 

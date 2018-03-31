@@ -1,6 +1,4 @@
 # is there a way to show the packages used from this doc?
-# replace , replace with ,clear in all stata chunks
-# add structure to models
 # insert further information tab at the bottom
 # insert conf.int = T for all tidy models
 # insert about list with useful link:
@@ -13,6 +11,10 @@ interpretation:
       https://stats.idre.ucla.edu/stata/webbooks/reg/chapter3/regression-with-statachapter-3-regression-with-categorical-predictors/
       annotated output: https://stats.idre.ucla.edu/other/annotatedoutput/
       descriptive statistics: https://stats.idre.ucla.edu/stata/output/descriptive-statistics-using-the-summarize-command/
+      
+helpful websites:
+      - http://data.princeton.edu/R/linearModels.html
+
       
       
 
@@ -37,7 +39,8 @@ Ex2:
       # summarize_all(funs(sum, mean, sd, min,max))
       # for export to latex file                    
       # latex(summary())
-
+# to do: make a link to a varia section where you specify the different possibilities of histograms
+# histogram
       cut out:
             
                         asample %>% 
@@ -48,6 +51,23 @@ Ex2:
                             geom_point() + 
                             geom_smooth(method="lm", color="red", se=F) +
                             geom_line(aes(y = mean(asample$hwageb)), color="blue"))
+      
+      # - N used
+      esample.n <- nobs(fit2.1) # only for panel structure
+      pdim(fit2.1)
+      
+      ###### check if mean close to 0
+      it is not 
+      ```{r mean close to 0 fit2.1}
+      mean(fit2.1$residuals)    # no
+      ```
+      
+      ###### Correlation Resid + Predict
+      Check the correlation between the residuals and the predictors to see if it's close to 0.
+      ```{r}
+      # cov(fit2.1$residuals, asample$pgbilzeit)      # no
+      ```
+      
 # Notes 
 ***
       #' Not include 
@@ -62,7 +82,6 @@ Ex2:
       cars[esample,] #trivial here since all obs are included
       
 Ex3:
-      todo: save margins plots and include them
 
       3.6: etwas mehr notes wenns geht
       

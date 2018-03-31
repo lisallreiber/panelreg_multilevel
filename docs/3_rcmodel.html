@@ -15,7 +15,7 @@
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/spacelab.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -106,34 +106,34 @@ button.code-folding-btn:focus {
 <style type="text/css">
 /* padding for bootstrap navbar */
 body {
-  padding-top: 64px;
+  padding-top: 52px;
   padding-bottom: 40px;
 }
 /* offset scroll position for anchor links (for fixed navbar)  */
 .section h1 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 
 .section h2 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 .section h3 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 .section h4 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 .section h5 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 .section h6 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 </style>
 
@@ -188,7 +188,7 @@ $(document).ready(function ()  {
 
     // establish options
     var options = {
-      selectors: "h1,h2,h3",
+      selectors: "h1,h2",
       theme: "bootstrap3",
       context: '.toc-content',
       hashGenerator: function (text) {
@@ -283,12 +283,45 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Panelregression and Multilevel Models</a>
+      <a class="navbar-brand" href="index.html">Panel- and Multilevel Models</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
   <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Panel Exercises
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="ex1_soep.html">Ex1</a>
+    </li>
+    <li>
+      <a href="ex2_soep.html">Ex2</a>
+    </li>
+    <li>
+      <a href="ex3_soep.html">Ex3</a>
+    </li>
+    <li>
+      <a href="ex4_soep.html">Ex4</a>
+    </li>
+    <li>
+      <a href="ex5_soep.html">Ex5</a>
+    </li>
+    <li>
+      <a href="ex6_soep.html">Ex6</a>
+    </li>
+    <li>
+      <a href="ex7_soep.html">Ex7</a>
+    </li>
+    <li>
+      <a href="ex8_soep.html">Ex8</a>
+    </li>
+  </ul>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -326,8 +359,20 @@ div.tocify {
     </li>
   </ul>
 </li>
-<li>
-  <a href="0_create.html">Data Preparation</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data Preparation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="ex0_create.html">Exercises</a>
+    </li>
+    <li>
+      <a href="0_create.html">Models</a>
+    </li>
+  </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -359,20 +404,19 @@ div.tocify {
 </div>
 
 
-<div id="random-coefficient-model" class="section level1 tabset">
+<div id="random-coefficient-model" class="section level1">
 <h1>3. Random Coefficient Model</h1>
+<hr />
 <div id="without-gender-variable" class="section level2 tabset">
-<h2>3.1 Without gender variable</h2>
-<div id="models" class="section level3">
-<h3>Models</h3>
-<div id="stata" class="section level4">
-<h4>Stata</h4>
-<pre class="stata"><code>use &quot;../data/ess50prep.dta&quot;, clear
+<h2>3.1 Without Gender Variable</h2>
+<div id="stata" class="section level3">
+<h3>Stata</h3>
+<pre class="stata"><code>use &quot;_data/ess50prep.dta&quot;, clear
 
 xtmixed stfdem polintr nwsptot || cntry: polintr nwsptot, cov(unstructured)
 estat icc</code></pre>
 <pre><code>
-. use &quot;../data/ess50prep.dta&quot;, clear
+. use &quot;_data/ess50prep.dta&quot;, clear
 
 . 
 . xtmixed stfdem polintr nwsptot || cntry: polintr nwsptot, cov(unstructured)
@@ -435,15 +479,15 @@ Conditional intraclass correlation
 ------------------------------------------------------------------------------
 Note: ICC is conditional on zero values of random-effects covariates.</code></pre>
 </div>
-<div id="r" class="section level4">
-<h4>R</h4>
-<div id="first-save-model-like-statas-est-store" class="section level5">
-<h5>First: Save Model (like Stata’s <code>est store</code>)</h5>
+<div id="r" class="section level3">
+<h3>R</h3>
+<div id="first-save-model-like-statas-est-store" class="section level4">
+<h4>First: Save Model (like Stata’s <code>est store</code>)</h4>
 <pre class="r"><code>multi3 &lt;- lmer(stfdem ~ polintr + nwsptot + (1 + polintr + nwsptot |cntry), data = ess, REML = FALSE)</code></pre>
 <p><code>1 +</code> is not necessarily needed because random coefficient models imply that the intercept is also random</p>
 </div>
-<div id="then-inspect-model" class="section level5">
-<h5>Then: Inspect model</h5>
+<div id="then-inspect-model" class="section level4">
+<h4>Then: Inspect model</h4>
 <pre class="r"><code>tidy(multi3)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -466,21 +510,18 @@ Note: ICC is conditional on zero values of random-effects covariates.</code></pr
 </div>
 </div>
 </div>
-</div>
 <div id="with-gender-variable" class="section level2 tabset">
 <h2>3.2 With gender variable</h2>
-<div id="model" class="section level3">
-<h3>Model</h3>
-<div id="stata-1" class="section level4">
-<h4>Stata</h4>
+<div id="stata-1" class="section level3">
+<h3>Stata</h3>
 <pre class="stata"><code>set maxiter 20
-use &quot;../data/ess50prep.dta&quot;, clear
+use &quot;_data/ess50prep.dta&quot;, clear
 
 xtmixed stfdem || cntry: polintr nwsptot gndr, cov(unstructured)</code></pre>
 <pre><code>
 . set maxiter 20
 
-. use &quot;../data/ess50prep.dta&quot;, clear
+. use &quot;_data/ess50prep.dta&quot;, clear
 
 . 
 . xtmixed stfdem || cntry: polintr nwsptot gndr, cov(unstructured)
@@ -554,14 +595,14 @@ LR test vs. linear model: chi2(10) = 1252.33              Prob &gt; chi2 = 0.000
 Note: LR test is conservative and provided only for reference.
 Warning: convergence not achieved; estimates are based on iterated EM</code></pre>
 </div>
-<div id="r-1" class="section level4">
-<h4>R</h4>
-<div id="first-save-model-like-statas-est-store-1" class="section level5">
-<h5>First: Save Model (like Stata’s <code>est store</code>)</h5>
+<div id="r-1" class="section level3">
+<h3>R</h3>
+<div id="first-save-model-like-statas-est-store-1" class="section level4">
+<h4>First: Save Model (like Stata’s <code>est store</code>)</h4>
 <pre class="r"><code>multi3 &lt;- lmer(stfdem ~ (1 + polintr + nwsptot + gndr |cntry), data = ess, REML = FALSE)</code></pre>
 </div>
-<div id="then-inspect-model-1" class="section level5">
-<h5>Then: Inspect model</h5>
+<div id="then-inspect-model-1" class="section level4">
+<h4>Then: Inspect model</h4>
 <pre class="r"><code>tidy(multi3)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
@@ -584,9 +625,14 @@ Warning: convergence not achieved; estimates are based on iterated EM</code></pr
 </div>
 </div>
 </div>
-</div>
-<div id="plotting-data" class="section level2">
+<div id="plotting-data" class="section level2 tabset">
 <h2>3.3 Plotting data</h2>
+<div id="stata-2" class="section level3">
+<h3>Stata</h3>
+<p>not (yet) available</p>
+</div>
+<div id="r-2" class="section level3">
+<h3>R</h3>
 <div id="random-effect-plots" class="section level4">
 <h4>Random effect plots</h4>
 <div id="sorted-alphabetically" class="section level5">
@@ -616,6 +662,7 @@ Warning: convergence not achieved; estimates are based on iterated EM</code></pr
 <h5>Random slopes depending on random intercepts highlighting <strong>Denmark</strong>, <strong>Portugal</strong>, <strong>Luxemburg</strong></h5>
 <pre class="r"><code>sjp.lmer(multi3, type = &quot;rs.ri&quot;, vars = &quot;polintr&quot;, sample.n = c(6, 16, 20),  show.legend = TRUE)</code></pre>
 <p><img src="3_rcmodel_files/figure-html/unnamed-chunk-10-1.png" width="672" /><img src="3_rcmodel_files/figure-html/unnamed-chunk-10-2.png" width="672" /><img src="3_rcmodel_files/figure-html/unnamed-chunk-10-3.png" width="672" /></p>
+</div>
 </div>
 </div>
 </div>

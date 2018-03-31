@@ -1,36 +1,30 @@
 ---
-output:
-  html_document:
-    code_folding: "show"
-    df_print: paged
-    toc: true
-    toc_float: true
-editor_options: 
-  chunk_output_type: console
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, cache = T)
-statapath = "/Applications/Stata/StataMP.app/Contents/MacOS/Stata-MP"
-
+source(".statapath.R")
 source("0_packages.R")
 
-load("../data/ess50prep.Rds")
+load("_data/ess50prep.Rds")
 ```
 
-# 4.1 Cross-Level Interaction Model {.tabset}
+# 4.1 Cross-Level Interaction Model 
+
+***
 
 ## Model Data {.tabset}
-### Model
-#### Stata
+
+### Stata
 ```{r, results = T, engine = "stata", engine.path= statapath, comment = ""}
-use "../data/ess50prep.dta", clear
+use "_data/ess50prep.dta", clear
 
 xtmixed stfdem polintr nwsptot gndr##newest gndr##new || cntry: gndr, cov(unstructured)
 estat icc
 ```
 
-#### R
+### R
 ```{r}
 multi4 <- lmer(stfdem ~ polintr + nwsptot + (gndr * new) + (gndr * newest) + (1  + gndr |cntry), data = ess, REML = FALSE)
 ```
@@ -42,7 +36,13 @@ icc(multi4)
 ```
 
 
-## 4.2 Fixed Effects Plots
+## 4.2 Fixed Effects Plots {.tabset}
+
+### Stata
+not (yet) available
+
+### R {.active}
+
 #### Fixed effects
 p-values approximated by Wald-Statistics with `p.kr = FALSE` -> reduces computing time signficantly
 ```{r}

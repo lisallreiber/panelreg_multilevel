@@ -12,12 +12,8 @@ editor_options:
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, cache = T)
-statapath = "/Applications/Stata/StataMP.app/Contents/MacOS/Stata-MP"
+source(".statapath.R")
 source("0_packages.R")
-#### Paths ####
-      #inpath <- "M:/Gsoep32long/"                    # Uni
-      #inpath <- "S:/DATA/soep32_de_l/stata"          # DIW
-      inpath <- "/Volumes/gsoep32l/Gsoep32long" # home
 options(digits=10)
 ```
 
@@ -37,7 +33,7 @@ use "_data/pgen.dta", clear
 merge 1:1 pid syear using "_data/ppfadl.dta" , ///
       keepusing(sampreg psample pop sex gebjahr phrf phrf0 phrf1) keep(match) nogen
 
-* 2. Data clening
+* 2. Data cleaning
 ********************************************************************************
 * 2.1 define missing values
 	mvdecode *, mv(-8/-1)
@@ -47,13 +43,13 @@ merge 1:1 pid syear using "_data/ppfadl.dta" , ///
 ** demographics
 	cap drop ost
 	recode sampreg 1 = 0 2 = 1, gen(ost)
-	lab def ost 0 "West" 1 "Ost" , replace
+	lab def ost 0 "west" 1 "east" , replace
 	lab val ost ost
 	tab1 ost sampreg
 
 	cap drop frau
 	recode sex 1 = 0 2 = 1, gen(frau)
-	lab def frau 0 "männlich" 1 "weiblich" , replace
+	lab def frau 0 "male" 1 "femal" , replace
 	lab val frau frau
 	tab1 frau sex
 	
@@ -63,7 +59,7 @@ merge 1:1 pid syear using "_data/ppfadl.dta" , ///
 ** Job Status
 	cap drop erwstatus
 	recode pgemplst 1 = 1  2 4 = 2 * = ., gen(erwstatus)
-	lab def erwstatus 1 "Vollzeit" 2 "Teilzeit", replace
+	lab def erwstatus 1 "fulltime" 2 "part-time", replace
 	lab val erwstatus erwstatus
 
 *** Consumer Price Index Jahr 2010 (also Exercise 1.2)
@@ -176,7 +172,7 @@ merge 1:1 pid syear using "_data/ppfadl.dta" , ///
 ## R {.tabset}
 
 ### Read SOEP Data into R 
-Because SOEP Data are not available in R format we can read them into R wth readstata13 or haven and save them as rds for future use.
+Because SOEP Data are not available in R format we can read them into R with `readstata13` or `haven` and save them as .rds for future use.
 ```{r create pgen ppfadl}
 #### 1. generate  and merge dataset mydf_raw  
 # PGEN
@@ -262,8 +258,6 @@ mydf_raw <- ppfadl %>%
 #### 2. Clean Data
 ##### 2.1 Define Missing Codes
 ```{r define missings}
-#### 2. cleaning data ####
-#  2.1 Define Missings
       na_codes <- c(-1: -8)
       for (i in seq_along(mydf_raw)) {
             mydf_raw[[i]][mydf_raw[[i]] %in% na_codes] <- NA
@@ -294,13 +288,14 @@ mydf_raw$erwstatus <- mydf_raw %>%
       select(erwstatus) %>% unlist() %>% 
       labelled(c("Vollzeit" = 1, "Teilzeit" = 2)) 
 
+
 ex_mydf <- mydf_raw %>% 
       # Demographics
-      mutate(ost = sampreg - 1, # ost(1), west(0)
+      mutate(ost = as_factor(labelled(sampreg - 1, c("west" = 0, "east" = 1))), 
              # age
              alter = syear - gebjahr, 
              # gender
-             frau = sex -1, # frau = 1 mann = 0
+             frau = as_factor(labelled(sex - 1, c("male" = 0, "female" = 1))), 
       # Generate Brutto Income 2010 and 2015, Hourly Wage 2015
              # Einkommen, Hourly Wage
              breink10 = pglabgro / cpi_s * 100,

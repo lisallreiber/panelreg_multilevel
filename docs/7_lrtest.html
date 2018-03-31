@@ -15,7 +15,7 @@
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
-<link href="site_libs/bootstrap-3.3.5/css/paper.min.css" rel="stylesheet" />
+<link href="site_libs/bootstrap-3.3.5/css/spacelab.min.css" rel="stylesheet" />
 <script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
 <script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
@@ -106,34 +106,34 @@ button.code-folding-btn:focus {
 <style type="text/css">
 /* padding for bootstrap navbar */
 body {
-  padding-top: 64px;
+  padding-top: 52px;
   padding-bottom: 40px;
 }
 /* offset scroll position for anchor links (for fixed navbar)  */
 .section h1 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 
 .section h2 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 .section h3 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 .section h4 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 .section h5 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 .section h6 {
-  padding-top: 69px;
-  margin-top: -69px;
+  padding-top: 57px;
+  margin-top: -57px;
 }
 </style>
 
@@ -188,7 +188,7 @@ $(document).ready(function ()  {
 
     // establish options
     var options = {
-      selectors: "h1,h2,h3",
+      selectors: "h1,h2",
       theme: "bootstrap3",
       context: '.toc-content',
       hashGenerator: function (text) {
@@ -283,12 +283,45 @@ div.tocify {
         <span class="icon-bar"></span>
         <span class="icon-bar"></span>
       </button>
-      <a class="navbar-brand" href="index.html">Panelregression and Multilevel Models</a>
+      <a class="navbar-brand" href="index.html">Panel- and Multilevel Models</a>
     </div>
     <div id="navbar" class="navbar-collapse collapse">
       <ul class="nav navbar-nav">
         <li>
   <a href="index.html">Home</a>
+</li>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Panel Exercises
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="ex1_soep.html">Ex1</a>
+    </li>
+    <li>
+      <a href="ex2_soep.html">Ex2</a>
+    </li>
+    <li>
+      <a href="ex3_soep.html">Ex3</a>
+    </li>
+    <li>
+      <a href="ex4_soep.html">Ex4</a>
+    </li>
+    <li>
+      <a href="ex5_soep.html">Ex5</a>
+    </li>
+    <li>
+      <a href="ex6_soep.html">Ex6</a>
+    </li>
+    <li>
+      <a href="ex7_soep.html">Ex7</a>
+    </li>
+    <li>
+      <a href="ex8_soep.html">Ex8</a>
+    </li>
+  </ul>
 </li>
 <li class="dropdown">
   <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
@@ -326,8 +359,20 @@ div.tocify {
     </li>
   </ul>
 </li>
-<li>
-  <a href="0_create.html">Data Preparation</a>
+<li class="dropdown">
+  <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false">
+    Data Preparation
+     
+    <span class="caret"></span>
+  </a>
+  <ul class="dropdown-menu" role="menu">
+    <li>
+      <a href="ex0_create.html">Exercises</a>
+    </li>
+    <li>
+      <a href="0_create.html">Models</a>
+    </li>
+  </ul>
 </li>
       </ul>
       <ul class="nav navbar-nav navbar-right">
@@ -359,15 +404,15 @@ div.tocify {
 </div>
 
 
-<div id="likelihood-ratio-test" class="section level1 tabset">
+<div id="likelihood-ratio-test" class="section level1">
 <h1>7. Likelihood Ratio Test</h1>
-<div id="test-model" class="section level3">
-<h3>Test Model</h3>
-<div id="stata" class="section level4">
-<h4>Stata</h4>
-<div id="model-needs-to-be-restriced-to-same-sample-with-if-esample" class="section level5">
-<h5>Model needs to be restriced to same sample with <code>if e(sample)</code></h5>
-<pre class="stata"><code>use &quot;../data/ess50prep.dta&quot;, clear
+<hr />
+<div id="model-data" class="section level2 tabset">
+<h2>Model Data</h2>
+<div id="stata" class="section level3">
+<h3>Stata</h3>
+<p>Model needs to be restriced to same sample with <code>if e(sample)</code></p>
+<pre class="stata"><code>use &quot;_data/ess50prep.dta&quot;, clear
 
 quietly: xtmixed stfdem || cntry: || region: 
 est store level3
@@ -376,7 +421,7 @@ quietly: xtmixed stfdem || cntry: if e(sample)
 est store level2
 lrtest level2 level3</code></pre>
 <pre><code>
-. use &quot;../data/ess50prep.dta&quot;, clear
+. use &quot;_data/ess50prep.dta&quot;, clear
 
 . 
 . quietly: xtmixed stfdem || cntry: || region: 
@@ -397,11 +442,9 @@ Note: The reported degrees of freedom assumes the null hypothesis is not on
       the boundary of the parameter space.  If this is not true, then the
       reported test is conservative.</code></pre>
 </div>
-</div>
-<div id="r" class="section level4">
-<h4>R</h4>
-<div id="model-needs-to-be-restriced-to-same-sample-with-essesample" class="section level5">
-<h5>Model needs to be restriced to same sample with <code>ess[esample, ]</code></h5>
+<div id="r" class="section level3">
+<h3>R</h3>
+<p>Model needs to be restriced to same sample with <code>ess[esample, ]</code></p>
 <pre class="r"><code>level2 &lt;- lmer(stfdem ~ (1|cntry/region), data = ess, REML = FALSE)
 esample&lt;-rownames(as.matrix(resid(level2)))  # restricts model to same sample
 level3 &lt;- lmer(stfdem ~ (1|cntry), data = ess[esample, ], REML = FALSE)
@@ -420,7 +463,6 @@ lrtest(level2, level3)</code></pre>
 ##          R-squared: 0.0228
 ##       Omega-squared: 0.0240
 ##          R-squared: 0.0228</code></pre>
-</div>
 </div>
 </div>
 </div>

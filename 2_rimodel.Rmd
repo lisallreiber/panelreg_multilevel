@@ -1,67 +1,63 @@
 ---
-output:
-  html_document:
-    code_folding: "show"
-    df_print: paged
-    toc: true
-    toc_float: true
-editor_options: 
-  chunk_output_type: console
+output: html_document
 ---
 
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE, cache = T)
-statapath = "/Applications/Stata/StataMP.app/Contents/MacOS/Stata-MP"
-
+source(".statapath.R")
 source("0_packages.R")
-load("../data/ess50prep.Rds")
+load("_data/ess50prep.Rds")
 ```
 
-# 2. Random intercept model with independent variables  {.tabset}
+# 2. Random intercept model with independent variables 
+
+***
 
 ## 2.1 Random Intercept Model {.tabset}
 
-### Models
-#### Stata
+### Stata
 ```{r, results = T, engine = "stata", engine.path= statapath, comment = ""}
-use "../data/ess50.dta", clear
+use "_data/ess50.dta", clear
 
 xtmixed stfdem polintr nwsptot gndr || cntry:
 estat icc
 ```
 
-#### R
-##### First: Save Model (like Stata's `est store`)
+### R
+#### First: Save Model (like Stata's `est store`)
 ```{r}
 multi2 <- lmer(stfdem ~ polintr + nwsptot + gndr + (1|cntry), data = ess, REML = FALSE)
 ```
 
-##### Then: Inspect model
+#### Then: Inspect model
 ```{r}
 tidy(multi2)
 glance(multi2)
 icc(multi2)
 ```
 
-##### R-Squared, works for random intercept models only
+#### R-Squared, works for random intercept models only
 ```{r}
 r2(multi2)
 ```
 
-##### Predictions for individual cluster
+#### Predictions for individual cluster
 ```{r}
 ranef(multi2) 
 ```
 
 
-## 2.2 Fixed Effects Plots
-#### R
-##### Fixed effects slopes for each random intercept 
+## 2.2 Fixed Effects Plots {.tabset}
+### Stata
+      not (yet) available
+      
+### R {.active}
+#### Fixed effects slopes for each random intercept 
 ```{r}
 sjp.lmer(multi2, type = "ri.slope")
 ```
 
-##### Fixed effects slopes for each random intercept highlighting **Portugal** and **Denmark**
+#### Fixed effects slopes for each random intercept highlighting **Portugal** and **Denmark**
 ```{r}
 sjp.lmer(multi2, type = "ri.slope", emph.grp = c("PT", "DK"), facet.grid = FALSE)
 ```
