@@ -114,8 +114,6 @@ tidy(random)
 ```
 
 
-##### Plot
-
 ### 7.2 {.tabset}
 **Execute the hausman test. Which model specification is more appropriate and why?**
 
