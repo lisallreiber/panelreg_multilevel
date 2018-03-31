@@ -493,7 +493,7 @@ asample &lt;- ex_mydf %&gt;%
               pid == 2582901 &amp; syear &gt; 2006 ~ 1 )
              ) %&gt;% 
       filter(is.na(na)) %&gt;% 
-      select(hwageb, pgbilzeit, cpgbilzeit, erf, cerf, frau, ost, phrf, syear )
+      select(hwageb, lnwage, pgbilzeit, cpgbilzeit, erf, cerf, frau, ost, phrf, syear )
 
 asample15 &lt;- asample %&gt;% filter(syear == 2015)</code></pre>
 </div>
@@ -1157,15 +1157,13 @@ plot(fit2.1)</code></pre>
 </div>
 <div id="work-experience-and-wage" class="section level3 tabset">
 <h3>2.3 work experience and wage</h3>
-<p>Is the relationship between work experience and wage linear?</p>
+<p><strong>Is the relationship between work experience and wage linear?</strong></p>
 <hr />
 <p>Labor market research found that the relationship of work and wage is not linear. In the cprplots one can see the that model that assumes linearity systematically overestimates people with long work experience. The solution to this would be to use the squared term of work experience in the model.</p>
-<div id="stata-2" class="section level4">
+<div id="stata-2" class="section level4 tabset active">
 <h4>Stata</h4>
-<pre class="r"><code>knitr::include_graphics(&quot;out/cpr_2_3.png&quot;)</code></pre>
-<p><img src="out/cpr_2_3.png" width="300px" /></p>
-<pre class="r"><code>knitr::include_graphics(&quot;out/cpr_2_32.png&quot;)</code></pre>
-<p><img src="out/cpr_2_32.png" width="300px" /></p>
+<div id="models-1" class="section level5">
+<h5>Models</h5>
 <pre class="stata"><code>    
 use &quot;_data/ex_mydf.dta&quot;, clear
 
@@ -1173,14 +1171,14 @@ use &quot;_data/ex_mydf.dta&quot;, clear
     
     cprplot erf, msize(vsmall) jitter(2) mspline msopts(bands(11) lcolor(red)) name(cpr_2_3, replace)
     
-    graph use cpr_2_3
-    graph export &quot;out/cpr_2_3.png&quot;, replace
+    *graph use cpr_2_3
+    *graph export &quot;out/cpr_2_3.png&quot;, replace
     
       reg hwageb i.frau##c.pgbilzeit c.erf##c.erf ost if asample==1 &amp; syear==2015 [pw=phrf] 
     cprplot erf, msize(vsmall) jitter(2) mspline msopts(bands(11) lcolor(red)) name(cpr_2_32, replace)
     
-    graph use cpr_2_32
-    graph export &quot;out/cpr_2_32.png&quot;, replace
+    *graph use cpr_2_32
+    *graph export &quot;out/cpr_2_32.png&quot;, replace
     </code></pre>
 <pre><code>
 .         
@@ -1215,19 +1213,62 @@ Linear regression                               Number of obs     =     14,218
 &gt; red)) name(cpr_2_3, replace)
 
 .         
-.         graph use cpr_2_3
-file cpr_2_3.gph not found
-r(601);
+.         *graph use cpr_2_3
+.         *graph export &quot;out/cpr_2_3.png&quot;, replace
+.         
+.       reg hwageb i.frau##c.pgbilzeit c.erf##c.erf ost if asample==1 &amp; syear==
+&gt; 2015 [pw=phrf] 
+(sum of wgt is   3.3886e+07)
 
-end of do-file
-r(601);</code></pre>
+Linear regression                               Number of obs     =     14,218
+                                                F(6, 14211)       =     241.95
+                                                Prob &gt; F          =     0.0000
+                                                R-squared         =     0.2375
+                                                Root MSE          =     9.9937
+
+------------------------------------------------------------------------------
+             |               Robust
+      hwageb |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        frau |
+   weiblich  |   2.018305   1.339491     1.51   0.132    -.6072725    4.643882
+   pgbilzeit |   1.790837   .0980965    18.26   0.000     1.598556    1.983119
+             |
+        frau#|
+ c.pgbilzeit |
+   weiblich  |  -.3821273    .113354    -3.37   0.001     -.604316   -.1599387
+             |
+         erf |   .5718543   .0346963    16.48   0.000     .5038451    .6398636
+             |
+ c.erf#c.erf |  -.0084294   .0008973    -9.39   0.000    -.0101881   -.0066707
+             |
+         ost |   -4.15973   .2665798   -15.60   0.000    -4.682261   -3.637198
+       _cons |  -10.53201    1.21738    -8.65   0.000    -12.91823   -8.145781
+------------------------------------------------------------------------------
+
+.         cprplot erf, msize(vsmall) jitter(2) mspline msopts(bands(11) lcolor(
+&gt; red)) name(cpr_2_32, replace)
+
+.         
+.         *graph use cpr_2_32
+.         *graph export &quot;out/cpr_2_32.png&quot;, replace
+.         </code></pre>
 </div>
-<div id="r-2" class="section level4 tabset active">
+<div id="plots-1" class="section level5 active">
+<h5>Plots</h5>
+<p>Component + Residual Plot</p>
+<pre class="r"><code>knitr::include_graphics(&quot;out/cpr_2_3.png&quot;)</code></pre>
+<p><img src="out/cpr_2_3.png" width="400px" /></p>
+<p>Component + Residual Plot with squared work experience</p>
+<pre class="r"><code>knitr::include_graphics(&quot;out/cpr_2_32.png&quot;)</code></pre>
+<p><img src="out/cpr_2_32.png" width="400px" /></p>
+</div>
+</div>
+<div id="r-2" class="section level4 tabset">
 <h4>R</h4>
-<div id="models-1" class="section level5">
+<div id="models-2" class="section level5">
 <h5>Models</h5>
-<div id="base-model" class="section level6">
-<h6>Base Model</h6>
+<p>Base Model</p>
 <pre class="r"><code># base model
   fit2.3 &lt;- asample%&gt;% 
       filter(syear == 2015) %&gt;%
@@ -1240,9 +1281,7 @@ r(601);</code></pre>
 {"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"-6.57","3":"0.4641","4":"-14","5":"3.1e-45"},{"1":"frau","2":"-2.75","3":"0.1737","4":"-16","5":"3.9e-56"},{"1":"pgbilzeit","2":"1.64","3":"0.0310","4":"53","5":"0.0e+00"},{"1":"erf","2":"0.24","3":"0.0076","4":"32","5":"9.0e-216"},{"1":"ost","2":"-4.28","3":"0.2223","4":"-19","5":"1.5e-81"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
-</div>
-<div id="exp-model-with-squared-experience" class="section level6">
-<h6>2.3_exp model with squared experience</h6>
+<p>Model with squared experience</p>
 <pre class="r"><code>  fit2.3_exp &lt;- asample %&gt;%
        filter(syear == 2015) %&gt;%
        mutate(frau.d = factor(frau)) %&gt;% 
@@ -1256,25 +1295,12 @@ r(601);</code></pre>
   </script>
 </div>
 </div>
-</div>
-<div id="plots-1" class="section level5">
+<div id="plots-2" class="section level5 active">
 <h5>Plots</h5>
-<div id="histogram-of-hourly-wage" class="section level6">
-<h6>Histogram of Hourly Wage</h6>
-<pre class="r"><code>  g_hist_wage</code></pre>
-<p><img src="ex2_soep_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
-<pre class="r"><code>  asample %&gt;% 
-        filter(syear == 2015) %&gt;% 
-        select(hwageb) %&gt;% 
-        stat.desc(basic = T)</code></pre>
-<div data-pagedtable="false">
-<script data-pagedtable-source type="application/json">
-{"columns":[{"label":[""],"name":["_rn_"],"type":[""],"align":["left"]},{"label":["hwageb"],"name":[1],"type":["dbl"],"align":["right"]}],"data":[{"1":"1.5e+04","_rn_":"nbr.val"},{"1":"7.3e+01","_rn_":"nbr.null"},{"1":"0.0e+00","_rn_":"nbr.na"},{"1":"0.0e+00","_rn_":"min"},{"1":"4.6e+02","_rn_":"max"},{"1":"4.6e+02","_rn_":"range"},{"1":"2.5e+05","_rn_":"sum"},{"1":"1.4e+01","_rn_":"median"},{"1":"1.7e+01","_rn_":"mean"},{"1":"9.7e-02","_rn_":"SE.mean"},{"1":"1.9e-01","_rn_":"CI.mean.0.95"},{"1":"1.4e+02","_rn_":"var"},{"1":"1.2e+01","_rn_":"std.dev"},{"1":"7.1e-01","_rn_":"coef.var"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
-  </script>
-</div>
 <p>Component + Residual Plot Note: These plots are not available if there is an interaction term in the model formula. It does work, if the interaction term is stored in an extra variable</p>
 <pre class="r"><code>  crPlots(fit2.3, terms = .~ erf, layout = c(1,1))</code></pre>
-<p><img src="ex2_soep_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="ex2_soep_files/figure-html/unnamed-chunk-6-1.png" width="400px" /></p>
+<p>Component + Residual Plot with squared work experience</p>
 <pre class="r"><code>fit2.3_exp &lt;- asample %&gt;%
        filter(syear == 2015) %&gt;%
        mutate(erfq = erf*erf) %&gt;% 
@@ -1282,30 +1308,29 @@ r(601);</code></pre>
           data= ., weights = phrf)
 
   crPlots(fit2.3_exp, terms = .~ erf, layout = c(1,1))</code></pre>
-<p><img src="ex2_soep_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
-</div>
+<p><img src="ex2_soep_files/figure-html/unnamed-chunk-7-1.png" width="400px" /></p>
 </div>
 </div>
 </div>
 <div id="log-model" class="section level3 tabset">
 <h3>2.4 Log Model</h3>
-<p>Specifiy the same regression model but use the natural logarithm as dependent variable instead. How does the the interpretation of coefficients change?</p>
+<p><strong>Specifiy the same regression model but use the natural logarithm as dependent variable instead. How does the the interpretation of coefficients change?</strong></p>
 <hr />
-<p><strong>Why use log of wage?</strong> Hourly wage is very right skewed while the log(wage) is closer to a normal distribution. Since the dependent variable is now the log, it is not very intuitive to interpret.</p>
-<p>How does the the interpretation of coefficients change? - before we had additive model now its a multiple model - you can be interpreted as percentage change - <code>dis exp(.0868897)</code> - e.g. 1.09 -&gt; for every more year of education, expected wage is raised by 9% - change after 8 years: <code>dis exp(.0868897)^8</code> = 2,003 -&gt; 100% increase</p>
+<p><strong>Why use log of wage?</strong> The distribution of hourly wage is very right skewed while the log(wage) is closer to a normal distribution. Since the dependent variable is now the natural logarithm, it is not very intuitive to interpret.</p>
+<p>How does the the interpretation of coefficients change?</p>
+<ul>
+<li>Now that we calculate a Log-Level-Effect the coefficient of x would stand for the change in ln(y), if x changes by one unit. In order to be better able to interpret the coefficients, we can interpret the exponential form of the model. Then the coefficient of x by one unit stands for <span class="math inline">\(e^b\)</span>. The coefficients can now be interpreted as percentage change.</li>
+</ul>
 <div id="stata-3" class="section level4">
 <h4>Stata</h4>
 <pre class="stata"><code>
 use &quot;_data/ex_mydf.dta&quot;, clear
     
 * Mincer-Equation
-    reg lnhwageb pgbilzeit erf frau ost if asample==1 &amp; syear==2015 [pw=phrf]
+    reg lnwage pgbilzeit erf frau ost if asample==1 &amp; syear==2015 [pw=phrf]
     
-* Standardization
-      reg hwageb pgbilzeit frau erf ost if asample==1 &amp; syear==2015 [pw=phrf], beta
-      
-      dis exp(.0868897) // 0.08.. if coef. of yrs of education is constant
-      dis  .3956569^2   // (beta coeff of yrs of education squared)</code></pre>
+      dis exp(.0868897) 
+      dis  .3956569^2</code></pre>
 <pre><code>
 . 
 . use &quot;_data/ex_mydf.dta&quot;, clear
@@ -1313,120 +1338,180 @@ use &quot;_data/ex_mydf.dta&quot;, clear
 
 .         
 . * Mincer-Equation
-.         reg lnhwageb pgbilzeit erf frau ost if asample==1 &amp; syear==2015 [pw=p
-&gt; hrf]
-variable lnhwageb not found
-r(111);
+.         reg lnwage pgbilzeit erf frau ost if asample==1 &amp; syear==2015 [pw=phr
+&gt; f]
+(sum of wgt is   3.3697e+07)
 
-end of do-file
-r(111);</code></pre>
+Linear regression                               Number of obs     =     14,150
+                                                F(4, 14145)       =     460.46
+                                                Prob &gt; F          =     0.0000
+                                                R-squared         =     0.2787
+                                                Root MSE          =     .48652
+
+------------------------------------------------------------------------------
+             |               Robust
+      lnwage |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+   pgbilzeit |   .0871554   .0027229    32.01   0.000     .0818181    .0924928
+         erf |   .0150668   .0006599    22.83   0.000     .0137733    .0163604
+        frau |  -.1350645   .0140727    -9.60   0.000    -.1626489   -.1074801
+         ost |   -.270033   .0178111   -15.16   0.000    -.3049452   -.2351209
+       _cons |   1.390662   .0408833    34.02   0.000     1.310525    1.470798
+------------------------------------------------------------------------------
+
+.         
+.       dis exp(.0868897) 
+1.0907764
+
+.       dis  .3956569^2
+.15654438</code></pre>
 </div>
 <div id="r-3" class="section level4 tabset active">
 <h4>R</h4>
-<div id="models-2" class="section level5">
-<h5>Models</h5>
-<div id="mincer-model" class="section level6">
-<h6>Mincer Model</h6>
-<pre class="r"><code> fit2.4 &lt;- asample %&gt;% 
-        # filter because income variable has 0&#39;s
-        filter(syear == 2015,
-               hwageb &gt; 0) %&gt;% 
-        lm(log(hwageb) ~ pgbilzeit + erf + frau + ost,
+<p>Model</p>
+<pre class="r"><code> fit2.4 &lt;- asample15 %&gt;% 
+        lm(lnwage ~ pgbilzeit + erf + frau + ost,
            data = ., weights = phrf)
 
- tidy(fit2.4)</code></pre>
+ tidy(fit2.4, conf.int = T)</code></pre>
 <div data-pagedtable="false">
 <script data-pagedtable-source type="application/json">
-{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"1.391","3":"0.02246","4":"62","5":"0.0e+00"},{"1":"pgbilzeit","2":"0.087","3":"0.00150","4":"58","5":"0.0e+00"},{"1":"erf","2":"0.015","3":"0.00037","4":"41","5":"0.0e+00"},{"1":"frau","2":"-0.135","3":"0.00841","4":"-16","5":"1.6e-57"},{"1":"ost","2":"-0.270","3":"0.01078","4":"-25","5":"1.5e-135"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[7],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"1.391","3":"0.02246","4":"62","5":"0.0e+00","6":"1.347","7":"1.435"},{"1":"pgbilzeit","2":"0.087","3":"0.00150","4":"58","5":"0.0e+00","6":"0.084","7":"0.090"},{"1":"erf","2":"0.015","3":"0.00037","4":"41","5":"0.0e+00","6":"0.014","7":"0.016"},{"1":"frau","2":"-0.135","3":"0.00841","4":"-16","5":"1.6e-57","6":"-0.152","7":"-0.119"},{"1":"ost","2":"-0.270","3":"0.01078","4":"-25","5":"1.5e-135","6":"-0.291","7":"-0.249"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
   </script>
 </div>
+<pre class="r"><code> glance(fit2.4)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["r.squared"],"name":[1],"type":["dbl"],"align":["right"]},{"label":["adj.r.squared"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["sigma"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["df"],"name":[6],"type":["int"],"align":["right"]},{"label":["logLik"],"name":[7],"type":["dbl"],"align":["right"]},{"label":["AIC"],"name":[8],"type":["dbl"],"align":["right"]},{"label":["BIC"],"name":[9],"type":["dbl"],"align":["right"]},{"label":["deviance"],"name":[10],"type":["dbl"],"align":["right"]},{"label":["df.residual"],"name":[11],"type":["int"],"align":["right"]}],"data":[{"1":"0.28","2":"0.28","3":"24","4":"1367","5":"0","6":"5","7":"-14503","8":"29018","9":"29063","10":"8e+06","11":"14145"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
 </div>
-<div id="coefficients" class="section level6">
-<h6>Coefficients</h6>
-<p>How does the the interpretation of coefficients change? -&gt; before we had additive model now its a multiple model you can interpret this as percentage change Example: 1.09 -&gt; for every more year of education, expected wage is raised by 9%</p>
-<pre class="r"><code>  exp(.0868897) # 0.08.. if coef. of yrs of education</code></pre>
+<p>Interpretation of coefficients Example coefficient for education: <code>exp(.0871554) = 1.09</code> -&gt; for every increase of education by one unit (year), wage grows by 9%</p>
+<pre class="r"><code>  exp(.0871554) </code></pre>
 <pre><code>## [1] 1.1</code></pre>
-<p>if you want to know the change after 8 years:</p>
-<pre class="r"><code>   exp(.0868897)^8   # 2,003 -&gt; 100% increase</code></pre>
+<p>If you want to know the change of 8 years more education: <code>exp(.0871554)^8 = 2,01</code> -&gt; 101% increase</p>
+<pre class="r"><code>   exp(.0871554)^8   </code></pre>
 <pre><code>## [1] 2</code></pre>
-</div>
-<div id="standardization" class="section level6">
-<h6>standardization</h6>
-<p>if you standardize you do it on both sides of the equations, (add , beta to command) then they are called beta- coeff.</p>
-<p>interpretation: change of y in terms of its SD when x changes by 1 SD what is it useful for? - how to get them? - is good to interpret how large the effect is the square of beta coef. tell you portion of variance axplained by var of variable</p>
-<ul>
-<li><p>15 % of wage is due to variation in bilzeit issues, you can only do than in one model, not compare across models if you have interaction in your model, can (not?) interpret beta’s</p></li>
-<li>standardization:
-<ul>
-<li>if you standardize you do it on both sides of the equations, (add , beta to command) then coefficients are called beta- coeff.</li>
-<li>interpretation: change of y in terms of its SD when x changes by 1 SD</li>
-<li>what is it useful for?</li>
-<li>how to get them
-<ul>
-<li>is good to interpret how large the effect is</li>
-<li>the square of beta coef. tell you portion of variance axplained by var of variable</li>
-<li><code>dis  .3956569^2</code> (beta coeff of yrs of education squared)</li>
-</ul></li>
-<li>15 percent of wage is due to variation in years if education</li>
-<li>issues, you can only do than in one model, not compare across models</li>
-<li>if you have interaction in your model, can (not?) interpret beta’s</li>
-</ul></li>
-</ul>
-<pre class="r"><code> # to do: betas
-   # reg hwageb pgbilzeit frau erf ost if asample==1 &amp; syear==2015 [pw=phrf], beta 
-
-  .3956569^2    # beta coeff of yrs of education squared</code></pre>
-<pre><code>## [1] 0.16</code></pre>
-</div>
-</div>
 </div>
 </div>
 <div id="gender-pay-gap" class="section level3 tabset">
 <h3>2.5 Gender Pay Gap</h3>
-<p>How large is the gender pay gap?</p>
+<p><strong>How large is the gender pay gap?</strong></p>
 <hr />
-<p>to do: write answer</p>
 <div id="stata-4" class="section level4">
 <h4>Stata</h4>
 <pre class="stata"><code>use &quot;_data/ex_mydf.dta&quot;, clear
 
-reg lnhwageb ost frau pgbilzeit c.erf##c.erf pgexpue if asample==1 &amp; syear==2015 [pw=phrf]
-margins  , at(erf=(0(5)50) pgbilzeit=(8 13 18))
-marginsplot
-dis exp(-.1437791)
-
 * raw gap
-reg lnhwageb frau if asample==1 &amp; syear==2015 [pw=phrf]
+reg lnwage frau if asample==1 &amp; syear==2015 [pw=phrf]
 dis exp(-.1983373)
-</code></pre>
+
+* gender wage gap 2015
+reg lnwage pgbilzeit c.erf##c.erf i.frau i.ost if asample==1 &amp; syear == 2015 [pw=phrf]
+
+dis exp(-.1456176)</code></pre>
 <pre><code>
 . use &quot;_data/ex_mydf.dta&quot;, clear
 (PGEN: Feb 12, 2017 13:00:53-1 DBV32L)
 
 . 
-. reg lnhwageb ost frau pgbilzeit c.erf##c.erf pgexpue if asample==1 &amp; syear==2
-&gt; 015 [pw=phrf]
-variable lnhwageb not found
-r(111);
+. * raw gap
+. reg lnwage frau if asample==1 &amp; syear==2015 [pw=phrf]
+(sum of wgt is   3.5427e+07)
 
-end of do-file
-r(111);</code></pre>
+Linear regression                               Number of obs     =     14,691
+                                                F(1, 14689)       =     169.09
+                                                Prob &gt; F          =     0.0000
+                                                R-squared         =     0.0297
+                                                Root MSE          =     .56728
+
+------------------------------------------------------------------------------
+             |               Robust
+      lnwage |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+        frau |   -.198841   .0152913   -13.00   0.000    -.2288138   -.1688682
+       _cons |   2.754187   .0112659   244.47   0.000     2.732105     2.77627
+------------------------------------------------------------------------------
+
+. dis exp(-.1983373)
+.82009319
+
+. 
+. * gender wage gap 2015
+. reg lnwage pgbilzeit c.erf##c.erf i.frau i.ost if asample==1 &amp; syear == 2015 
+&gt; [pw=phrf]
+(sum of wgt is   3.3697e+07)
+
+Linear regression                               Number of obs     =     14,150
+                                                F(5, 14144)       =     391.34
+                                                Prob &gt; F          =     0.0000
+                                                R-squared         =     0.2969
+                                                Root MSE          =     .48037
+
+------------------------------------------------------------------------------
+             |               Robust
+      lnwage |      Coef.   Std. Err.      t    P&gt;|t|     [95% Conf. Interval]
+-------------+----------------------------------------------------------------
+   pgbilzeit |   .0856499   .0026784    31.98   0.000     .0803999    .0908999
+         erf |   .0381035   .0022446    16.98   0.000     .0337039    .0425032
+             |
+ c.erf#c.erf |  -.0005924   .0000521   -11.36   0.000    -.0006946   -.0004902
+             |
+        frau |
+   weiblich  |  -.1456176   .0137884   -10.56   0.000    -.1726446   -.1185906
+             |
+         ost |
+        Ost  |  -.2642993   .0176628   -14.96   0.000    -.2989206   -.2296779
+       _cons |   1.270545   .0429209    29.60   0.000     1.186414    1.354675
+------------------------------------------------------------------------------
+
+. 
+. dis exp(-.1456176)
+.86448822</code></pre>
 </div>
 <div id="r-4" class="section level4 tabset active">
 <h4>R</h4>
 <div id="models-3" class="section level5">
 <h5>Models</h5>
-<pre class="r"><code>    # reg lnhwageb ost frau pgbilzeit c.erf##c.erf pgexpue if asample==1 &amp; syear==2015 [pw=phrf]
-    # margins  , at(erf=(0(5)50) pgbilzeit=(8 13 18))
-    # marginsplot
-    exp(-.1437791)</code></pre>
-<pre><code>## [1] 0.87</code></pre>
-<pre class="r"><code>    # 
-    # * raw gap
-    # reg lnhwageb frau if asample==1 &amp; syear==2015 [pw=phrf]
-    # 
-    exp(-.1983373)</code></pre>
-<pre><code>## [1] 0.82</code></pre>
+<p>raw gap</p>
+<pre class="r"><code>fit2.5_raw &lt;- asample15 %&gt;% 
+        lm(lnwage ~  frau , data = ., weights = phrf)
+
+tidy(fit2.5_raw, conf.int=T)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]},{"label":["conf.low"],"name":[6],"type":["dbl"],"align":["right"]},{"label":["conf.high"],"name":[7],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"2.8","3":"0.0064","4":"429","5":"0.0e+00","6":"2.74","7":"2.77"},{"1":"frau","2":"-0.2","3":"0.0094","4":"-21","5":"2.6e-98","6":"-0.22","7":"-0.18"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Effect of gender on wage Compared to males, wages for females change by a factor of 0.8197, in other words are diminished by 18.03 %</p>
+<pre class="r"><code>exp(fit2.5_raw$coefficients[&quot;frau&quot;])</code></pre>
+<pre><code>## frau 
+## 0.82</code></pre>
+<pre class="r"><code>1 - exp(fit2.5_raw$coefficients[&quot;frau&quot;])</code></pre>
+<pre><code>## frau 
+## 0.18</code></pre>
+<p>Wage gap with further coefficients</p>
+<pre class="r"><code>fit2.5 &lt;- asample15 %&gt;% 
+        lm(lnwage ~ pgbilzeit + I(erf^2) + frau + ost,
+           data = ., weights = phrf)
+
+tidy(fit2.5)</code></pre>
+<div data-pagedtable="false">
+<script data-pagedtable-source type="application/json">
+{"columns":[{"label":["term"],"name":[1],"type":["chr"],"align":["left"]},{"label":["estimate"],"name":[2],"type":["dbl"],"align":["right"]},{"label":["std.error"],"name":[3],"type":["dbl"],"align":["right"]},{"label":["statistic"],"name":[4],"type":["dbl"],"align":["right"]},{"label":["p.value"],"name":[5],"type":["dbl"],"align":["right"]}],"data":[{"1":"(Intercept)","2":"1.54378","3":"2.2e-02","4":"71","5":"0.0e+00"},{"1":"pgbilzeit","2":"0.08576","3":"1.5e-03","4":"56","5":"0.0e+00"},{"1":"I(erf^2)","2":"0.00031","3":"9.3e-06","4":"33","5":"1.8e-229"},{"1":"frau","2":"-0.14583","3":"8.6e-03","4":"-17","5":"4.9e-64"},{"1":"ost","2":"-0.26708","3":"1.1e-02","4":"-24","5":"6.2e-128"}],"options":{"columns":{"min":{},"max":[10]},"rows":{"min":[10],"max":[10]},"pages":{}}}
+  </script>
+</div>
+<p>Compared to males, wages for females change by a factor of 0.8197, in other words are diminished by 13.39 %</p>
+<pre class="r"><code>exp(fit2.5$coefficients[&quot;frau&quot;])</code></pre>
+<pre><code>## frau 
+## 0.86</code></pre>
+<pre class="r"><code>1 - exp(fit2.5$coefficients[&quot;frau&quot;])</code></pre>
+<pre><code>## frau 
+## 0.14</code></pre>
+</div>
+<div id="plots-3" class="section level5">
+<h5>Plots</h5>
+<pre class="r"><code># margins  , at(erf=(0(5)50) pgbilzeit=(8 13 18))
+    # marginsplot</code></pre>
 </div>
 </div>
 </div>

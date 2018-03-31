@@ -243,7 +243,7 @@ knitr::include_graphics("out/margins_3_4.png")
 ```
 
 three way interaction
-```{r stata marginsplot_3_4, out.width = "600px"}
+```{r stata marginsplot_3_42, out.width = "600px"}
 knitr::include_graphics("out/margins_3_42.png")
 ```
 #### R {.tabset .active}

@@ -265,7 +265,7 @@ mydf_raw <- ppfadl %>%
 ```
 
 ##### 2.2 Generate Variables
-Notes:
+Note:
 
 **Logarithm of wage differences in STATA and R**. 
 

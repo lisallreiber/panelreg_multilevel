@@ -62,7 +62,7 @@ asample <- ex_mydf %>%
               pid == 2582901 & syear > 2006 ~ 1 )
              ) %>% 
       filter(is.na(na)) %>% 
-      select(hwageb, pgbilzeit, cpgbilzeit, erf, cerf, frau, ost, phrf, syear )
+      select(hwageb, lnwage, pgbilzeit, cpgbilzeit, erf, cerf, frau, ost, phrf, syear )
 
 asample15 <- asample %>% filter(syear == 2015)
 ```
@@ -452,22 +452,15 @@ These are quick ways to extract the confidence intervals, intercept and slopes o
       
 
 ### 2.3 work experience and wage {.tabset}
-Is the relationship between work experience and wage linear?
+**Is the relationship between work experience and wage linear?**
 
 ***
 
 Labor market research found that the relationship of work and wage is not linear. In the cprplots one can see the that model that assumes linearity systematically overestimates people with long work experience. The solution to this would be to use the squared term of work experience in the model.
 
 
-#### Stata
-```{r stata marginsplot_2_3, out.width = "400px"}
-knitr::include_graphics("out/cpr_2_3.png")
-```
-
-```{r stata marginsplot_2_32, out.width = "400px"}
-knitr::include_graphics("out/cpr_2_32.png")
-```
-
+#### Stata {.tabset .active}
+##### Models
 ```{r stata 2.3, results = T, engine = "stata", engine.path= statapath, comment = ""}
 	
 use "_data/ex_mydf.dta", clear
@@ -476,20 +469,32 @@ use "_data/ex_mydf.dta", clear
 	
 	cprplot erf, msize(vsmall) jitter(2) mspline msopts(bands(11) lcolor(red)) name(cpr_2_3, replace)
 	
-	graph use cpr_2_3
-	graph export "out/cpr_2_3.png", replace
+	*graph use cpr_2_3
+	*graph export "out/cpr_2_3.png", replace
 	
       reg hwageb i.frau##c.pgbilzeit c.erf##c.erf ost if asample==1 & syear==2015 [pw=phrf] 
 	cprplot erf, msize(vsmall) jitter(2) mspline msopts(bands(11) lcolor(red)) name(cpr_2_32, replace)
 	
-	graph use cpr_2_32
-	graph export "out/cpr_2_32.png", replace
+	*graph use cpr_2_32
+	*graph export "out/cpr_2_32.png", replace
 	
 ```
 
-#### R {.tabset .active}
+##### Plots {.active}
+
+Component + Residual Plot 
+```{r stata marginsplot_2_3, out.width = "400px"}
+knitr::include_graphics("out/cpr_2_3.png")
+```
+
+Component + Residual Plot with squared work experience
+```{r stata marginsplot_2_32, out.width = "400px"}
+knitr::include_graphics("out/cpr_2_32.png")
+```
+
+#### R {.tabset}
 ##### Models
-###### Base Model
+Base Model
 ```{r}
 # base model
   fit2.3 <- asample%>% 
@@ -500,7 +505,7 @@ use "_data/ex_mydf.dta", clear
   tidy(fit2.3)
 ```
 
-###### Model with squared experience
+Model with squared experience
 ```{r}
   fit2.3_exp <- asample %>%
        filter(syear == 2015) %>%
@@ -512,8 +517,7 @@ use "_data/ex_mydf.dta", clear
   
 ```
 
-##### Plots
-
+##### Plots {.active}
 Component + Residual Plot 
 Note: These plots are not available if there is an interaction term in the model formula. It does work, if the interaction term is stored in an extra variable
 ```{r, out.width = "400px"}
@@ -521,6 +525,7 @@ Note: These plots are not available if there is an interaction term in the model
 
 ```
 
+Component + Residual Plot with squared work experience
 ```{r, out.width = "400px"}
 fit2.3_exp <- asample %>%
        filter(syear == 2015) %>%
@@ -533,127 +538,106 @@ fit2.3_exp <- asample %>%
 ```
 
 ### 2.4 Log Model {.tabset}
-Specifiy the same regression model but use the natural logarithm as dependent variable instead.
-How does the the interpretation of coefficients change?
+**Specifiy the same regression model but use the natural logarithm as dependent variable instead. \n How does the the interpretation of coefficients change?**
 
 ***
 
-**Why use log of wage?** Hourly wage is very right skewed while the log(wage) is closer to a normal distribution. Since the dependent variable is now the log, it is not very intuitive to interpret.
+**Why use log of wage?** The distribution of hourly wage is very right skewed while the log(wage) is closer to a normal distribution. Since the dependent variable is now the natural logarithm, it is not very intuitive to interpret.
 
 How does the the interpretation of coefficients change?
- - before we had additive model now its a multiple model
- - you can be interpreted as percentage change
-      - `dis exp(.0868897)`	
- 	- e.g. 1.09 -> for every more year of education, expected wage is raised by 9%
- - change after 8 years:
- 	`dis exp(.0868897)^8` = 2,003 -> 100% increase
- 	
+
+- Now that we calculate a Log-Level-Effect the coefficient of x would stand for the change in ln(y), if x changes by one unit. In order to be better able to interpret the coefficients, we can interpret the exponential form of the model. Then the coefficient of x by one unit stands for $e^b$. The coefficients can now be interpreted as percentage change. 
+
 #### Stata
 ```{r stata 2.4, results = T, engine = "stata", engine.path= statapath, comment = ""}
 
 use "_data/ex_mydf.dta", clear
 	
 * Mincer-Equation
-	reg lnhwageb pgbilzeit erf frau ost if asample==1 & syear==2015 [pw=phrf]
+	reg lnwage pgbilzeit erf frau ost if asample==1 & syear==2015 [pw=phrf]
 	
-* Standardization
-      reg hwageb pgbilzeit frau erf ost if asample==1 & syear==2015 [pw=phrf], beta
-      
-      dis exp(.0868897)	// 0.08.. if coef. of yrs of education is constant
-      dis  .3956569^2	// (beta coeff of yrs of education squared)
+      dis exp(.0868897)	
+      dis  .3956569^2
 ```
 #### R {.tabset .active}
-##### Models
-###### Mincer Model
+Model
 ```{r}
- fit2.4 <- asample %>% 
-        # filter because income variable has 0's
-        filter(syear == 2015,
-               hwageb > 0) %>% 
-        lm(log(hwageb) ~ pgbilzeit + erf + frau + ost,
+ fit2.4 <- asample15 %>% 
+        lm(lnwage ~ pgbilzeit + erf + frau + ost,
            data = ., weights = phrf)
 
- tidy(fit2.4)
+ tidy(fit2.4, conf.int = T)
+ glance(fit2.4)
 ```
 
-###### Coefficients
-How does the the interpretation of coefficients change?
--> before we had additive model now its a multiple model you can interpret this as percentage change
-Example:
-1.09 -> for every more year of education, expected wage is raised by 9%
+Interpretation of coefficients 
+Example coefficient for education:
+`exp(.0871554) = 1.09` -> for every increase of education by one unit (year), wage grows by 9%
+
 ```{r}
-  exp(.0868897)	# 0.08.. if coef. of yrs of education
+  exp(.0871554)	
 ```
   
-if you want to know the change after 8 years:
+If you want to know the change of 8 years more education:
+`exp(.0871554)^8 = 2,01` -> 101% increase
 ```{r}
-   exp(.0868897)^8   # 2,003 -> 100% increase
-```
-
-###### standardization
-if you standardize you do it on both sides of the equations, (add , beta to command) then they are called beta- coeff.
-
-interpretation: change of y in terms of its SD when x changes by 1 SD  what is it useful for?
- - how to get them?
- - is good to interpret how large the effect is the square of beta coef. tell you portion of variance axplained by  var of variable
- 
- - 15 % of wage is due to variation in bilzeit issues, you can only do than in one model, not compare across models if you have interaction in your model, can (not?) interpret beta's
- 
- - standardization:
-      - if you standardize you do it on both sides of the equations, (add , beta to command) then coefficients are called beta- coeff.
- 	- interpretation: change of y in terms of its SD when x changes by 1 SD
- 	- what is it useful for?
- 	- how to get them
- 		- is good to interpret how large the effect is
- 		- the square of beta coef. tell you portion of variance axplained by  var of variable
- 		- `dis  .3956569^2`	(beta coeff of yrs of education squared)
- 	- 15 percent of wage is due to variation in years if education
- 	- issues, you can only do than in one model, not compare across models
- 	- if you have interaction in your model, can (not?) interpret beta's
-
-```{r}
- # to do: betas
-   # reg hwageb pgbilzeit frau erf ost if asample==1 & syear==2015 [pw=phrf], beta 
-
-  .3956569^2	# beta coeff of yrs of education squared
+   exp(.0871554)^8   
 ```
 
 
 ### 2.5 Gender Pay Gap {.tabset}
-How large is the gender pay gap?
+**How large is the gender pay gap?**
 
 ***
 
-to do: write answer
 
 #### Stata
 ```{r stata 2.5, results = T, engine = "stata", engine.path= statapath, comment = ""}
 use "_data/ex_mydf.dta", clear
 
-reg lnhwageb ost frau pgbilzeit c.erf##c.erf pgexpue if asample==1 & syear==2015 [pw=phrf]
-margins  , at(erf=(0(5)50) pgbilzeit=(8 13 18))
-marginsplot
-dis exp(-.1437791)
-
 * raw gap
-reg lnhwageb frau if asample==1 & syear==2015 [pw=phrf]
+reg lnwage frau if asample==1 & syear==2015 [pw=phrf]
 dis exp(-.1983373)
 
+* gender wage gap 2015
+reg lnwage pgbilzeit c.erf##c.erf i.frau i.ost if asample==1 & syear == 2015 [pw=phrf]
+
+dis exp(-.1456176)
 ```
+
 #### R {.tabset .active}
 ##### Models
+raw gap
 ```{r}
-    # reg lnhwageb ost frau pgbilzeit c.erf##c.erf pgexpue if asample==1 & syear==2015 [pw=phrf]
-    # margins  , at(erf=(0(5)50) pgbilzeit=(8 13 18))
-    # marginsplot
-    exp(-.1437791)
-    # 
-    # * raw gap
-    # reg lnhwageb frau if asample==1 & syear==2015 [pw=phrf]
-    # 
-    exp(-.1983373)
+fit2.5_raw <- asample15 %>% 
+        lm(lnwage ~  frau , data = ., weights = phrf)
+
+tidy(fit2.5_raw, conf.int=T)
 ```
 
-  
+Effect of gender on wage
+Compared to males, wages for females change by a factor of 0.8197, in other words are diminished by 18.03 %
+```{r}
+exp(fit2.5_raw$coefficients["frau"])
 
+1 - exp(fit2.5_raw$coefficients["frau"])
+```
+
+Wage gap with further coefficients
+
+```{r}
+fit2.5 <- asample15 %>% 
+        lm(lnwage ~ pgbilzeit + I(erf^2) + frau + ost,
+           data = ., weights = phrf)
+
+tidy(fit2.5)
+```
+Compared to males, wages for females change by a factor of 0.8197, in other words are diminished by 13.39 %
+```{r}
+exp(fit2.5$coefficients["frau"])
+
+1 - exp(fit2.5$coefficients["frau"])
+
+
+```
  

@@ -15,6 +15,7 @@ interpretation:
 helpful websites:
       - http://data.princeton.edu/R/linearModels.html
 
+
       
       
 
@@ -67,7 +68,40 @@ Ex2:
       ```{r}
       # cov(fit2.1$residuals, asample$pgbilzeit)      # no
       ```
+      2.4
+      - errors should have constant variance
+      - before we had additive model now its a multiple model
+      to do: dis exp() is still stata code 
+
+
+      ###### standardization
+if you standardize you do it on both sides of the equations, (add , beta to command) then they are called beta- coeff.
       
+      interpretation: change of y in terms of its SD when x changes by 1 SD  what is it useful for?
+      - how to get them?
+      - is good to interpret how large the effect is the square of beta coef. tell you portion of variance axplained by  var of variable
+      
+      - 15 % of wage is due to variation in bilzeit issues, you can only do than in one model, not compare across models if you have interaction in your model, can (not?) interpret beta's
+      
+      - standardization:
+            - if you standardize you do it on both sides of the equations, (add , beta to command) then coefficients are called beta- coeff.
+      - interpretation: change of y in terms of its SD when x changes by 1 SD
+      - what is it useful for?
+            - how to get them
+      - is good to interpret how large the effect is
+      - the square of beta coef. tell you portion of variance axplained by  var of variable
+      - `dis  .3956569^2`	(beta coeff of yrs of education squared)
+      - 15 percent of wage is due to variation in years if education
+      - issues, you can only do than in one model, not compare across models
+      - if you have interaction in your model, can (not?) interpret beta's
+      
+      ```{r}
+      # to do: betas
+      # reg hwageb pgbilzeit frau erf ost if asample==1 & syear==2015 [pw=phrf], beta 
+      
+      .3956569^2	# beta coeff of yrs of education squared
+      ```
+
 # Notes 
 ***
       #' Not include 
